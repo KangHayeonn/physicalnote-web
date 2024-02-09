@@ -1,4 +1,4 @@
-import { cls } from "@/libs/commons/utils";
+import { cls } from "@/utils";
 import React from "react";
 
 interface ButtonProps {

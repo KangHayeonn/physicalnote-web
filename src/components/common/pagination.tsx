@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { cls } from "../../libs/commons/utils";
+import { cls } from "@/utils";
 
 interface PaginationProps {
   currentPage: number;
