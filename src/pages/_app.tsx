@@ -1,15 +1,12 @@
-import { SWRConfig } from "swr";
-import "@/styles/globals.css";
 import type { AppProps } from "next/app";
+import Head from "next/head";
+import { SWRConfig } from "swr";
 import { RecoilRoot } from "recoil";
 import { Toaster } from "react-hot-toast";
-import Head from "next/head";
+import fetcher from "@/api/fetcher";
+import "@/styles/globals.css";
 
 export default function App({ Component, pageProps }: AppProps) {
-  function fetcher(url: string) {
-    return fetch(url).then((response) => response.json());
-  }
-
   return (
     <RecoilRoot>
       <SWRConfig value={{ fetcher }}>

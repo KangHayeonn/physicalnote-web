@@ -1,6 +1,6 @@
 import React, { MouseEvent, forwardRef, useEffect, useState } from "react";
 import { useTable, Column, useRowSelect } from "react-table";
-import { cls } from "../../libs/commons/utils";
+import { cls } from "@/utils";
 import { useRecoilState } from "recoil";
 
 export interface Data {

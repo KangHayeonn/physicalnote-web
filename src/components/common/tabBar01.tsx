@@ -1,5 +1,5 @@
 import React from "react";
-import { cls } from "../../libs/commons/utils";
+import { cls } from "@/utils";
 
 interface Tabs {
   key: string;

@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
-import { cls } from "../../libs/commons/utils";
+import { cls } from "@/utils";
 
 interface SearchProps {
   title?: string;
