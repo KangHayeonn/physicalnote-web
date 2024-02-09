@@ -1,12 +1,21 @@
+import React from "react";
 import { NextPage } from "next";
 import Image from "next/image";
-import React from "react";
+import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import Input from "@/components/common/input";
 import { LoginFormType } from "@/types/login";
 import Api from "@/api/login";
+import {
+  setAccessToken,
+  setLoginId,
+  setName,
+  setUserId,
+  setRole,
+} from "@/utils/tokenControl";
+import { showToast } from "@/utils";
 
 const schema = yup.object({
   email: yup
@@ -23,6 +32,7 @@ const schema = yup.object({
 });
 
 const Login: NextPage = () => {
+  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -32,10 +42,30 @@ const Login: NextPage = () => {
     mode: "onChange",
   });
 
-  const onValid = ({ email, password }: LoginFormType) => {
-    // todo : login api
-    const result = Api.v1Login({ email, password, type: "IDPW" });
-    console.log(result);
+  const onValid = async ({ email, password }: LoginFormType) => {
+    await Api.v1Login({
+      loginId: email,
+      password: password,
+      type: "IDPW",
+    })
+      .then((res) => {
+        const { status, data } = res;
+        if (status === 200) {
+          const { token, userId, loginId, name, role } = data;
+          setAccessToken(token);
+          setUserId(userId);
+          setLoginId(loginId);
+          setName(name);
+          setRole(role);
+          router.push("/dashboard");
+        }
+      })
+      .catch((err) => {
+        const { status } = err.response;
+        if (status === 401) {
+          showToast("로그인 정보가 잘못되었습니다.");
+        }
+      });
   };
 
   return (

@@ -4,7 +4,7 @@ export interface LoginFormType {
 }
 
 export interface LoginRequestType {
-  email: string;
+  loginId: string;
   password: string;
   type: string;
 }
