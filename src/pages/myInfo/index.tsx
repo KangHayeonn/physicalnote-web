@@ -1,10 +1,16 @@
-import { NextPage } from "next";
-import Layout from "@/components/layout";
 import React from "react";
 import { useForm } from "react-hook-form";
+import { NextPage } from "next";
+import { useRouter } from "next/router";
+import Layout from "@/components/layout";
 
 const MyInfo: NextPage = () => {
+  const router = useRouter();
   const { register, handleSubmit } = useForm();
+
+  const goChangePassword = () => {
+    router.push("/changePassword");
+  };
 
   const onValid = (data: any) => {
     console.log(data);
@@ -40,9 +46,14 @@ const MyInfo: NextPage = () => {
           <div className="flex flex-col space-y-2">
             <p className="text-[16px] font-[500]">이름 : 홍길동</p>
             <p className="text-[16px] font-[500]">회원번호 : 023030</p>
-            <span className="text-[#8DBE3D] text-[12px] font-[700] py-1 w-[58px] h-[25px] flex justify-center items-center rounded-[5px] shadow-[0_2px_10px_0px_rgba(0,0,0,0.25)]">
+            <div onClick={goChangePassword}>
+              <span className="text-[14px] text-[#B9B9C3] cursor-pointer hover:text-[#9F9F9F]">
+                비밀번호 변경
+              </span>
+            </div>
+            {/*<span className="text-[#8DBE3D] text-[12px] font-[700] py-1 w-[58px] h-[25px] flex justify-center items-center rounded-[5px] shadow-[0_2px_10px_0px_rgba(0,0,0,0.25)]">
               이용중
-            </span>
+              </span>*/}
           </div>
         </div>
         <div className="space-y-5">
