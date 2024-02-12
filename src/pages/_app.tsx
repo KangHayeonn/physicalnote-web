@@ -21,7 +21,11 @@ export default function App({ Component, pageProps }: AppProps) {
             {/* <link rel="icon" href="" /> */}
           </Head>
           <Component {...pageProps} />
-          <Toaster position="top-center" reverseOrder={false} />
+          <Toaster
+            containerStyle={{ bottom: 100 }}
+            position="bottom-center"
+            reverseOrder={false}
+          />
         </div>
       </SWRConfig>
     </RecoilRoot>
