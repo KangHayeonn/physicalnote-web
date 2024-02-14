@@ -4,9 +4,11 @@ import Search from "@/components/common/search";
 import { BarChart } from "@mui/x-charts";
 import AxisWithComposition from "@/components/common/axisWithComposition";
 import { useState } from "react";
+import DatePickerComponent from "@/components/common/datepicker";
 
 const InjuryProgress: NextPage = () => {
   const [isPlayer, setIsPlayer] = useState(false);
+  const [searchYear, setSearchYear] = useState<Date | null>(null);
 
   const xAxisData = [
     "1월",
@@ -59,12 +61,7 @@ const InjuryProgress: NextPage = () => {
     <Layout>
       <div className="flex items-center space-x-[30px]">
         <h1 className="text-[28px] font-[700]">부상추이</h1>
-        <select className="w-[127px] h-[25px] rounded-[5px] py-0 border-[#B9B9C3] text-[12px] font-[700] shadow-xl">
-          <option value="">구분</option>
-          <option value="first">1군</option>
-          <option value="second">2군</option>
-          <option value="second">부상자</option>
-        </select>
+        <DatePickerComponent calendarType="year" changeYear={setSearchYear} />
       </div>
       <div className="my-2 w-full grid">
         <div className="grid-cols-12">
