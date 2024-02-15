@@ -3,7 +3,7 @@ import Layout from "@/components/layout";
 import Search from "@/components/common/search";
 import Table from "@/components/common/table";
 import Pagination from "@/components/common/pagination";
-import usePagination from "@/libs/commons/hooks/usePagination";
+import usePagination from "@/utils/hooks/usePagination";
 import { useRouter } from "next/router";
 import { MouseEvent, useMemo, useState } from "react";
 
