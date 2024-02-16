@@ -1,6 +1,6 @@
 import { NextPage } from "next";
 import { MouseEvent, useMemo, useState } from "react";
-import usePagination from "@/libs/commons/hooks/usePagination";
+import usePagination from "@/utils/hooks/usePagination";
 import { useRouter } from "next/router";
 import Layout from "@/components/layout";
 import Search from "@/components/common/search";

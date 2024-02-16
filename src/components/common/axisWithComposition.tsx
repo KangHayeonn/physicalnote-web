@@ -6,25 +6,11 @@ import { BarPlot } from "@mui/x-charts/BarChart";
 import { ChartsXAxis } from "@mui/x-charts/ChartsXAxis";
 import { ChartsYAxis } from "@mui/x-charts/ChartsYAxis";
 import { axisClasses } from "@mui/x-charts/ChartsAxis";
-
-interface SeriesData {
-  type: "line" | "bar" | "pie" | "scatter";
-  id: string;
-  yAxisKey: string;
-  data: number[];
-}
-
-interface YAxisIds {
-  id: string;
-}
-
-interface AxisWithCompositionProps {
-  xAxisData: string[];
-  seriesData: SeriesData[];
-  yAxisIds: YAxisIds[];
-  height?: number;
-  margin?: { left: number; right: number };
-}
+import {
+  SeriesDataType,
+  YAxisIds,
+  AxisWithCompositionProps,
+} from "@/types/chart";
 
 const AxisWithComposition = ({
   xAxisData,
@@ -61,9 +47,8 @@ const AxisWithComposition = ({
         <BarPlot />
         <LinePlot />
         <ChartsXAxis axisId="quarters" labelFontSize={18} />
-        <ChartsYAxis axisId="quantities" />
-        {/* <ChartsYAxis axisId="qqq" position="right" /> */}
-        <ChartsYAxis axisId="money" position="right" />
+        <ChartsYAxis axisId={`${yAxisIds[0].id}`} />
+        <ChartsYAxis axisId={`${yAxisIds[2].id}`} position="right" />
       </ResponsiveChartContainer>
     </Box>
   );
