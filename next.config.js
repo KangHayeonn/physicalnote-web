@@ -11,7 +11,7 @@ const nextConfig = {
   },
   env: {
     ENV_PREFIX_PATH: process.env.ENV_PREFIX_PATH,
-    ENV_SERVER_PATH: process.env.ENV_SERVER_PATH,
+    ENV_SERVER_PATH: process.env.NEXT_PUBLIC_BASE_URL,
   },
   typescript: {
     // !! WARN !!

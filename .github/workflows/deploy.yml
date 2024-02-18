@@ -53,6 +53,8 @@ jobs:
           npm run build
         env:
           NODE_ENV: production
+          NEXT_PUBLIC_BASE_URL: ${{ secrets.NEXT_PUBLIC_BASE_URL }}
+          ENV_PREFIX_PATH: ${{ secrets.ENV_PREFIX_PATH }}
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v2
