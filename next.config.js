@@ -48,6 +48,11 @@ const nextConfig = {
   images: {
     loader: "akamai",
     path: "/",
+    // domains: [""],
+  },
+  i18n: {
+    locales: ["ko", "en"],
+    defaultLocale: "ko",
   },
 };
 

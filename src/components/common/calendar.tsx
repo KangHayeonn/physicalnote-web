@@ -4,7 +4,7 @@ import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid"; // a plugin!
 import koLocale from "@fullcalendar/core/locales/ko";
 
-const CalendarComponents = ({ events }) => {
+const FullCalendarComponent = ({ events }) => {
   return (
     <div>
       <FullCalendar
@@ -18,4 +18,4 @@ const CalendarComponents = ({ events }) => {
   );
 };
 
-export default CalendarComponents;
+export default FullCalendarComponent;
