@@ -21,19 +21,6 @@ const nextConfig = {
     ignoreBuildErrors: true,
   },
 
-  // async rewrites() {
-  //   return [
-  //     {
-  //       source: "/phr/:path*",
-  //       destination: "https://phr-dev.devlock.co.kr/:path*",
-  //     },
-  //     {
-  //       source: "/:path*", // 다른 요청은 Next.js 페이지로 리디렉션
-  //       destination: "/:path*",
-  //     },
-  //   ];
-  // },
-
   async redirects() {
     return [
       {
