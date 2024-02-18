@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: true,
+  reactStrictMode: false, // true
   transpilePackages: ["@mui/x-charts"],
   webpack: (config) => {
     config.module.rules.push({
@@ -11,7 +11,7 @@ const nextConfig = {
   },
   env: {
     ENV_PREFIX_PATH: process.env.ENV_PREFIX_PATH,
-    ENV_SERVER_PATH: process.env.ENV_SERVER_PATH,
+    // ENV_SERVER_PATH: process.env.ENV_SERVER_PATH,
   },
   typescript: {
     // !! WARN !!

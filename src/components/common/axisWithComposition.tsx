@@ -48,7 +48,10 @@ const AxisWithComposition = ({
         <LinePlot />
         <ChartsXAxis axisId="quarters" labelFontSize={18} />
         <ChartsYAxis axisId={`${yAxisIds[0].id}`} />
-        <ChartsYAxis axisId={`${yAxisIds[2].id}`} position="right" />
+        <ChartsYAxis
+          axisId={`${yAxisIds.length > 2 ? yAxisIds[2].id : yAxisIds[1].id}`}
+          position="right"
+        />
       </ResponsiveChartContainer>
     </Box>
   );

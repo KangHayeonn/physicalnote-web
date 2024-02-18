@@ -1,83 +1,70 @@
 import { NextPage } from "next";
+import { useRouter } from "next/router";
+import { useState, useEffect, useMemo } from "react";
 import Layout from "@/components/layout";
 import Search from "@/components/common/search";
 import Table from "@/components/common/table";
 import Pagination from "@/components/common/pagination";
 import usePagination from "@/utils/hooks/usePagination";
-import { useRouter } from "next/router";
-import { MouseEvent, useMemo, useState } from "react";
+import { useRecoilValue } from "recoil";
+import {
+  searchPlayerGraderState,
+  searchCategoryState,
+  searchKeywordState,
+} from "@/recoil/search/searchState";
+import Api from "@/api/privateData";
+import {
+  PrivateDataType,
+  PlayersRequestType,
+  PlayersResponseType,
+} from "@/types/privateData";
+import { showToast } from "@/utils";
 
 const PrivateData: NextPage = () => {
   const router = useRouter();
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState<number>(0);
+  const [isChecked, setIsChecked] = useState<boolean>(true);
+  const [data, setData] = useState<PrivateDataType[]>([]);
+  const [totalLen, setTotalLen] = useState<number>(0);
+  const searchGrader = useRecoilValue(searchPlayerGraderState);
+  const searchCategory = useRecoilValue(searchCategoryState);
+  const searchKeyword = useRecoilValue(searchKeywordState);
 
-  const data = [
-    {
-      id: 1,
-      name: "dh",
-      age: 23,
-      tel: "010-1234-1234",
-      height: 180,
-      weight: 72,
-      position: "미드필더",
-      belongto: "1군",
-    },
-    {
-      id: 2,
-      name: "mike",
-      age: 23,
-      tel: "010-1234-1234",
-      height: 180,
-      weight: 72,
-      position: "미드필더",
-      belongto: "1군",
-    },
-  ];
-
-  // 열 항목
-  let columnData = [
+  const columnData = [
     {
       Header: "선수이름",
       accessor: "name",
-      Cell: ({ value }: any) => (value ? value : "-"),
     },
     {
       Header: "나이",
       accessor: "age",
-      Cell: ({ value }: any) => (value ? value : "-"),
     },
     {
       Header: "전화번호",
-      accessor: "tel",
-      Cell: ({ value }: any) => (value ? value : "-"),
+      accessor: "phone",
     },
     {
       Header: "키(cm)",
       accessor: "height",
-      Cell: ({ value }: any) => (value ? value : "-"),
     },
     {
       Header: "몸무게(kg)",
       accessor: "weight",
-      Cell: ({ value }: any) => (value ? value : "-"),
     },
     {
       Header: "포지션",
       accessor: "position",
-      Cell: ({ value }: any) => (value ? value : "-"),
     },
     {
       Header: "소속",
       accessor: "belongto",
-      Cell: ({ value }: any) => (value ? value : "-"),
     },
   ];
 
   const columns = useMemo(() => columnData, []);
 
-  // pagination
   const itemPerPage = 10;
-  const totalItems = data?.length;
+  const totalItems = totalLen;
   const { currentPage, totalPages, currentItems, handlePageChange } =
     usePagination((page) => setPage(page), itemPerPage, totalItems);
 
@@ -85,29 +72,105 @@ const PrivateData: NextPage = () => {
     if (currentPage + 1 < totalPages) {
       handlePageChange(currentPage + 1);
     }
+    getPrivateList();
   };
 
   const prev = () => {
     if (currentPage > 0) {
       handlePageChange(currentPage - 1);
     }
+    getPrivateList();
   };
 
-  const handleRowClick = (id: number) => (e: MouseEvent<HTMLDivElement>) => {
+  // 중요 선수 등록/삭제 (즐겨찾기)
+  const handleImportantCheck = async (
+    id: number,
+    e: React.MouseEvent<HTMLDivElement>
+  ) => {
     e.preventDefault();
-    router.push(`/privateData/${id}`);
+    setData((prevData) =>
+      prevData.map((item) => {
+        if (item.id === id) {
+          return { ...item, importantYn: !item.importantYn };
+        }
+
+        return item;
+      })
+    );
+
+    await Api.v1UpdateImportantPlayer(id).then((res) => {
+      const { status, data } = res;
+      if (status === 200) {
+        if (data.importantYn) {
+          showToast("즐겨찾기로 등록되었습니다.");
+        } else {
+          showToast("즐겨찾기가 해제되었습니다.");
+        }
+      }
+    });
   };
+
+  const handleRowClick =
+    (id: number) => (e: React.MouseEvent<HTMLDivElement>) => {
+      e.preventDefault();
+      router.push(`/privateData/${id}`);
+    };
+
+  const getPrivateList = async () => {
+    const queryParams: PlayersRequestType =
+      searchGrader === "ALL" ? {} : { playerGrade: searchGrader };
+
+    if (searchCategory === "name") {
+      queryParams.name = searchKeyword;
+    }
+    if (searchCategory === "position") {
+      queryParams.position = searchKeyword;
+    }
+
+    await Api.v1GetPlayers(queryParams, currentPage, itemPerPage).then(
+      (res) => {
+        const { content, totalElements } = res.data;
+        const tempData: PrivateDataType[] = [];
+
+        content.map((item: PlayersResponseType) => {
+          const grade =
+            item.playerGrade === "FIRST"
+              ? "1군"
+              : item.playerGrade === "SECOND"
+                ? "2군"
+                : "부상자";
+          tempData.push({
+            position: item.positions.join(", "),
+            belongto: grade,
+            ...item,
+          });
+        });
+
+        setData(tempData);
+        setTotalLen(totalElements);
+      }
+    );
+  };
+
+  const resetPage = () => {
+    handlePageChange(0);
+  };
+
+  useEffect(() => {
+    getPrivateList();
+  }, [page]);
 
   return (
     <Layout>
       <h1 className="text-[28px] font-[700]">개인 데이터</h1>
-      <Search />
+      <Search onClickSubmit={getPrivateList} resetPage={resetPage} />
       <div className="bg-white py-4 my-4 px-4 rounded-[4px]">
         <Table
           columns={columns}
           data={data || []}
           onClickRow={handleRowClick}
-          isSelectedCheckbox={true}
+          isSelectedCheckbox={isChecked}
+          onSelect={handleImportantCheck}
         />
         <Pagination
           currentPage={currentPage}

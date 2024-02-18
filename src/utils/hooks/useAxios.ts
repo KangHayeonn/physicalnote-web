@@ -9,7 +9,7 @@ interface SendApiRequestParams {
 }
 
 const axiosInstance = axios.create({
-  baseURL: `${process.env.ENV_SERVER_PATH}admin`,
+  baseURL: `${process.env.NEXT_PUBLIC_BASE_URL}admin`,
   headers: {
     "Content-Type": "application/json",
     Authorization: `bearer ${
