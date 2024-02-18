@@ -1,81 +1,41 @@
+import { useState, useEffect } from "react";
 import { NextPage } from "next";
+import { useRouter } from "next/router";
+import Image from "next/image";
 import Layout from "@/components/layout";
-import Search from "@/components/common/search";
-import Table from "@/components/common/table";
 import Pagination from "@/components/common/pagination";
 import usePagination from "@/utils/hooks/usePagination";
-import { useRouter } from "next/router";
-import { MouseEvent, useMemo, useState } from "react";
+import DatePickerComponent from "@/components/common/datepicker";
+import PlayerHooperIndex from "@/components/privateData/playerHooperIndex";
+import { cls } from "@/utils";
+import Api from "@/api/privateData";
+import { playerDetailRowTitle } from "@/constants/mock/privateData";
+import {
+  PlayerTotalInfoType,
+  PlayerMonthDataType,
+  PrivateTableRowType,
+  PlayerInfoType,
+} from "@/types/privateData";
+import { getDateFormatMonthDay } from "@/utils/dateFormat";
 
 const PrivateDataDetail: NextPage = () => {
   const router = useRouter();
-  const [page, setPage] = useState(0);
-
-  const data = [
-    {
-      name: "dh",
-      age: 23,
-      tel: "010-1234-1234",
-      height: 180,
-      weight: 72,
-      position: "미드필더",
-      belongto: "1군",
-    },
-    {
-      name: "mike",
-      age: 23,
-      tel: "010-1234-1234",
-      height: 180,
-      weight: 72,
-      position: "미드필더",
-      belongto: "1군",
-    },
-  ];
-
-  // 열 항목
-  let columnData = [
-    {
-      Header: "선수이름",
-      accessor: "name",
-      Cell: ({ value }: any) => (value ? value : "-"),
-    },
-    {
-      Header: "나이",
-      accessor: "age",
-      Cell: ({ value }: any) => (value ? value : "-"),
-    },
-    {
-      Header: "전화번호",
-      accessor: "tel",
-      Cell: ({ value }: any) => (value ? value : "-"),
-    },
-    {
-      Header: "키(cm)",
-      accessor: "height",
-      Cell: ({ value }: any) => (value ? value : "-"),
-    },
-    {
-      Header: "몸무게(kg)",
-      accessor: "weight",
-      Cell: ({ value }: any) => (value ? value : "-"),
-    },
-    {
-      Header: "포지션",
-      accessor: "position",
-      Cell: ({ value }: any) => (value ? value : "-"),
-    },
-    {
-      Header: "소속",
-      accessor: "belongto",
-      Cell: ({ value }: any) => (value ? value : "-"),
-    },
-  ];
-
-  const columns = useMemo(() => columnData, []);
+  const { id } = router.query;
+  const [page, setPage] = useState<number>(0);
+  const [searchYear, setSearchYear] = useState<Date | null>(new Date());
+  const [userInfo, setUserInfo] = useState<PlayerInfoType>({
+    userId: 0,
+    profile: "",
+    name: "가선수",
+    positions: ["미드필더"],
+    importantYn: false,
+  });
+  const [totalInfo, setTotalInfo] = useState<PlayerTotalInfoType>();
+  const [monthData, setMonthData] = useState<PlayerMonthDataType[]>([]);
 
   // pagination
   const itemPerPage = 10;
-  const totalItems = data?.length;
+  const totalItems = 10; // data length
   const { currentPage, totalPages, currentItems, handlePageChange } =
     usePagination((page) => setPage(page), itemPerPage, totalItems);
 
@@ -91,34 +51,185 @@ const PrivateDataDetail: NextPage = () => {
     }
   };
 
-  const handleRowClick = (id: number) => (e: MouseEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    console.log(id);
+  const getPlayerDetail = async () => {
+    await Api.v1GetPlayerDetail(Number(id), "2023-12").then((res) => {
+      const { content } = res.data;
+      if (content.length > 0) {
+        setUserInfo({ ...content[0]?.userSimpleInfo });
+        setTotalInfo({ ...content[0]?.totalInfo });
+        setMonthData([...content[0]?.dataList]);
+      }
+    });
+  };
+
+  const getTotalResult = (
+    data: PlayerTotalInfoType,
+    key: string,
+    word: string
+  ) => {
+    let result = null;
+    Object.keys(data).find((item) => {
+      if (item.startsWith(key) && item.includes(word)) {
+        result = Number(data[item]).toFixed(1);
+        return true;
+      }
+      return false;
+    });
+    return result || "-";
+  };
+
+  useEffect(() => {
+    getPlayerDetail();
+  }, [searchYear]);
+
+  const TableRow = ({ column, data }: PrivateTableRowType) => {
+    const key = column?.key;
+    if (!key) return null;
+
+    return (
+      <td className="py-[20px] text-[14px] whitespace-normal">
+        <div>
+          <span>
+            {data[key.toString()] !== undefined ? data[key.toString()] : "-"}
+          </span>
+        </div>
+      </td>
+    );
   };
 
   return (
-    <Layout>
-      <h1 className="text-[28px] font-[700]">
-        개인 데이터 _ <span className="text-[18px ]">가선수(미드필더)</span>
-      </h1>
-      <Search />
-      <div className="bg-white py-4 my-4 px-4 rounded-[4px]">
-        <Table
-          columns={columns}
-          data={data || []}
-          onClickRow={handleRowClick}
-          isSelectedCheckbox={true}
-        />
-        <Pagination
-          currentPage={currentPage}
-          totalPage={totalPages}
-          onPageChange={handlePageChange}
-          setPage={setPage}
-          next={next}
-          prev={prev}
-        />
-      </div>
-    </Layout>
+    <div className="min-w-[1750px]">
+      <Layout>
+        <div className="flex space-x-2">
+          <h1 className="text-[28px] font-[700]">
+            개인 데이터 _{" "}
+            <span className="text-[20px]">
+              {userInfo.name}({userInfo.positions?.join(", ")})
+            </span>
+          </h1>
+          {userInfo.importantYn ? (
+            <Image
+              src="/images/star_checked.svg"
+              width={0}
+              height={0}
+              alt="like button"
+              style={{ width: "30px", height: "auto" }}
+            />
+          ) : (
+            <Image
+              src="/images/star_unchecked.svg"
+              width={0}
+              height={0}
+              alt="like button"
+              style={{ width: "30px", height: "auto" }}
+            />
+          )}
+        </div>
+        <div className="flex items-center justify-end">
+          <DatePickerComponent
+            calendarType="yearMonth"
+            changeYear={setSearchYear}
+          />
+        </div>
+        <div className="bg-white py-4 my-4 px-4 rounded-[4px]">
+          {monthData.length !== 0 ? (
+            <>
+              <table className="w-full">
+                <thead>
+                  <tr>
+                    <th></th>
+                    <th className={cls("py-[20px] text-[14px] bg-[#eefdd3]")}>
+                      <div>
+                        <span>전체평균</span>
+                      </div>
+                    </th>
+                    <th className={cls("py-[20px] text-[14px] bg-[#eefdd3]")}>
+                      <div>
+                        <span>전체평균오차</span>
+                      </div>
+                    </th>
+                    <th className={cls("py-[20px] text-[14px] bg-[#eefdd3]")}>
+                      <div>
+                        <span>지난 30일 평균</span>
+                      </div>
+                    </th>
+                    {monthData.map((data, idx) => {
+                      return (
+                        <th
+                          key={`column${idx}`}
+                          className={cls("py-[20px] text-[14px]")}
+                        >
+                          <div>
+                            <span>
+                              {getDateFormatMonthDay(new Date(data.date))}
+                            </span>
+                          </div>
+                        </th>
+                      );
+                    })}
+                  </tr>
+                </thead>
+                <tbody className="text-center divide-y-[1px]">
+                  {playerDetailRowTitle.map((row, idx) => {
+                    return (
+                      <tr
+                        key={row.key}
+                        className="cursor-pointer transition-colors"
+                      >
+                        <td className="py-[20px] text-[14px] whitespace-normal">
+                          {row.value}
+                        </td>
+                        <td className="py-[20px] text-[14px] whitespace-normal bg-[#eefdd3]">
+                          {totalInfo
+                            ? getTotalResult(totalInfo, row.key, "TotalAvg")
+                            : "-"}
+                        </td>
+                        <td className="py-[20px] text-[14px] whitespace-normal bg-[#eefdd3]">
+                          {totalInfo
+                            ? getTotalResult(totalInfo, row.key, "TotalStdDev")
+                            : "-"}
+                        </td>
+                        <td className="py-[20px] text-[14px] whitespace-normal bg-[#eefdd3]">
+                          {totalInfo
+                            ? getTotalResult(
+                                totalInfo,
+                                row.key,
+                                "Last30MonthAvg"
+                              )
+                            : "-"}
+                        </td>
+                        {monthData.map((rowData, index) => {
+                          return (
+                            <TableRow
+                              key={`rowData${idx}${index}`}
+                              column={row}
+                              data={rowData}
+                            />
+                          );
+                        })}
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+              <Pagination
+                currentPage={currentPage}
+                totalPage={totalPages}
+                onPageChange={handlePageChange}
+                setPage={setPage}
+                next={next}
+                prev={prev}
+              />
+              <PlayerHooperIndex />
+            </>
+          ) : (
+            <div className="flex items-center justify-center w-full py-10 font-bold">
+              데이터가 없습니다.
+            </div>
+          )}
+        </div>
+      </Layout>
+    </div>
   );
 };
 

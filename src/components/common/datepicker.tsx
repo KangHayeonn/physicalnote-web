@@ -69,6 +69,35 @@ const DatePickerComponent = ({
     );
   }
 
+  if (calendarType === "yearMonth") {
+    return (
+      <div className="calendar-wrapper">
+        <DatePicker
+          showIcon
+          toggleCalendarOnIconClick
+          icon={
+            <Image
+              src="/images/arrow_down.svg"
+              width={0}
+              height={0}
+              alt="Clock Icon"
+              className="calendar-icon"
+              style={{ width: "100%", height: "auto" }}
+            />
+          }
+          showMonthYearPicker
+          locale={ko}
+          maxDate={today}
+          selected={year}
+          dateFormat="yyyy년 MM월"
+          onChange={(date) => {
+            setYear(date);
+          }}
+        />
+      </div>
+    );
+  }
+
   if (calendarType === "year") {
     return (
       <div className="calendar-wrapper">
@@ -87,7 +116,7 @@ const DatePickerComponent = ({
           }
           showYearPicker
           locale={ko}
-          maxDate={tomorrow}
+          maxDate={today}
           selected={year}
           dateFormat="yyyy"
           onChange={(date) => {

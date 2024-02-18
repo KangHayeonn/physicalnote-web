@@ -1,6 +1,7 @@
 .calendar-wrapper {
   width: 127px;
   position: relative;
+  margin-right: 50px;
 }
 
 .calendar-icon {
@@ -237,4 +238,8 @@
 
 .react-datepicker__navigation--next {
   top: 8px !important;
+}
+
+.react-datepicker-popper {
+  width: 240px;
 }

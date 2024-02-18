@@ -64,7 +64,7 @@ const Table = ({
                           src="/images/star_checked.svg"
                           width={0}
                           height={0}
-                          alt="unlike button"
+                          alt="like button"
                           style={{ width: "18px", height: "auto" }}
                         />
                       ) : (
