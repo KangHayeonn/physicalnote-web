@@ -118,7 +118,7 @@ const PrivateDataDetail: NextPage = () => {
   };
 
   return (
-    <div className="min-w-[1750px]">
+    <div className="min-w-[1900px]">
       <Layout>
         <div className="flex space-x-2">
           <h1 className="text-[28px] font-[700]">

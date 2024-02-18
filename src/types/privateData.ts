@@ -96,3 +96,11 @@ export interface PlayerInfoType {
   positions: Array<string>;
   importantYn: boolean;
 }
+
+export interface PlayerHooperIndexType {
+  hooperIndex12: number;
+  hooperIndex34: number;
+  hooperIndex56: number;
+  hooperIndex78: number;
+  hooperIndex910: number;
+}
