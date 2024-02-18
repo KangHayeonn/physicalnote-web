@@ -10,6 +10,7 @@ import { MouseEvent, useMemo, useState } from "react";
 const PrivateData: NextPage = () => {
   const router = useRouter();
   const [page, setPage] = useState(0);
+  const [isChecked, setIsChecked] = useState<boolean>(true);
 
   const data = [
     {
@@ -107,7 +108,7 @@ const PrivateData: NextPage = () => {
           columns={columns}
           data={data || []}
           onClickRow={handleRowClick}
-          isSelectedCheckbox={true}
+          isSelectedCheckbox={isChecked}
         />
         <Pagination
           currentPage={currentPage}

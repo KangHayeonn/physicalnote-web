@@ -1,37 +1,22 @@
-import React, { MouseEvent, forwardRef, useEffect, useState } from "react";
-import { useTable, Column, useRowSelect } from "react-table";
+import React, { useState } from "react";
+import Image from "next/image";
 import { cls } from "@/utils";
 import { useRecoilState } from "recoil";
+import { PrivateDataType } from "@/types/privateData";
+import { TableType, TableRowType } from "@/types/common";
 
-export interface Data {
-  id?: number;
-  name?: string;
-  age?: number;
-  tel?: string;
-}
-
-interface TableProps {
-  columns: Column[];
-  data: Data[];
-  onClickRow?: (id: number) => (e: MouseEvent<HTMLDivElement>) => void;
-  isSelectedCheckbox?: boolean;
-  onSelect?: (selectedRows: any) => void;
-}
-
-const Checkbox = React.forwardRef(({ indeterminate, ...rest }, ref) => {
-  const defaultRef = React.useRef();
-  const resolvedRef = ref || defaultRef;
-
-  React.useEffect(() => {
-    resolvedRef.current.indeterminate = indeterminate;
-  }, [resolvedRef, indeterminate]);
+const TableRow = ({ column, data }: TableRowType) => {
+  const accessor = column?.accessor;
+  if (!accessor) return null;
 
   return (
-    <>
-      <input type="checkbox" ref={resolvedRef} {...rest} />
-    </>
+    <td className="py-[20px] text-[14px] whitespace-normal ">
+      <div>
+        <span>{data[accessor.toString()] || "-"}</span>
+      </div>
+    </td>
   );
-});
+};
 
 const Table = ({
   columns,
@@ -39,133 +24,73 @@ const Table = ({
   onClickRow,
   isSelectedCheckbox,
   onSelect,
-}: TableProps) => {
-  // const [expandedRows, setExpandedRows] = useState<number[]>([]);
-
-  const {
-    getTableProps,
-    getTableBodyProps,
-    headerGroups,
-    rows,
-    prepareRow,
-    selectedFlatRows,
-  } = useTable({ columns, data }, useRowSelect, (hooks) => {
-    hooks.visibleColumns.push((columns) => {
-      if (isSelectedCheckbox) {
-        return [
-          {
-            id: "selection",
-            Header: ({ getToggleAllRowsSelectedProps }) => (
-              <Checkbox {...getToggleAllRowsSelectedProps()} />
-            ),
-            Cell: ({ row }) => (
-              <Checkbox
-                {...row.getToggleRowSelectedProps()}
-                onClick={(e) => {
-                  e.stopPropagation();
-                }}
-              />
-            ),
-          },
-          ...columns,
-        ];
-      }
-      return columns;
-    });
-  });
-
-  useEffect(() => {
-    if (onSelect) {
-      onSelect(selectedFlatRows.map((row) => row.original.id));
-    }
-  }, [selectedFlatRows]);
-
-  // 토글 아코디언
-  // const onToggleRow = (id: number) => {
-  //   const isRowExpanded = expandedRows.includes(id);
-  //   if (isRowExpanded) {
-  //     setExpandedRows(expandedRows.filter((rowId) => rowId !== id));
-  //   } else {
-  //     setExpandedRows([...expandedRows, id]);
-  //   }
-  // };
+}: TableType) => {
+  const [isChecked, setIsChecked] = useState<boolean>(false);
 
   return (
     <>
       {data.length !== 0 ? (
-        <table className="w-full" {...getTableProps()}>
+        <table className="w-full">
           <thead>
-            {headerGroups.map((headerGroup) => (
-              <tr {...headerGroup.getHeaderGroupProps()}>
-                {headerGroup.headers.map((column) => (
-                  <th
-                    className={cls("py-[20px] text-[14px]")}
-                    {...column.getHeaderProps()}
-                  >
-                    <div className="flex items-center justify-center">
-                      <span>{column.render("Header")}</span>
-                    </div>
-                  </th>
-                ))}
-              </tr>
-            ))}
+            <tr>
+              {isSelectedCheckbox ? <th></th> : null}
+              {columns.map((column, idx) => (
+                <th
+                  key={`column${idx}`}
+                  className={cls("py-[20px] text-[14px]")}
+                >
+                  <div className="flex items-center justify-center">
+                    <span>{column.Header?.toString()}</span>
+                  </div>
+                </th>
+              ))}
+            </tr>
           </thead>
-          <tbody
-            className="text-center divide-y-[1px]"
-            {...getTableBodyProps()}
-          >
-            {rows.map((row) => {
-              prepareRow(row);
+          <tbody className="text-center divide-y-[1px]">
+            {data.map((item, idx) => {
               // const isRowExpanded = expandedRows.includes(row.values.id);
               return (
-                <>
-                  <tr
-                    onClick={onClickRow(row.original.id)}
-                    className="cursor-pointer hover:bg-gray-100 transition-colors"
-                    {...row.getRowProps()}
-                  >
-                    {row.cells.map((cell) => {
-                      return (
-                        <td
-                          className="py-[20px] text-[14px] whitespace-normal "
-                          {...cell.getCellProps()}
-                        >
-                          <div>
-                            <span>{cell.render("Cell")}</span>
-                          </div>
-                        </td>
-                      );
-                    })}
-                  </tr>
-                  {/* {isRowExpanded && (
-                    <tr key={`expanded_${row.values.id}`}>
-                      <td colSpan={columns.length}>
-                        <div className="p-4 w-full">
-                          {row.values.type === "GENERAL" && (
-                            <ExpGeneralTable queryId={row.values.id} />
-                          )}
-                          {row.values.type === "PRESCRIPTION" && (
-                            <ExpPriscriptionTable queryId={row.values.id} />
-                          )}
-                        </div>
-                      </td>
-                    </tr>
-                  )} */}
-                </>
+                <tr
+                  key={`data${idx}`}
+                  onClick={onClickRow && onClickRow(Number(item.id))}
+                  className="cursor-pointer hover:bg-[#eefdd3] transition-colors"
+                >
+                  {isSelectedCheckbox && (
+                    <td className="py-[20px] text-[14px] whitespace-normal ">
+                      <div>
+                        {isChecked ? (
+                          <Image
+                            src="/images/star_checked.svg"
+                            width={0}
+                            height={0}
+                            alt="unlike button"
+                            style={{ width: "18px", height: "auto" }}
+                          />
+                        ) : (
+                          <Image
+                            src="/images/star_unchecked.svg"
+                            width={0}
+                            height={0}
+                            alt="unlike button"
+                            style={{ width: "18px", height: "auto" }}
+                          />
+                        )}
+                      </div>
+                    </td>
+                  )}
+                  {columns.map((col, index) => {
+                    return (
+                      <TableRow
+                        key={`rowData${idx}${index}`}
+                        column={col}
+                        data={item}
+                      />
+                    );
+                  })}
+                </tr>
               );
             })}
           </tbody>
-          {/* <pre>
-            <code>
-              {JSON.stringify(
-                {
-                  데이터: selectedFlatRows.map((row) => row.original),
-                },
-                null,
-                2
-              )}
-            </code>
-          </pre> */}
         </table>
       ) : (
         <div className="flex items-center justify-center w-full py-10 font-bold">
