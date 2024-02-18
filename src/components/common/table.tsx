@@ -1,8 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 import Image from "next/image";
 import { cls } from "@/utils";
-import { useRecoilState } from "recoil";
-import { PrivateDataType } from "@/types/privateData";
 import { TableType, TableRowType } from "@/types/common";
 
 const TableRow = ({ column, data, onClick }: TableRowType) => {
@@ -25,11 +23,8 @@ const Table = ({
   isSelectedCheckbox,
   onSelect,
 }: TableType) => {
-  const [isChecked, setIsChecked] = useState<boolean>(false);
-
   const isCheckImport = (id: number, e: React.MouseEvent<HTMLDivElement>) => {
     if (onSelect) onSelect(id, e);
-    setIsChecked(!isChecked);
   };
 
   return (
@@ -64,7 +59,7 @@ const Table = ({
                       className="py-[20px] text-[14px] whitespace-normal"
                       onClick={(e) => isCheckImport(item.id, e)}
                     >
-                      {isChecked ? (
+                      {item.importantYn ? (
                         <Image
                           src="/images/star_checked.svg"
                           width={0}

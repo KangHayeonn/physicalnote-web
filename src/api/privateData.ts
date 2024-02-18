@@ -14,6 +14,15 @@ const PrivateData = {
       return Promise.reject(err);
     }
   },
+  async v1UpdateImportantPlayer(playerId: number) {
+    try {
+      const url = `${prefix}/team/important/${playerId}`;
+      const result = await instanceWithToken.post(url);
+      return result;
+    } catch (err) {
+      return Promise.reject(err);
+    }
+  },
 };
 
 export default PrivateData;

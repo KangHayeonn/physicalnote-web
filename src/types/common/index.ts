@@ -4,6 +4,7 @@ import { PrivateDataType } from "@/types/privateData";
 export interface SearchProps {
   title?: string;
   onClickSubmit: () => void;
+  resetPage?: () => void;
 }
 
 export interface ValidType {

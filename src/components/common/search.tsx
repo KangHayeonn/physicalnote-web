@@ -14,7 +14,7 @@ import {
   searchKeywordState,
 } from "@/recoil/search/searchState";
 
-const Search = ({ title, onClickSubmit }: SearchProps) => {
+const Search = ({ title, onClickSubmit, resetPage }: SearchProps) => {
   const router = useRouter();
   const [searchGrader, setSearchGrader] = useRecoilState(
     searchPlayerGraderState
@@ -45,6 +45,7 @@ const Search = ({ title, onClickSubmit }: SearchProps) => {
   const handleSubmit = (e: React.FormEvent<HTMLButtonElement>) => {
     e.preventDefault();
     onClickSubmit();
+    if (resetPage) resetPage();
   };
 
   useEffect(() => {

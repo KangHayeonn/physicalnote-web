@@ -18,10 +18,11 @@ import {
   PlayersRequestType,
   PlayersResponseType,
 } from "@/types/privateData";
+import { showToast } from "@/utils";
 
 const PrivateData: NextPage = () => {
   const router = useRouter();
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState<number>(0);
   const [isChecked, setIsChecked] = useState<boolean>(true);
   const [data, setData] = useState<PrivateDataType[]>([]);
   const [totalLen, setTotalLen] = useState<number>(0);
@@ -62,7 +63,6 @@ const PrivateData: NextPage = () => {
 
   const columns = useMemo(() => columnData, []);
 
-  // pagination
   const itemPerPage = 10;
   const totalItems = totalLen;
   const { currentPage, totalPages, currentItems, handlePageChange } =
@@ -82,12 +82,32 @@ const PrivateData: NextPage = () => {
     getPrivateList();
   };
 
-  const handleImportantCheck = (
+  // 중요 선수 등록/삭제 (즐겨찾기)
+  const handleImportantCheck = async (
     id: number,
     e: React.MouseEvent<HTMLDivElement>
   ) => {
     e.preventDefault();
-    // todo : 중요 선수 등록/삭제 api (id)
+    setData((prevData) =>
+      prevData.map((item) => {
+        if (item.id === id) {
+          return { ...item, importantYn: !item.importantYn };
+        }
+
+        return item;
+      })
+    );
+
+    await Api.v1UpdateImportantPlayer(id).then((res) => {
+      const { status, data } = res;
+      if (status === 200) {
+        if (data.importantYn) {
+          showToast("즐겨찾기로 등록되었습니다.");
+        } else {
+          showToast("즐겨찾기가 해제되었습니다.");
+        }
+      }
+    });
   };
 
   const handleRowClick =
@@ -114,7 +134,11 @@ const PrivateData: NextPage = () => {
 
         content.map((item: PlayersResponseType) => {
           const grade =
-            item.playerGrade === "FIRST" ? "1군" : "SECOND" ? "2군" : "부상자";
+            item.playerGrade === "FIRST"
+              ? "1군"
+              : item.playerGrade === "SECOND"
+                ? "2군"
+                : "부상자";
           tempData.push({
             position: item.positions.join(", "),
             belongto: grade,
@@ -128,6 +152,10 @@ const PrivateData: NextPage = () => {
     );
   };
 
+  const resetPage = () => {
+    handlePageChange(0);
+  };
+
   useEffect(() => {
     getPrivateList();
   }, [page]);
@@ -135,7 +163,7 @@ const PrivateData: NextPage = () => {
   return (
     <Layout>
       <h1 className="text-[28px] font-[700]">개인 데이터</h1>
-      <Search onClickSubmit={getPrivateList} />
+      <Search onClickSubmit={getPrivateList} resetPage={resetPage} />
       <div className="bg-white py-4 my-4 px-4 rounded-[4px]">
         <Table
           columns={columns}

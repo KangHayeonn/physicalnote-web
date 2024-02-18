@@ -6,7 +6,7 @@ export interface PrivateDataType {
   height?: number;
   weight?: number;
   position?: string;
-  playerGrade?: string;
+  belongto?: string;
   importantYn?: boolean;
   [key: string]: any;
 }
