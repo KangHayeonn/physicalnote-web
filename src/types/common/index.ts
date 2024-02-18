@@ -3,6 +3,7 @@ import { PrivateDataType } from "@/types/privateData";
 
 export interface SearchProps {
   title?: string;
+  onClickSubmit: () => void;
 }
 
 export interface ValidType {
@@ -30,10 +31,13 @@ export interface TableType {
   data: PrivateDataType[];
   onClickRow?: (id: number) => (e: React.MouseEvent<HTMLDivElement>) => void;
   isSelectedCheckbox?: boolean;
-  onSelect?: (selectedRows: any) => void;
+  onSelect?: (id: number, e: React.MouseEvent<HTMLDivElement>) => void;
 }
 
 export interface TableRowType {
   column: Column;
   data: PrivateDataType;
+  onClick:
+    | ((e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void)
+    | undefined;
 }

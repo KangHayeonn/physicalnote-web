@@ -26,9 +26,9 @@ const DropDown = ({
     }
   };
 
-  const changeItem = (item: string) => {
-    setTitle(item);
-    if (changeText) changeText(item);
+  const changeItem = (item: SearchCategoryType) => {
+    setTitle(item.value);
+    if (changeText) changeText(item.key);
     setIsOpen(false);
   };
 
@@ -67,7 +67,7 @@ const DropDown = ({
             return (
               <div
                 key={item.key}
-                onClick={() => changeItem(item.value)}
+                onClick={() => changeItem(item)}
                 className="flex justify-center text-[15px] text-[#000] px-[5px] py-[7px] hover:bg-[#C6E19B]"
               >
                 {item.value}

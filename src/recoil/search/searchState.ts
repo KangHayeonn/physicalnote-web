@@ -2,7 +2,7 @@ import { atom } from "recoil";
 
 const searchPlayerGraderState = atom<string>({
   key: "searchPlayerGrader",
-  default: "전체",
+  default: "ALL",
 });
 
 const searchCategoryState = atom<string>({

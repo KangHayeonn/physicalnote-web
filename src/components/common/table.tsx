@@ -5,12 +5,12 @@ import { useRecoilState } from "recoil";
 import { PrivateDataType } from "@/types/privateData";
 import { TableType, TableRowType } from "@/types/common";
 
-const TableRow = ({ column, data }: TableRowType) => {
+const TableRow = ({ column, data, onClick }: TableRowType) => {
   const accessor = column?.accessor;
   if (!accessor) return null;
 
   return (
-    <td className="py-[20px] text-[14px] whitespace-normal ">
+    <td className="py-[20px] text-[14px] whitespace-normal" onClick={onClick}>
       <div>
         <span>{data[accessor.toString()] || "-"}</span>
       </div>
@@ -26,6 +26,11 @@ const Table = ({
   onSelect,
 }: TableType) => {
   const [isChecked, setIsChecked] = useState<boolean>(false);
+
+  const isCheckImport = (id: number, e: React.MouseEvent<HTMLDivElement>) => {
+    if (onSelect) onSelect(id, e);
+    setIsChecked(!isChecked);
+  };
 
   return (
     <>
@@ -52,30 +57,30 @@ const Table = ({
               return (
                 <tr
                   key={`data${idx}`}
-                  onClick={onClickRow && onClickRow(Number(item.id))}
                   className="cursor-pointer hover:bg-[#eefdd3] transition-colors"
                 >
                   {isSelectedCheckbox && (
-                    <td className="py-[20px] text-[14px] whitespace-normal ">
-                      <div>
-                        {isChecked ? (
-                          <Image
-                            src="/images/star_checked.svg"
-                            width={0}
-                            height={0}
-                            alt="unlike button"
-                            style={{ width: "18px", height: "auto" }}
-                          />
-                        ) : (
-                          <Image
-                            src="/images/star_unchecked.svg"
-                            width={0}
-                            height={0}
-                            alt="unlike button"
-                            style={{ width: "18px", height: "auto" }}
-                          />
-                        )}
-                      </div>
+                    <td
+                      className="py-[20px] text-[14px] whitespace-normal"
+                      onClick={(e) => isCheckImport(item.id, e)}
+                    >
+                      {isChecked ? (
+                        <Image
+                          src="/images/star_checked.svg"
+                          width={0}
+                          height={0}
+                          alt="unlike button"
+                          style={{ width: "18px", height: "auto" }}
+                        />
+                      ) : (
+                        <Image
+                          src="/images/star_unchecked.svg"
+                          width={0}
+                          height={0}
+                          alt="unlike button"
+                          style={{ width: "18px", height: "auto" }}
+                        />
+                      )}
                     </td>
                   )}
                   {columns.map((col, index) => {
@@ -84,6 +89,7 @@ const Table = ({
                         key={`rowData${idx}${index}`}
                         column={col}
                         data={item}
+                        onClick={onClickRow && onClickRow(Number(item.id))}
                       />
                     );
                   })}

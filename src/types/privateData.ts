@@ -1,11 +1,30 @@
 export interface PrivateDataType {
-  id?: number;
+  id: number;
   name?: string;
   age?: number;
-  tel?: string;
+  phone?: string;
   height?: number;
   weight?: number;
   position?: string;
-  belongto?: string;
+  playerGrade?: string;
+  importantYn?: boolean;
   [key: string]: any;
+}
+
+export interface PlayersRequestType {
+  playerGrade?: string;
+  name?: string;
+  position?: string;
+}
+
+export interface PlayersResponseType {
+  id: number;
+  name: string;
+  age: number;
+  phone: string;
+  height: number;
+  weight: number;
+  positions: Array<string>;
+  playerGrade: string;
+  importantYn: boolean;
 }
