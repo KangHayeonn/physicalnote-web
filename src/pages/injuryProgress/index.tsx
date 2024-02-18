@@ -3,7 +3,11 @@ import { NextPage } from "next";
 import Layout from "@/components/layout";
 import AxisWithComposition from "@/components/common/axisWithComposition";
 import DatePickerComponent from "@/components/common/datepicker";
-import { xAxisData, seriesData, yAxisIds } from "@/constants/injuryProgress";
+import {
+  xAxisData,
+  seriesData,
+  yAxisIds,
+} from "@/constants/mock/injuryProgress";
 import Api from "@/api/injuryProgress";
 import { injuryProgressResponseType } from "@/types/injuryProgress";
 import { SeriesDataType } from "@/types/chart";

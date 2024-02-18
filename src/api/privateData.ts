@@ -23,6 +23,31 @@ const PrivateData = {
       return Promise.reject(err);
     }
   },
+  async v1GetPlayerDetail(
+    playerId: number,
+    yearMonth: string,
+    page: number,
+    size: number
+  ) {
+    try {
+      const url = `${prefix}/player/${playerId}/data`;
+      const result = await instanceWithToken.get(url, {
+        params: { yearMonth, page, size },
+      });
+      return result;
+    } catch (err) {
+      return Promise.reject(err);
+    }
+  },
+  async v1GetPlayerHooperIndex(playerId: number) {
+    try {
+      const url = `${prefix}/player/${playerId}/intensity_hooperIndex`;
+      const result = await instanceWithToken.get(url);
+      return result;
+    } catch (err) {
+      return Promise.reject(err);
+    }
+  },
 };
 
 export default PrivateData;
