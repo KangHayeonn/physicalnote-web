@@ -23,11 +23,16 @@ const PrivateData = {
       return Promise.reject(err);
     }
   },
-  async v1GetPlayerDetail(playerId: number, yearMonth: string) {
+  async v1GetPlayerDetail(
+    playerId: number,
+    yearMonth: string,
+    page: number,
+    size: number
+  ) {
     try {
       const url = `${prefix}/player/${playerId}/data`;
       const result = await instanceWithToken.get(url, {
-        params: { yearMonth },
+        params: { yearMonth, page, size },
       });
       return result;
     } catch (err) {

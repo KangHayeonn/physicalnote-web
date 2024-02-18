@@ -243,3 +243,15 @@
 .react-datepicker-popper {
   width: 240px;
 }
+
+.react-datepicker__month-text--keyboard-selected {
+  color: #fff !important;
+  background-color: #8dbe3d !important;
+  border-radius: 50%;
+}
+
+.react-datepicker__month-text:hover {
+  border-radius: 50%;
+  background-color: #c6e19b !important;
+  color: #fff;
+}

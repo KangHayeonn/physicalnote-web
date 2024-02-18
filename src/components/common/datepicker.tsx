@@ -10,6 +10,7 @@ interface CalendarProps {
   changeDate?: React.Dispatch<React.SetStateAction<Date | null>> | undefined;
   changeTime?: React.Dispatch<React.SetStateAction<Date | null>> | undefined;
   changeYear?: React.Dispatch<React.SetStateAction<Date | null>> | undefined;
+  onClick?: () => void;
 }
 
 const DatePickerComponent = ({
@@ -17,6 +18,7 @@ const DatePickerComponent = ({
   changeDate,
   changeTime,
   changeYear,
+  onClick,
 }: CalendarProps) => {
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [time, setTime] = useState<Date | null>(null);
@@ -35,6 +37,7 @@ const DatePickerComponent = ({
 
   useEffect(() => {
     if (changeYear) changeYear(year);
+    if (onClick) onClick();
   }, [changeYear, year]);
 
   if (calendarType === "time") {

@@ -16,13 +16,14 @@ import {
   PrivateTableRowType,
   PlayerInfoType,
 } from "@/types/privateData";
-import { getDateFormatMonthDay } from "@/utils/dateFormat";
+import { getDateFormatMonthDay, getDateToString } from "@/utils/dateFormat";
 import Button from "@/components/common/button";
 
 const PrivateDataDetail: NextPage = () => {
   const router = useRouter();
   const { id } = router.query;
   const [page, setPage] = useState<number>(0);
+  const [totalLen, setTotalLen] = useState<number>(0);
   const [searchYear, setSearchYear] = useState<Date | null>(new Date());
   const [userInfo, setUserInfo] = useState<PlayerInfoType>({
     userId: 0,
@@ -36,7 +37,7 @@ const PrivateDataDetail: NextPage = () => {
 
   // pagination
   const itemPerPage = 10;
-  const totalItems = 10; // data length
+  const totalItems = totalLen; // data length
   const { currentPage, totalPages, currentItems, handlePageChange } =
     usePagination((page) => setPage(page), itemPerPage, totalItems);
 
@@ -44,21 +45,29 @@ const PrivateDataDetail: NextPage = () => {
     if (currentPage + 1 < totalPages) {
       handlePageChange(currentPage + 1);
     }
+    getPlayerDetail();
   };
 
   const prev = () => {
     if (currentPage > 0) {
       handlePageChange(currentPage - 1);
     }
+    getPlayerDetail();
   };
 
   const getPlayerDetail = async () => {
-    await Api.v1GetPlayerDetail(Number(id), "2023-12").then((res) => {
-      const { content } = res.data;
+    await Api.v1GetPlayerDetail(
+      Number(id),
+      getDateToString(searchYear || new Date()),
+      currentPage,
+      itemPerPage
+    ).then((res) => {
+      const { content, totalElements } = res.data;
       if (content.length > 0) {
         setUserInfo({ ...content[0]?.userSimpleInfo });
         setTotalInfo({ ...content[0]?.totalInfo });
         setMonthData([...content[0]?.dataList]);
+        setTotalLen(totalElements);
       }
     });
   };
@@ -83,9 +92,15 @@ const PrivateDataDetail: NextPage = () => {
     router.back();
   };
 
+  const resetPage = () => {
+    handlePageChange(0);
+  };
+
   useEffect(() => {
-    getPlayerDetail();
-  }, [searchYear]);
+    if (id) {
+      getPlayerDetail();
+    }
+  }, [searchYear, page]);
 
   const TableRow = ({ column, data }: PrivateTableRowType) => {
     const key = column?.key;
@@ -134,6 +149,7 @@ const PrivateDataDetail: NextPage = () => {
           <DatePickerComponent
             calendarType="yearMonth"
             changeYear={setSearchYear}
+            onClick={resetPage}
           />
         </div>
         <div className="bg-white py-4 my-4 px-4 rounded-[4px]">
