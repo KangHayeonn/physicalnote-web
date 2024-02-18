@@ -17,6 +17,7 @@ import {
   PlayerInfoType,
 } from "@/types/privateData";
 import { getDateFormatMonthDay } from "@/utils/dateFormat";
+import Button from "@/components/common/button";
 
 const PrivateDataDetail: NextPage = () => {
   const router = useRouter();
@@ -76,6 +77,10 @@ const PrivateDataDetail: NextPage = () => {
       return false;
     });
     return result || "-";
+  };
+
+  const goBack = () => {
+    router.back();
   };
 
   useEffect(() => {
@@ -221,6 +226,14 @@ const PrivateDataDetail: NextPage = () => {
                 prev={prev}
               />
               <PlayerHooperIndex />
+              <div className="flex items-center justify-end py-8">
+                <Button
+                  type="button"
+                  text="뒤로가기"
+                  classnames="text-[#8DBE3D] text-[12px] font-[700]"
+                  onClick={goBack}
+                />
+              </div>
             </>
           ) : (
             <div className="flex items-center justify-center w-full py-10 font-bold">
