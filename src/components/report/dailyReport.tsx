@@ -102,7 +102,6 @@ const DailyReport = () => {
   const handleRowClick =
     (id: number) => (e: React.MouseEvent<HTMLDivElement>) => {
       e.preventDefault();
-      console.log(id);
     };
 
   const columns = useMemo(() => columnData, []);
