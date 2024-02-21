@@ -30,6 +30,7 @@ export const seriesData: SeriesDataType[] = [
   },
   {
     type: "line",
+    curve: "linear",
     yAxisKey: "totalCount",
     data: [1, 6, 4, 5],
     color: "#FF0000",

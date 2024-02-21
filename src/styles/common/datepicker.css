@@ -1,5 +1,5 @@
 .calendar-wrapper {
-  width: 127px;
+  width: 150px;
   position: relative;
   margin-right: 50px;
 }
@@ -46,7 +46,7 @@
 }
 
 .react-datepicker__input-container > input {
-  width: 127px;
+  width: 150px;
   height: 28px;
   font-size: 13px;
   font-weight: 700;

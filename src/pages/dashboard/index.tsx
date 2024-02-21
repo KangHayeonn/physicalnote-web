@@ -3,7 +3,8 @@ import Layout from "@/components/layout";
 import { Box, Slider, styled } from "@mui/material";
 import Item from "@/components/common/item";
 import AxisWithComposition from "@/components/common/axisWithComposition";
-import Search from "@/components/common/search";
+import Button from "@/components/common/button";
+import DatePickerComponent from "@/components/common/datepicker";
 import {
   BarChart,
   BarPlot,
@@ -11,6 +12,7 @@ import {
   LineChart,
   ResponsiveChartContainer,
 } from "@mui/x-charts";
+import { xAxisData, seriesData } from "@/constants/mock/injuryProgress";
 
 const PrettoSlider = styled(Slider)({
   color: "#52af77",
@@ -133,9 +135,9 @@ const Dashboard: NextPage = () => {
   };
 
   // X축 데이터와 seriesData를 생성합니다.
-  const xAxisData = [];
-  const seriesData = [];
-
+  // const xAxisData: Array<string> = [];
+  // const seriesData: any = [];
+  /*
   Object.keys(monthsData).forEach((month) => {
     const monthData = monthsData[month];
 
@@ -143,11 +145,10 @@ const Dashboard: NextPage = () => {
       xAxisData.push(`${month}-${i}주차`);
     }
 
-    monthData.forEach((data) => {
+    monthData.forEach((data: any) => {
       data.data.forEach((weekData, i) => {
         seriesData.push({
           type: data.type,
-          curve: data.curve,
           yAxisKey: data.yAxisKey,
           data: [weekData],
           name: `${month}-${i + 1}주차`,
@@ -155,42 +156,14 @@ const Dashboard: NextPage = () => {
         });
       });
     });
-  });
+  });*/
 
-  // const xAxisData = ["1주차", "2주차", "3주차", "4주차", "금", "토", "일"];
-
-  // const seriesData = [
-  //   // {
-  //   //   type: "bar",
-  //   //   // id: "revenue",
-  //   //   yAxisKey: "money",
-  //   //   data: [4, 20, 12, 25],
-  //   //   color: "#4e79a7",
-  //   // },
-  //   // {
-  //   //   type: "bar",
-  //   //   // id: "revenue",
-  //   //   yAxisKey: "money",
-  //   //   data: [4, 10, 20, 18],
-  //   //   color: "#efefef",
-  //   // },
-  //   {
-  //     type: "line",
-  //     curve: "linear",
-  //     // id: 'cookies',
-  //     yAxisKey: "quantities",
-  //     data: [1, 6, 4, 5],
-  //   },
-  //   {
-  //     type: "bar",
-  //     // id: 'icecream',
-  //     yAxisKey: "quantities",
-  //     data: [1, 6, 4, 5],
-  //     color: "#C6E19B",
-  //   },
-  // ];
-
-  const yAxisIds = [{ id: "money" }, { id: "quantities" }];
+  const yAxisIds = [
+    { id: "nonContactCnt" },
+    { id: "contactCnt" },
+    { id: "totalCount" },
+    { id: "diseaseCount" },
+  ];
 
   return (
     <div className="min-w-[1820px]">
@@ -204,7 +177,33 @@ const Dashboard: NextPage = () => {
           <option value="second">부상자</option>
         </select> */}
         </div>
-        <Search />
+        <div className="flex items-center justify-end space-x-2">
+          <Button
+            type="button"
+            text="2주전"
+            classnames="text-[#8DBE3D] text-[13px] font-[700]"
+            onClick={() => {}}
+          />
+          <Button
+            type="button"
+            text="지난주"
+            classnames="text-[#8DBE3D] text-[13px] font-[700]"
+            onClick={() => {}}
+          />
+          <Button
+            type="button"
+            text="오늘"
+            classnames="text-[#8DBE3D] text-[13px] font-[700]"
+            onClick={() => {}}
+          />
+          <DatePickerComponent calendarType="date" initDate={new Date()} />
+          <Button
+            type="button"
+            text="초기화"
+            classnames="text-[#000] text-[13px] font-[700]"
+            onClick={() => {}}
+          />
+        </div>
         <div className="space-y-8">
           <div className="flex flex-col space-y-2">
             <h2 className="text-[20px] font-[500]">팀 컨디션</h2>
@@ -322,7 +321,12 @@ const Dashboard: NextPage = () => {
                 </div>
               </div>
               <div className="col-span-7 flex flex-col space-y-2">
-                <span className="text-[15px] font-[400]">■ 관찰대상</span>
+                <div className="space-x-2">
+                  <span className="text-[15px] font-[400] ">■ 관찰대상</span>
+                  <em className="text-[12px] text-[#FF0000] font-[400] not-italic">
+                    (컨디션조절이 필요해요!)
+                  </em>
+                </div>
                 <div className="grid grid-cols-6 gap-10">
                   {[1, 1, 1, 1, 1, 1].map((el, idx) => (
                     <Item key={idx} position="미드필더" name="홍길동" />
@@ -436,7 +440,7 @@ const Dashboard: NextPage = () => {
           <div className="flex flex-col space-y-2">
             <h2 className="text-[20px] font-[500]">운동부하 밸런스</h2>
             <div className="grid grid-cols-12 space-x-10">
-              <div className="flex flex-col col-span-5 space-y-4">
+              <div className="flex flex-col col-span-5">
                 <div className="text-[15px] font-[400] space-x-2">
                   <span>■ 주간 트레이닝 부하</span>
                   <em className="text-[12px] text-[#CBCCCD] font-[400] not-italic">
@@ -445,16 +449,9 @@ const Dashboard: NextPage = () => {
                 </div>
                 <div className="flex flex-col items-end space-y-1">
                   <span className="text-[12px] font-[400] mr-4">
-                    [2023년 10월 2주차]
+                    [ 2023년 10월 2주차 ]
                   </span>
                   <div className="w-full rounded-[25px] shadow-[0_2px_10px_0px_rgba(0,0,0,0.25)]">
-                    {/* <AxisWithComposition
-                    xAxisData={xAxisData}
-                    seriesData={seriesData}
-                    yAxisIds={yAxisIds}
-                    height={260}
-                    margin={{ left: 40, right: 40 }}
-                  /> */}
                     <LineChart
                       height={260}
                       xAxis={[
@@ -488,29 +485,71 @@ const Dashboard: NextPage = () => {
                   <div className="text-[15px] font-[400] space-x-2">
                     <span>■ 트레이닝 밸런스</span>
                     <em className="text-[12px] text-[#CBCCCD] font-[400] not-italic">
-                      (주 단위 평균 값)
+                      (이번주 운동부하 평균 / 지난주 운동부하 평균)
                     </em>
                   </div>
-                  <div className="w-full rounded-[25px] shadow-[0_2px_10px_0px_rgba(0,0,0,0.25)]">
-                    <BarChart
-                      width={450}
-                      height={260}
-                      series={[
-                        {
-                          data: uData,
-                          type: "bar",
-                          color: "#C6E19B",
-                        },
-                      ]}
-                      xAxis={[
-                        {
-                          scaleType: "band",
-                          data: xLabels,
-                          categoryGapRatio: 0.6,
-                        },
-                      ]}
-                      leftAxis={null}
-                    />
+                  <div className="w-full">
+                    <span className="text-[15px] font-[400]">
+                      [ 이번주 운동부하 평균 : 300 ]
+                    </span>
+                    <div className="flex space-x-10 mt-6 mb-5">
+                      <div className="w-full h-[42px] flex justify-around items-center rounded-[25px] shadow-[0_2px_10px_0px_rgba(0,0,0,0.25)]">
+                        <div>지난 4주 (400)</div>
+                        <div className="px-2 bg-[#FFCFA1] rounded-[5px] font-[700]">
+                          0.75
+                        </div>
+                      </div>
+                      <div className="w-full h-[42px] flex justify-around items-center rounded-[25px] shadow-[0_2px_10px_0px_rgba(0,0,0,0.25)]">
+                        <div>지난 6주 (500)</div>
+                        <div className="px-2 bg-[#FFCFA1] rounded-[5px] font-[700]">
+                          0.60
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex space-x-10 mb-9">
+                      <div className="w-full h-[42px] flex justify-around items-center rounded-[25px] shadow-[0_2px_10px_0px_rgba(0,0,0,0.25)]">
+                        <div>지난 8주 (420)</div>
+                        <div className="px-2 bg-[#C7DF9F] rounded-[5px] font-[700]">
+                          1.40
+                        </div>
+                      </div>
+                      <div className="w-full h-[42px] flex justify-around items-center rounded-[25px] shadow-[0_2px_10px_0px_rgba(0,0,0,0.25)]">
+                        <div>지난 10주 (170)</div>
+                        <div className="px-2 bg-[#FFA1A1] rounded-[5px] font-[700]">
+                          1.76
+                        </div>
+                      </div>
+                    </div>
+                    <div className="w-full text-[15px] p-2 rounded-[25px] shadow-[0_2px_10px_0px_rgba(0,0,0,0.25)] space-y-1">
+                      <div className="flex space-x-1">
+                        <div className="w-[93px] flex justify-center px-2 bg-[#FFCFA1] rounded-[5px] font-[700]">
+                          ＜0.80
+                        </div>
+                        <div>훈련부하 부족으로 상대적 부상위험이 있습니다.</div>
+                      </div>
+                      <div className="flex space-x-1">
+                        <div className="w-[93px] flex justify-center px-2 bg-[#C7DF9F] rounded-[5px] font-[700]">
+                          0.80 - 1.50
+                        </div>
+                        <div>
+                          최적의 훈련부하로써 부상위험이{" "}
+                          <em className="text-[15px] text-[#8DBE3D] font-[700] not-italic">
+                            낮습니다.
+                          </em>
+                        </div>
+                      </div>
+                      <div className="flex space-x-1">
+                        <div className=" w-[93px] flex justify-center px-2 bg-[#FFA1A1] rounded-[5px] font-[700]">
+                          ＞1.50
+                        </div>
+                        <div>
+                          오버트레이닝 구간으로 부상위험이{" "}
+                          <em className="text-[15px] text-[#FF0000] font-[700] not-italic">
+                            아주 높습니다.
+                          </em>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
                 <div className="grid grid-rows-1 w-[404px]">

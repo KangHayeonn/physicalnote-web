@@ -1,5 +1,6 @@
 export interface SeriesDataType {
   type: "line" | "bar" | "pie" | "scatter";
+  curve?: string;
   yAxisKey: string;
   data: number[];
   color: string;
