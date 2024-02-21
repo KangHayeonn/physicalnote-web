@@ -31,7 +31,7 @@ const Report = {
     size: number
   ) {
     try {
-      const url = `${prefix}/graph/hooper_index`;
+      const url = `${prefix}/graph/hopper_index`;
       const result = await instanceWithToken.get(url, {
         params: { ...data, page, size },
       });

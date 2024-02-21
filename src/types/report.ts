@@ -79,6 +79,7 @@ export interface DailyReportType {
 export interface WeeklyReportType {
   initPage: number;
   weeklyData: WeeklyReportDataType[];
+  searchDate: Date;
   totalLen: number;
   getWeeklyEvent: (currentPage?: number, itemPerPage?: number) => Promise<void>;
 }
@@ -97,4 +98,34 @@ export interface WeeklyChartDataType {
   weight?: number;
   muscleSoreness?: number;
   workLoad?: number;
+}
+
+export interface HooperIndexResponseType {
+  userId: number;
+  userName: string;
+  hooperIndex: number;
+}
+
+export interface BodyFatResponseType {
+  userId: number;
+  userName: string;
+  bodyFat: number;
+}
+
+export interface WeightResponseType {
+  userId: number;
+  userName: string;
+  weight: number;
+}
+
+export interface MuscleSorenessResponseType {
+  userId: number;
+  userName: string;
+  muscleSoreness: number;
+}
+
+export interface WorkLoadResponseType {
+  userId: number;
+  userName: string;
+  workLoad: number;
 }

@@ -159,7 +159,7 @@ const Report: NextPage = () => {
   }, [searchGrader, searchCategory, searchKeyword]);
 
   useEffect(() => {
-    getDailyReport(0, 10);
+    getInitData();
   }, [searchDate]);
 
   return (
@@ -235,6 +235,7 @@ const Report: NextPage = () => {
             <WeeklyReport
               initPage={page}
               weeklyData={weeklyData}
+              searchDate={searchDate}
               totalLen={totalLen}
               getWeeklyEvent={getWeeklyReport}
             />
