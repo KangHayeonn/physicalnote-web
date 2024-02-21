@@ -122,6 +122,7 @@ const Report: NextPage = () => {
 
   const toggleDate = (type: string) => {
     const today = new Date();
+
     if (type === "lastWeek") {
       const lastWeek = today.setDate(today.getDate() - 7);
       setInitDate(new Date(lastWeek));
@@ -138,15 +139,12 @@ const Report: NextPage = () => {
   };
 
   const getInitData = () => {
-    if (reportType === "days") {
-      getDailyReport(0, 10);
-    }
-
-    if (reportType === "weeks") {
-      getWeeklyReport(0, 10);
-    }
-
+    reportType === "days" ? getDailyReport(0, 10) : getWeeklyReport(0, 10);
     setPage(0);
+  };
+
+  const init = () => {
+    setInitDate(new Date());
   };
 
   useEffect(() => {
@@ -189,6 +187,12 @@ const Report: NextPage = () => {
             calendarType="date"
             initDate={initDate}
             changeDate={setSearchDate}
+          />
+          <Button
+            type="button"
+            text="초기화"
+            classnames="text-[#000] text-[13px] font-[700]"
+            onClick={init}
           />
         </div>
         <div className="flex w-[260px] h-[47px] rounded-lg shadow-[0_2px_10px_0px_rgba(0,0,0,0.25)] overflow-hidden font-[700]">
