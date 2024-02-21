@@ -17,7 +17,7 @@ const TabBar01 = ({ tabs, activeTab, onTabClick, classnames }: TabBarProps) => {
   return (
     <div
       className={cls(
-        "flex items-center  space-x-2",
+        "flex items-center space-x-2",
         classnames || "justify-start"
       )}
     >

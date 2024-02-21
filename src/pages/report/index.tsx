@@ -88,7 +88,10 @@ const Report: NextPage = () => {
     currentPage: number = 0,
     itemPerPage: number = 10
   ) => {
-    const queryParams: ReportRequestType = { recordDate: "2024-02-05" };
+    const date = getFullDateToString(searchDate);
+    const queryParams: ReportRequestType = {
+      recordDate: date,
+    };
 
     if (searchFilter.playerGrader !== "ALL") {
       queryParams.playerGrade = searchFilter.playerGrader;
@@ -230,6 +233,7 @@ const Report: NextPage = () => {
           )}
           {reportType === "weeks" && (
             <WeeklyReport
+              initPage={page}
               weeklyData={weeklyData}
               totalLen={totalLen}
               getWeeklyEvent={getWeeklyReport}

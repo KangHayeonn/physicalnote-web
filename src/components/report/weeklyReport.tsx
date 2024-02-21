@@ -1,103 +1,106 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useEffect } from "react";
 import { Box } from "@mui/material";
 import { AxisConfig, BarChart } from "@mui/x-charts";
-import { ChartsXAxis } from "@mui/x-charts/ChartsXAxis";
 import TabBar01 from "@/components/common/tabBar01";
 import Table from "@/components/common/table";
 import Pagination from "@/components/common/pagination";
 import usePagination from "@/utils/hooks/usePagination";
 import { WeeklyReportDataType, WeeklyReportType } from "@/types/report";
+import { weeklyColumnData } from "@/constants/mock/report";
+import Api from "@/api/privateData";
+import { showToast } from "@/utils";
+import { WeeklyChartDataType } from "@/types/report";
 
 type ExtendedAxisConfig = AxisConfig & { categoryGapRatio?: number };
 
 const WeeklyReport = ({
+  initPage,
   weeklyData,
   totalLen,
   getWeeklyEvent,
 }: WeeklyReportType) => {
-  const [page2, setPage2] = useState<number>(0);
+  const [page, setPage] = useState<number>(0);
+  const [pageChart, setPageChart] = useState<number>(0);
   const [data, setData] = useState<WeeklyReportDataType[]>(weeklyData);
+  const [chartData, setChartData] = useState<WeeklyChartDataType[]>([]);
+  const [totalLength, setTotalLength] = useState<number>(totalLen);
   const [isChecked, setIsChecked] = useState<boolean>(true);
 
-  const data2 = [
-    {
-      name: "dh",
-      position: "미드필더",
-      weight: 72,
-      bodyFat: 1,
-      index: 4,
-      musclePain: 6,
-      ExerciseLoad: 10,
-    },
-  ];
+  // pagination - table
+  const itemPerPage = 10;
+  const totalItems = totalLength;
+  const { currentPage, totalPages, currentItems, handlePageChange } =
+    usePagination((page) => setPage(page), itemPerPage, totalItems);
 
-  // 열 항목
-  let columnData2 = [
-    {
-      Header: "선수이름",
-      accessor: "name",
-      Cell: ({ value }: any) => (value ? value : "-"),
-    },
-    {
-      Header: "포지션",
-      accessor: "position",
-      Cell: ({ value }: any) => (value ? value : "-"),
-    },
-    {
-      Header: "몸무게",
-      accessor: "weight",
-      Cell: ({ value }: any) => (value ? value : "-"),
-    },
-    {
-      Header: "체지방(%)",
-      accessor: "bodyFat",
-      Cell: ({ value }: any) => (value ? value : "-"),
-    },
-    {
-      Header: "후퍼인댁스",
-      accessor: "index",
-      Cell: ({ value }: any) => (value ? value : "-"),
-    },
-    {
-      Header: "근육통",
-      accessor: "musclePain",
-      Cell: ({ value }: any) => (value ? value : "-"),
-    },
-    {
-      Header: "운동부하",
-      accessor: "ExerciseLoad",
-      Cell: ({ value }: any) => (value ? value : "-"),
-    },
-  ];
+  const next = () => {
+    if (currentPage + 1 < totalPages) {
+      handlePageChange(currentPage + 1);
+    }
+    getWeeklyEvent(currentPage, itemPerPage);
+  };
 
-  const columns2 = useMemo(() => columnData2, []);
+  const prev = () => {
+    if (currentPage > 0) {
+      handlePageChange(currentPage - 1);
+    }
+    getWeeklyEvent(currentPage, itemPerPage);
+  };
 
-  // pagination
-  const itemPerPage2 = 10;
-  const totalItems2 = data2?.length;
+  // pagination - chart
+  const itemPerPageChart = 10;
+  const totalItemsChart = chartData?.length;
   const {
-    currentPage: currentPage2,
-    totalPages: totalPages2,
-    currentItems: currentItems2,
-    handlePageChange: handlePageChange2,
-  } = usePagination((page) => setPage2(page), itemPerPage2, totalItems2);
+    currentPage: currentPageChart,
+    totalPages: totalPagesChart,
+    currentItems: currentItemsChart,
+    handlePageChange: handlePageChangeChart,
+  } = usePagination(
+    (pageChart) => setPageChart(pageChart),
+    itemPerPageChart,
+    totalItemsChart
+  );
 
-  const next2 = () => {
-    if (currentPage2 + 1 < totalPages2) {
-      handlePageChange2(currentPage2 + 1);
+  const nextChart = () => {
+    if (currentPageChart + 1 < totalPagesChart) {
+      handlePageChangeChart(currentPageChart + 1);
     }
+    // getWeeklyEvent(currentPage, itemPerPage);
   };
 
-  const prev2 = () => {
-    if (currentPage2 > 0) {
-      handlePageChange2(currentPage2 - 1);
+  const prevChart = () => {
+    if (currentPageChart > 0) {
+      handlePageChangeChart(currentPageChart - 1);
     }
+    // getWeeklyEvent(currentPage, itemPerPage);
   };
 
-  const handleRowClick2 =
-    (id: number) => (e: React.MouseEvent<HTMLDivElement>) => {
-      e.preventDefault();
-    };
+  // 중요 선수 등록/삭제 (즐겨찾기)
+  const handleImportantCheck = async (
+    id: number,
+    e: React.MouseEvent<HTMLDivElement>
+  ) => {
+    e.preventDefault();
+    setData((prevData) =>
+      prevData.map((item) => {
+        if (item.id === id) {
+          return { ...item, importantYn: !item.importantYn };
+        }
+
+        return item;
+      })
+    );
+
+    await Api.v1UpdateImportantPlayer(id).then((res) => {
+      const { status, data } = res;
+      if (status === 200) {
+        if (data.importantYn) {
+          showToast("즐겨찾기로 등록되었습니다.");
+        } else {
+          showToast("즐겨찾기가 해제되었습니다.");
+        }
+      }
+    });
+  };
 
   // 탭바 모듈 로직 시작
   const [activeTab, setActiveTab] = useState("hooperIndex");
@@ -117,6 +120,19 @@ const WeeklyReport = ({
   const onTabClick = (tabKey: string) => {
     setActiveTab(tabKey);
   };
+
+  useEffect(() => {
+    getWeeklyEvent(currentPage, itemPerPage);
+  }, [page]);
+
+  useEffect(() => {
+    setData(weeklyData);
+    setTotalLength(totalLen);
+  }, [weeklyData, totalLen]);
+
+  useEffect(() => {
+    handlePageChange(0);
+  }, [initPage]);
 
   return (
     <>
@@ -151,29 +167,29 @@ const WeeklyReport = ({
             </div>
           </div>
           <Pagination
-            currentPage={currentPage2}
-            totalPage={totalPages2}
-            onPageChange={handlePageChange2}
-            setPage={setPage2}
-            next={next2}
-            prev={prev2}
+            currentPage={currentPageChart}
+            totalPage={totalPagesChart}
+            onPageChange={handlePageChangeChart}
+            setPage={setPageChart}
+            next={nextChart}
+            prev={prevChart}
           />
         </>
       )}
       <div className="flex flex-col mt-20 space-y-10">
         <Table
-          columns={columns2}
+          columns={weeklyColumnData}
           data={data || []}
-          onClickRow={handleRowClick2}
           isSelectedCheckbox={isChecked}
+          onSelect={handleImportantCheck}
         />
         <Pagination
-          currentPage={currentPage2}
-          totalPage={totalPages2}
-          onPageChange={handlePageChange2}
-          setPage={setPage2}
-          next={next2}
-          prev={prev2}
+          currentPage={currentPage}
+          totalPage={totalPages}
+          onPageChange={handlePageChange}
+          setPage={setPage}
+          next={next}
+          prev={prev}
         />
       </div>
     </>
