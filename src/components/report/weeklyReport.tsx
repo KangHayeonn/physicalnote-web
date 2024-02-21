@@ -1,9 +1,14 @@
 import React, { useState, useMemo } from "react";
+import { Box } from "@mui/material";
+import { AxisConfig, BarChart } from "@mui/x-charts";
+import { ChartsXAxis } from "@mui/x-charts/ChartsXAxis";
 import TabBar01 from "@/components/common/tabBar01";
 import Table from "@/components/common/table";
 import Pagination from "@/components/common/pagination";
 import usePagination from "@/utils/hooks/usePagination";
 import { WeeklyReportDataType, WeeklyReportType } from "@/types/report";
+
+type ExtendedAxisConfig = AxisConfig & { categoryGapRatio?: number };
 
 const WeeklyReport = ({
   weeklyData,
@@ -95,15 +100,19 @@ const WeeklyReport = ({
     };
 
   // 탭바 모듈 로직 시작
-  const [activeTab, setActiveTab] = useState("index");
+  const [activeTab, setActiveTab] = useState("hooperIndex");
 
   const tabs = [
-    { key: "index", label: "후퍼인댁스" },
+    { key: "hooperIndex", label: "후퍼인덱스" },
     { key: "bodyFat", label: "체지방" },
     { key: "weight", label: "몸무게" },
     { key: "musclePain", label: "근육통" },
     { key: "ExerciseLoad", label: "운동부하" },
   ];
+
+  // 그래프 (트레이닝 밸런스)
+  const uData = [4000, 3000, 2000, 2780];
+  const xLabels = ["이번주", "저번주", "지난4주", "지난8주"];
 
   const onTabClick = (tabKey: string) => {
     setActiveTab(tabKey);
@@ -111,11 +120,47 @@ const WeeklyReport = ({
 
   return (
     <>
-      <div className="pb-10">
+      <div className="pb-5">
         <TabBar01 tabs={tabs} activeTab={activeTab} onTabClick={onTabClick} />
       </div>
-      {activeTab === "index" && <div className="h-[400px]">123</div>}
-      <div className="flex flex-col space-y-10">
+      {activeTab === "hooperIndex" && (
+        <>
+          <div className="h-[320px]">
+            <div className="w-full rounded-[25px] shadow-[0_2px_10px_0px_rgba(0,0,0,0.25)]">
+              <Box sx={{ width: "100%" }}>
+                <BarChart
+                  height={300}
+                  series={[
+                    {
+                      data: uData,
+                      type: "bar",
+                      color: "#C6E19B",
+                    },
+                  ]}
+                  xAxis={
+                    [
+                      {
+                        scaleType: "band",
+                        data: xLabels,
+                        categoryGapRatio: 0.8,
+                      },
+                    ] as ExtendedAxisConfig[]
+                  }
+                />
+              </Box>
+            </div>
+          </div>
+          <Pagination
+            currentPage={currentPage2}
+            totalPage={totalPages2}
+            onPageChange={handlePageChange2}
+            setPage={setPage2}
+            next={next2}
+            prev={prev2}
+          />
+        </>
+      )}
+      <div className="flex flex-col mt-20 space-y-10">
         <Table
           columns={columns2}
           data={data || []}

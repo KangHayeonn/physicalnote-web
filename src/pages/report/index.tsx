@@ -219,7 +219,7 @@ const Report: NextPage = () => {
             주간
           </div>
         </div>
-        <div className="bg-white py-4 my-4 px-4 rounded-[4px]">
+        <div className="bg-white py-4 my-4 rounded-[4px]">
           {reportType === "days" && (
             <DailyReport
               initPage={page}
