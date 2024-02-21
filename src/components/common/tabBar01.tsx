@@ -17,7 +17,7 @@ const TabBar01 = ({ tabs, activeTab, onTabClick, classnames }: TabBarProps) => {
   return (
     <div
       className={cls(
-        "flex items-center  space-x-2",
+        "flex items-center space-x-2",
         classnames || "justify-start"
       )}
     >
@@ -26,8 +26,8 @@ const TabBar01 = ({ tabs, activeTab, onTabClick, classnames }: TabBarProps) => {
           type="button"
           onClick={() => onTabClick(tab.key)}
           className={cls(
-            "px-5 py-2  rounded-3xl text-[14px] font-[400]",
-            activeTab === tab.key ? "text-white bg-[#0e0e0e]" : "bg-[#F2F2F3]"
+            "px-1 py-2 text-[20px] font-[700]",
+            activeTab === tab.key ? "text-[#0e0e0e]" : "text-[#B9B9C3]"
           )}
         >
           {tab.label}
