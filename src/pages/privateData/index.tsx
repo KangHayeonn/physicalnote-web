@@ -165,21 +165,29 @@ const PrivateData: NextPage = () => {
       <h1 className="text-[28px] font-[700]">개인 데이터</h1>
       <Search onClickSubmit={getPrivateList} resetPage={resetPage} />
       <div className="bg-white py-4 my-4 px-4 rounded-[4px]">
-        <Table
-          columns={columns}
-          data={data || []}
-          onClickRow={handleRowClick}
-          isSelectedCheckbox={isChecked}
-          onSelect={handleImportantCheck}
-        />
-        <Pagination
-          currentPage={currentPage}
-          totalPage={totalPages}
-          onPageChange={handlePageChange}
-          setPage={setPage}
-          next={next}
-          prev={prev}
-        />
+        {data.length !== 0 ? (
+          <>
+            <Table
+              columns={columns}
+              data={data || []}
+              onClickRow={handleRowClick}
+              isSelectedCheckbox={isChecked}
+              onSelect={handleImportantCheck}
+            />
+            <Pagination
+              currentPage={currentPage}
+              totalPage={totalPages}
+              onPageChange={handlePageChange}
+              setPage={setPage}
+              next={next}
+              prev={prev}
+            />
+          </>
+        ) : (
+          <div className="flex items-center justify-center w-full py-10 font-bold">
+            데이터가 없습니다.
+          </div>
+        )}
       </div>
     </Layout>
   );

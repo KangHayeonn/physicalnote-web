@@ -3,9 +3,16 @@ import TabBar01 from "@/components/common/tabBar01";
 import Table from "@/components/common/table";
 import Pagination from "@/components/common/pagination";
 import usePagination from "@/utils/hooks/usePagination";
+import { WeeklyReportDataType, WeeklyReportType } from "@/types/report";
 
-const WeeklyReport = () => {
-  const [page2, setPage2] = useState(0);
+const WeeklyReport = ({
+  weeklyData,
+  totalLen,
+  getWeeklyEvent,
+}: WeeklyReportType) => {
+  const [page2, setPage2] = useState<number>(0);
+  const [data, setData] = useState<WeeklyReportDataType[]>(weeklyData);
+  const [isChecked, setIsChecked] = useState<boolean>(true);
 
   const data2 = [
     {
@@ -111,8 +118,9 @@ const WeeklyReport = () => {
       <div className="flex flex-col space-y-10">
         <Table
           columns={columns2}
-          data={data2 || []}
+          data={data || []}
           onClickRow={handleRowClick2}
+          isSelectedCheckbox={isChecked}
         />
         <Pagination
           currentPage={currentPage2}

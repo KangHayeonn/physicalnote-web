@@ -25,7 +25,7 @@ const Button = ({
         type={type}
         onClick={onClick}
         className={cls(
-          "shadow-[0_2px_10px_0px_rgba(0,0,0,0.25)] rounded-[5px] py-1 px-3",
+          "shadow-[0_2px_10px_0px_rgba(0,0,0,0.25)] rounded-[5px] py-1 px-3 hover:bg-[#C6E19B] hover:text-[#fff]",
           classnames || ""
         )}
       >
