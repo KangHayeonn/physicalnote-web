@@ -1,9 +1,10 @@
 import { Column } from "react-table";
 import { PrivateDataType } from "@/types/privateData";
+import { DailyReportDataType, WeeklyReportDataType } from "../report";
 
 export interface SearchProps {
   title?: string;
-  onClickSubmit: () => void;
+  onClickSubmit?: () => void;
   resetPage?: () => void;
 }
 
@@ -29,7 +30,7 @@ export interface DropDownProps {
 
 export interface TableType {
   columns: Column[];
-  data: PrivateDataType[];
+  data: PrivateDataType[] | DailyReportDataType[] | WeeklyReportDataType[];
   onClickRow?: (id: number) => (e: React.MouseEvent<HTMLDivElement>) => void;
   isSelectedCheckbox?: boolean;
   onSelect?: (id: number, e: React.MouseEvent<HTMLDivElement>) => void;

@@ -1,291 +1,243 @@
 import { NextPage } from "next";
+import { useState, useEffect } from "react";
 import Layout from "@/components/layout";
 import Search from "@/components/common/search";
-import { useState, useMemo, MouseEvent } from "react";
 import { cls } from "@/utils";
-import { useRouter } from "next/router";
-import usePagination from "@/utils/hooks/usePagination";
-import Table from "@/components/common/table";
-import Pagination from "@/components/common/pagination";
-import TabBar01 from "@/components/common/tabBar01";
+import DailyReport from "@/components/report/dailyReport";
+import WeeklyReport from "@/components/report/weeklyReport";
+import { useRecoilValue } from "recoil";
+import {
+  searchPlayerGraderState,
+  searchCategoryState,
+  searchKeywordState,
+} from "@/recoil/search/searchState";
+import DatePickerComponent from "@/components/common/datepicker";
+import Button from "@/components/common/button";
+import Api from "@/api/report";
+import {
+  ReportRequestType,
+  DailyReportResponseType,
+  WeeklyReportResponseType,
+  DailyReportDataType,
+  WeeklyReportDataType,
+  SearchFilterType,
+} from "@/types/report";
+import { getFullDateToString } from "@/utils/dateFormat";
 
 const Report: NextPage = () => {
-  const router = useRouter();
-  const [page, setPage] = useState(0);
-  const [page2, setPage2] = useState(0);
-  const [method, setMethod] = useState<"days" | "weeks">("days");
+  const [reportType, setReportType] = useState<"days" | "weeks">("days");
+  const [dailyData, setDailyData] = useState<DailyReportDataType[]>([]);
+  const [weeklyData, setWeeklyData] = useState<WeeklyReportDataType[]>([]);
+  const [totalLen, setTotalLen] = useState<number>(0);
+  const [page, setPage] = useState<number>(0);
+  const [searchFilter, setSearchFilter] = useState<SearchFilterType>({
+    playerGrader: "ALL",
+    category: "",
+    keyword: "",
+  });
+  const [initDate, setInitDate] = useState<Date>(new Date());
+  const [searchDate, setSearchDate] = useState<Date>(new Date());
 
-  const onClickDays = () => setMethod("days");
-  const onClickWeeks = () => setMethod("weeks");
+  const searchGrader = useRecoilValue(searchPlayerGraderState);
+  const searchCategory = useRecoilValue(searchCategoryState);
+  const searchKeyword = useRecoilValue(searchKeywordState);
 
-  // 탭바 모듈 로직 시작
-  const [activeTab, setActiveTab] = useState("index");
+  const onClickDays = () => setReportType("days");
+  const onClickWeeks = () => setReportType("weeks");
 
-  const tabs = [
-    { key: "index", label: "후퍼인댁스" },
-    { key: "bodyFat", label: "체지방" },
-    { key: "weight", label: "몸무게" },
-    { key: "musclePain", label: "근육통" },
-    { key: "ExerciseLoad", label: "운동부하" },
-  ];
+  const getDailyReport = async (
+    currentPage: number = 0,
+    itemPerPage: number = 10
+  ) => {
+    const date = getFullDateToString(searchDate);
+    const queryParams: ReportRequestType = {
+      recordDate: date,
+    };
 
-  const onTabClick = (tabKey: string) => {
-    setActiveTab(tabKey);
+    if (searchFilter.playerGrader !== "ALL") {
+      queryParams.playerGrade = searchFilter.playerGrader;
+    }
+
+    if (searchFilter.category === "name") {
+      queryParams.name = searchFilter.keyword;
+    }
+    if (searchFilter.category === "position") {
+      queryParams.position = searchFilter.keyword;
+    }
+
+    await Api.v1GetDailyReport(queryParams, currentPage, itemPerPage).then(
+      (res) => {
+        const { content, totalElements } = res.data;
+        const tempData: DailyReportDataType[] = [];
+
+        content.map((item: DailyReportResponseType) => {
+          tempData.push({
+            id: item.userId,
+            position: item.positions.join(", "),
+            ...item,
+          });
+        });
+
+        setDailyData(tempData);
+        setTotalLen(totalElements);
+      }
+    );
   };
-  // 탭바 모듈 로직 끝
 
-  const data = [
-    {
-      name: "dh",
-      age: 23,
-      tel: "010-1234-1234",
-      height: 180,
-      weight: 72,
-      position: "미드필더",
-      belongto: "1군",
-    },
-    {
-      name: "mike",
-      age: 23,
-      tel: "010-1234-1234",
-      height: 180,
-      weight: 72,
-      position: "미드필더",
-      belongto: "1군",
-    },
-  ];
+  const getWeeklyReport = async (
+    currentPage: number = 0,
+    itemPerPage: number = 10
+  ) => {
+    const queryParams: ReportRequestType = { recordDate: "2024-02-05" };
 
-  // 열 항목
-  let columnData = [
-    {
-      Header: "선수이름",
-      accessor: "name",
-      Cell: ({ value }: any) => (value ? value : "-"),
-    },
-    {
-      Header: "체지방(%)",
-      accessor: "",
-      Cell: ({ value }: any) => (value ? value : "-"),
-    },
-    {
-      Header: "몸무게",
-      accessor: "weight",
-      Cell: ({ value }: any) => (value ? value : "-"),
-    },
-    {
-      Header: "%(전날대비차이)",
-      accessor: "",
-      Cell: ({ value }: any) => (value ? value : "-"),
-    },
-    {
-      Header: "소변검사",
-      accessor: "",
-      Cell: ({ value }: any) => (value ? value : "-"),
-    },
-    {
-      Header: "잠",
-      accessor: "",
-      Cell: ({ value }: any) => (value ? value : "-"),
-    },
-    {
-      Header: "스트레스",
-      accessor: "",
-      Cell: ({ value }: any) => (value ? value : "-"),
-    },
-    {
-      Header: "피로도",
-      accessor: "",
-      Cell: ({ value }: any) => (value ? value : "-"),
-    },
-    {
-      Header: "근육통",
-      accessor: "",
-      Cell: ({ value }: any) => (value ? value : "-"),
-    },
-    {
-      Header: "후퍼인댁스",
-      accessor: "",
-      Cell: ({ value }: any) => (value ? value : "-"),
-    },
-  ];
+    if (searchFilter.playerGrader !== "ALL") {
+      queryParams.playerGrade = searchFilter.playerGrader;
+    }
 
-  const columns = useMemo(() => columnData, []);
+    if (searchFilter.category === "name") {
+      queryParams.name = searchFilter.keyword;
+    }
+    if (searchFilter.category === "position") {
+      queryParams.position = searchFilter.keyword;
+    }
 
-  // pagination
-  const itemPerPage = 10;
-  const totalItems = data?.length;
-  const { currentPage, totalPages, currentItems, handlePageChange } =
-    usePagination((page) => setPage(page), itemPerPage, totalItems);
+    await Api.v1GetWeeklyReport(queryParams, currentPage, itemPerPage).then(
+      (res) => {
+        const { content, totalElements } = res.data;
+        const tempData: WeeklyReportDataType[] = [];
 
-  const next = () => {
-    if (currentPage + 1 < totalPages) {
-      handlePageChange(currentPage + 1);
+        content.map((item: WeeklyReportResponseType) => {
+          tempData.push({
+            id: item.userId,
+            position: item.positions.join(", "),
+            ...item,
+          });
+        });
+
+        setWeeklyData(tempData);
+        setTotalLen(totalElements);
+      }
+    );
+  };
+
+  const toggleDate = (type: string) => {
+    const today = new Date();
+
+    if (type === "lastWeek") {
+      const lastWeek = today.setDate(today.getDate() - 7);
+      setInitDate(new Date(lastWeek));
+    }
+
+    if (type === "yesterday") {
+      const yesterday = today.setDate(today.getDate() - 1);
+      setInitDate(new Date(yesterday));
+    }
+
+    if (type === "today") {
+      setInitDate(today);
     }
   };
 
-  const prev = () => {
-    if (currentPage > 0) {
-      handlePageChange(currentPage - 1);
-    }
+  const getInitData = () => {
+    reportType === "days" ? getDailyReport(0, 10) : getWeeklyReport(0, 10);
+    setPage(0);
   };
 
-  const handleRowClick = (id: number) => (e: MouseEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    console.log(id);
+  const init = () => {
+    setInitDate(new Date());
   };
 
-  // ================================================================================
-  const data2 = [
-    {
-      name: "dh",
-      position: "미드필더",
-      weight: 72,
-      bodyFat: 1,
-      index: 4,
-      musclePain: 6,
-      ExerciseLoad: 10,
-    },
-  ];
+  useEffect(() => {
+    setSearchFilter({
+      playerGrader: searchGrader,
+      category: searchCategory,
+      keyword: searchKeyword,
+    });
+  }, [searchGrader, searchCategory, searchKeyword]);
 
-  // 열 항목
-  let columnData2 = [
-    {
-      Header: "선수이름",
-      accessor: "name",
-      Cell: ({ value }: any) => (value ? value : "-"),
-    },
-    {
-      Header: "포지션",
-      accessor: "position",
-      Cell: ({ value }: any) => (value ? value : "-"),
-    },
-    {
-      Header: "몸무게",
-      accessor: "weight",
-      Cell: ({ value }: any) => (value ? value : "-"),
-    },
-    {
-      Header: "체지방(%)",
-      accessor: "bodyFat",
-      Cell: ({ value }: any) => (value ? value : "-"),
-    },
-    {
-      Header: "후퍼인댁스",
-      accessor: "index",
-      Cell: ({ value }: any) => (value ? value : "-"),
-    },
-    {
-      Header: "근육통",
-      accessor: "musclePain",
-      Cell: ({ value }: any) => (value ? value : "-"),
-    },
-    {
-      Header: "운동부하",
-      accessor: "ExerciseLoad",
-      Cell: ({ value }: any) => (value ? value : "-"),
-    },
-  ];
-
-  const columns2 = useMemo(() => columnData2, []);
-
-  // pagination
-  const itemPerPage2 = 10;
-  const totalItems2 = data?.length;
-  const {
-    currentPage: currentPage2,
-    totalPages: totalPages2,
-    currentItems: currentItems2,
-    handlePageChange: handlePageChange2,
-  } = usePagination((page) => setPage2(page), itemPerPage, totalItems);
-
-  const next2 = () => {
-    if (currentPage2 + 1 < totalPages2) {
-      handlePageChange2(currentPage2 + 1);
-    }
-  };
-
-  const prev2 = () => {
-    if (currentPage2 > 0) {
-      handlePageChange2(currentPage2 - 1);
-    }
-  };
-
-  const handleRowClick2 = (id: number) => (e: MouseEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    console.log(id);
-  };
+  useEffect(() => {
+    getDailyReport(0, 10);
+  }, [searchDate]);
 
   return (
-    <Layout>
-      <h1 className="text-[28px] font-[700]">리포트</h1>
-      <Search />
-      <div className="flex w-[260px] h-[47px] rounded-lg shadow-[0_2px_10px_0px_rgba(0,0,0,0.25)] overflow-hidden font-[700]">
-        <div
-          onClick={onClickDays}
-          className={cls(
-            "w-1/2 flex items-center justify-center cursor-pointer",
-            method === "days" ? "bg-[#C6E19B] text-white" : "text-[#8DBE3D]"
-          )}
-        >
-          일간
+    <div className="min-w-[1850px]">
+      <Layout>
+        <h1 className="text-[28px] font-[700]">리포트</h1>
+        <Search onClickSubmit={getInitData} />
+        <div className="flex items-center justify-end space-x-2">
+          <Button
+            type="button"
+            text="지난주"
+            classnames="text-[#8DBE3D] text-[13px] font-[700]"
+            onClick={() => toggleDate("lastWeek")}
+          />
+          <Button
+            type="button"
+            text="어제"
+            classnames="text-[#8DBE3D] text-[13px] font-[700]"
+            onClick={() => toggleDate("yesterday")}
+          />
+          <Button
+            type="button"
+            text="오늘"
+            classnames="text-[#8DBE3D] text-[13px] font-[700]"
+            onClick={() => toggleDate("today")}
+          />
+          <DatePickerComponent
+            calendarType="date"
+            initDate={initDate}
+            changeDate={setSearchDate}
+          />
+          <Button
+            type="button"
+            text="초기화"
+            classnames="text-[#000] text-[13px] font-[700]"
+            onClick={init}
+          />
         </div>
-        <div
-          onClick={onClickWeeks}
-          className={cls(
-            "w-1/2 flex items-center justify-center cursor-pointer",
-            method === "weeks" ? "bg-[#C6E19B] text-white" : "text-[#8DBE3D]"
-          )}
-        >
-          주간
+        <div className="flex w-[260px] h-[47px] rounded-lg shadow-[0_2px_10px_0px_rgba(0,0,0,0.25)] overflow-hidden font-[700]">
+          <div
+            onClick={onClickDays}
+            className={cls(
+              "w-1/2 flex items-center justify-center cursor-pointer",
+              reportType === "days"
+                ? "bg-[#C6E19B] text-white"
+                : "text-[#8DBE3D]"
+            )}
+          >
+            일간
+          </div>
+          <div
+            onClick={onClickWeeks}
+            className={cls(
+              "w-1/2 flex items-center justify-center cursor-pointer",
+              reportType === "weeks"
+                ? "bg-[#C6E19B] text-white"
+                : "text-[#8DBE3D]"
+            )}
+          >
+            주간
+          </div>
         </div>
-      </div>
-      <div className="bg-white py-4 my-4 px-4 rounded-[4px]">
-        {method === "days" && (
-          <>
-            <Table
-              columns={columns}
-              data={data || []}
-              onClickRow={handleRowClick}
+        <div className="bg-white py-4 my-4 px-4 rounded-[4px]">
+          {reportType === "days" && (
+            <DailyReport
+              initPage={page}
+              dailyData={dailyData}
+              totalLen={totalLen}
+              getDailyEvent={getDailyReport}
             />
-            <Pagination
-              currentPage={currentPage}
-              totalPage={totalPages}
-              onPageChange={handlePageChange}
-              setPage={setPage}
-              next={next}
-              prev={prev}
+          )}
+          {reportType === "weeks" && (
+            <WeeklyReport
+              weeklyData={weeklyData}
+              totalLen={totalLen}
+              getWeeklyEvent={getWeeklyReport}
             />
-          </>
-        )}
-        {method === "weeks" && (
-          <>
-            <div className="pb-10">
-              <TabBar01
-                tabs={tabs}
-                activeTab={activeTab}
-                onTabClick={onTabClick}
-              />
-            </div>
-            {activeTab === "index" && <div className="h-[400px]">123</div>}
-            <div className="flex flex-col space-y-10">
-              <Table
-                columns={columns2}
-                data={data2 || []}
-                onClickRow={handleRowClick2}
-              />
-              <Pagination
-                currentPage={currentPage2}
-                totalPage={totalPages2}
-                onPageChange={handlePageChange2}
-                setPage={setPage2}
-                next={next2}
-                prev={prev2}
-              />
-            </div>
-          </>
-        )}
-      </div>
-    </Layout>
+          )}
+        </div>
+      </Layout>
+    </div>
   );
 };
 

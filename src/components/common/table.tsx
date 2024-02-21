@@ -47,7 +47,7 @@ const Table = ({
             </tr>
           </thead>
           <tbody className="text-center divide-y-[1px]">
-            {data.map((item, idx) => {
+            {data.map((item: any, idx: any) => {
               // const isRowExpanded = expandedRows.includes(row.values.id);
               return (
                 <tr

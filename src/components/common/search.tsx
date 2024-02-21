@@ -44,7 +44,7 @@ const Search = ({ title, onClickSubmit, resetPage }: SearchProps) => {
   // 검색 클릭 로직
   const handleSubmit = (e: React.FormEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    onClickSubmit();
+    if (onClickSubmit) onClickSubmit();
     if (resetPage) resetPage();
   };
 

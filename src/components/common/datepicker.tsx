@@ -7,7 +7,8 @@ import { setHours, setMinutes } from "date-fns";
 
 interface CalendarProps {
   calendarType?: string;
-  changeDate?: React.Dispatch<React.SetStateAction<Date | null>> | undefined;
+  initDate?: Date;
+  changeDate?: React.Dispatch<React.SetStateAction<Date>> | undefined;
   changeTime?: React.Dispatch<React.SetStateAction<Date | null>> | undefined;
   changeYear?: React.Dispatch<React.SetStateAction<Date | null>> | undefined;
   onClick?: () => void;
@@ -15,16 +16,18 @@ interface CalendarProps {
 
 const DatePickerComponent = ({
   calendarType,
+  initDate,
   changeDate,
   changeTime,
   changeYear,
   onClick,
 }: CalendarProps) => {
-  const [startDate, setStartDate] = useState<Date | null>(null);
+  const [startDate, setStartDate] = useState<Date>(initDate || new Date());
   const [time, setTime] = useState<Date | null>(null);
   const [year, setYear] = useState<Date | null>(new Date());
 
   const today = new Date();
+  const yesterday = new Date(today.setDate(today.getDate() - 1));
   const tomorrow = new Date(today.setDate(today.getDate() + 1));
 
   useEffect(() => {
@@ -39,6 +42,10 @@ const DatePickerComponent = ({
     if (changeYear) changeYear(year);
     if (onClick) onClick();
   }, [changeYear, year]);
+
+  useEffect(() => {
+    if (initDate) setStartDate(initDate);
+  }, [initDate]);
 
   if (calendarType === "time") {
     return (
@@ -131,6 +138,33 @@ const DatePickerComponent = ({
     );
   }
 
+  if (calendarType === "date") {
+    return (
+      <div className="calendar-wrapper">
+        <DatePicker
+          showIcon
+          toggleCalendarOnIconClick
+          icon={
+            <Image
+              src="/images/arrow_down.svg"
+              width={10}
+              height={10}
+              alt="Clock Icon"
+              className="calendar-icon"
+            />
+          }
+          locale={ko}
+          selected={startDate}
+          maxDate={today}
+          dateFormat="yy.MM.dd"
+          onChange={(date) => {
+            if (date) setStartDate(date);
+          }}
+        />
+      </div>
+    );
+  }
+
   return (
     <div className="calendar-wrapper">
       <DatePicker
@@ -150,7 +184,7 @@ const DatePickerComponent = ({
         minDate={tomorrow}
         dateFormat="yyyy.MM.dd"
         onChange={(date) => {
-          setStartDate(date);
+          if (date) setStartDate(date);
         }}
         placeholderText="날짜 입력"
       />
