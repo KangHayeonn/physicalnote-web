@@ -277,7 +277,7 @@ const WeeklyReport = ({
 
   useEffect(() => {
     getChartEvent();
-  }, [pageChart, activeTab, searchDate]);
+  }, [pageChart, activeTab]);
 
   useEffect(() => {
     setData(weeklyData);
@@ -288,7 +288,7 @@ const WeeklyReport = ({
   useEffect(() => {
     handlePageChange(0);
     handlePageChangeChart(0);
-  }, [initPage, searchDate, searchFilter]);
+  }, [initPage, searchDate]);
 
   return (
     <>
