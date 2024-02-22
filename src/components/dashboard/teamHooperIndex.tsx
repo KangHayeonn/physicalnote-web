@@ -1,13 +1,35 @@
 import React, { useState, useEffect } from "react";
+import usePagination from "@/utils/hooks/usePagination";
 import Item from "@/components/common/item";
 import { useRecoilValue } from "recoil";
 import { teamHooperIndexState } from "@/recoil/dashboard/dashboardState";
 import { TeamHooperIndexInfoType, LevelCircleType } from "@/types/dashboard";
+import Pagination2 from "@/components/common/pagination02";
 
 const TeamHooperIndex = () => {
   const hooperIndex = useRecoilValue(teamHooperIndexState);
   const [teamCaution, setTeamCaution] = useState<TeamHooperIndexInfoType[]>([]);
   const [isOpen, setIsOpen] = useState<boolean[]>([]);
+  const [totalLength, setTotalLength] = useState<number>(0);
+  const [page, setPage] = useState<number>(0);
+
+  // pagination
+  const itemPerPage = 6;
+  const totalItems = totalLength;
+  const { currentPage, totalPages, currentItems, handlePageChange } =
+    usePagination((page) => setPage(page), itemPerPage, totalItems);
+
+  const next = () => {
+    if (currentPage + 1 < totalPages) {
+      handlePageChange(currentPage + 1);
+    }
+  };
+
+  const prev = () => {
+    if (currentPage > 0) {
+      handlePageChange(currentPage - 1);
+    }
+  };
 
   const toggleEvent = (idx: number) => {
     const tempIsOpen = [...isOpen];
@@ -20,6 +42,7 @@ const TeamHooperIndex = () => {
     setTeamCaution(hooperIndex);
     if (hooperIndex) {
       const length = hooperIndex.length;
+      setTotalLength(length);
       setIsOpen(Array.from({ length }, () => false));
     }
   }, [hooperIndex]);
@@ -69,11 +92,21 @@ const TeamHooperIndex = () => {
 
   return (
     <div className="col-span-7 flex flex-col space-y-2">
-      <div className="space-x-2">
-        <span className="text-[15px] font-[400] ">■ 관찰대상</span>
-        <em className="text-[12px] text-[#FF0000] font-[400] not-italic">
-          (컨디션조절이 필요해요!)
-        </em>
+      <div className="flex justify-between">
+        <div className="space-x-2">
+          <span className="text-[15px] font-[400] ">■ 관찰대상</span>
+          <em className="text-[12px] text-[#FF0000] font-[400] not-italic">
+            (컨디션조절이 필요해요!)
+          </em>
+        </div>
+        <div className="flex items-center justify-end space-x-2">
+          <Pagination2
+            currentPage={currentPage}
+            totalPage={totalPages}
+            next={next}
+            prev={prev}
+          />
+        </div>
       </div>
       {teamCaution.length !== 0 ? (
         <div className="grid grid-cols-6 gap-10">
