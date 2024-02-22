@@ -140,17 +140,17 @@ const TeamInjury = () => {
                     <span>{`${el.userInfo.positions.join("/")} ${el.userInfo.name}`}</span>
                   </div>
                   {el.injuryInfo.map((item, index) => (
-                    <>
+                    <div
+                      key={`injuryItem${index}`}
+                      className="w-full text-[12px] space-y-1"
+                    >
                       {index < 2 && (
-                        <div
-                          key={`injuryItem${index}`}
-                          className="w-full text-[12px] space-y-1"
-                        >
+                        <>
                           <div className="text-[14px]">{`${index + 1}. ${item.injuryOfString}`}</div>
                           <LevelCircle level={item.injuryDetails} />
-                        </div>
+                        </>
                       )}
-                    </>
+                    </div>
                   ))}
                   <div
                     className="flex item-center justify-center text-[11px] pt-2"

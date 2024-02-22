@@ -1,14 +1,54 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { useRecoilValue } from "recoil";
 import AxisWithComposition from "@/components/common/axisWithComposition";
-import { xAxisData, seriesData } from "@/constants/mock/injuryProgress";
+import { trainingLoadGraphState } from "@/recoil/dashboard/dashboardState";
+import { TrainingLoadGraphInfoType } from "@/types/dashboard";
+import { SeriesDataType } from "@/types/chart";
 
 const TrainingLoadGraph = () => {
-  const yAxisIds = [
-    { id: "nonContactCnt" },
-    { id: "contactCnt" },
-    { id: "totalCount" },
-    { id: "diseaseCount" },
-  ];
+  const trainingLoadGraphInfo = useRecoilValue(trainingLoadGraphState);
+  const [trainingLoad, setTrainingLoad] = useState<TrainingLoadGraphInfoType[]>(
+    []
+  );
+  const [progressData, setProgressData] = useState<SeriesDataType[]>([]);
+  const [xAxis, setXAxis] = useState<Array<string>>([]);
+
+  const yAxisIds = [{ id: "loadValue" }, { id: "totalCount" }];
+
+  useEffect(() => {
+    if (trainingLoadGraphInfo) {
+      const tempLoadValue: Array<number> = [];
+      const tempTotalCount: Array<number> = [];
+      const xAxisList: Array<string> = [];
+
+      trainingLoadGraphInfo.map((info) => {
+        const { monthOfString, weeklyGraphInfo } = info;
+        weeklyGraphInfo?.map((item) => {
+          tempLoadValue.push(item.value);
+          tempTotalCount.push(item.value);
+          xAxisList.push(`${monthOfString} ${item.xvalue}`);
+        });
+      });
+
+      setProgressData([
+        {
+          type: "bar",
+          yAxisKey: "loadValue",
+          data: tempLoadValue,
+          color: "#C6E19B",
+        },
+        {
+          type: "line",
+          curve: "linear",
+          yAxisKey: "totalCount",
+          data: tempTotalCount,
+          color: "#FF0000",
+        },
+      ]);
+      setXAxis(xAxisList);
+      setTrainingLoad(trainingLoad);
+    }
+  }, [trainingLoadGraphInfo]);
 
   return (
     <div className="grid grid-cols-12 space-x-10">
@@ -23,8 +63,8 @@ const TrainingLoadGraph = () => {
           </div>
           <div className="rounded-[25px] shadow-[0_2px_10px_0px_rgba(0,0,0,0.25)]">
             <AxisWithComposition
-              xAxisData={xAxisData}
-              seriesData={seriesData}
+              xAxisData={xAxis}
+              seriesData={progressData}
               yAxisIds={yAxisIds}
               height={260}
               margin={{ left: 40, right: 40 }}
