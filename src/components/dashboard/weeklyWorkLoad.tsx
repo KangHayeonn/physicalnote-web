@@ -42,23 +42,31 @@ const WeeklyWorkLoad = () => {
           {`[ ${weeklyData.stringOfWeekly} ]`}
         </span>
         <div className="w-full rounded-[25px] shadow-[0_2px_10px_0px_rgba(0,0,0,0.25)]">
-          <LineChart
-            height={260}
-            xAxis={[
-              {
-                scaleType: "point",
-                data: xvalue,
-              },
-            ]}
-            series={[
-              {
-                type: "line",
-                curve: "linear",
-                data: value,
-                color: "#8DBE3D",
-              },
-            ]}
-          />
+          {value.length !== 0 ? (
+            <LineChart
+              height={260}
+              xAxis={[
+                {
+                  scaleType: "point",
+                  data: xvalue,
+                },
+              ]}
+              series={[
+                {
+                  type: "line",
+                  curve: "linear",
+                  data: value,
+                  color: "#8DBE3D",
+                  valueFormatter: (value) =>
+                    value == null ? "?" : value.toString(),
+                },
+              ]}
+            />
+          ) : (
+            <div className="min-h-[260px] flex items-center justify-center w-full py-10 font-bold">
+              데이터가 없습니다.
+            </div>
+          )}
         </div>
       </div>
     </div>
