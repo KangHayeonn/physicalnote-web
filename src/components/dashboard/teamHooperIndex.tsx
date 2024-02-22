@@ -6,7 +6,12 @@ import { teamHooperIndexState } from "@/recoil/dashboard/dashboardState";
 import { TeamHooperIndexInfoType, LevelCircleType } from "@/types/dashboard";
 import Pagination2 from "@/components/common/pagination02";
 
-const TeamHooperIndex = () => {
+interface TeamHooperIndexProps {
+  initPage: Date;
+  getData: (page?: number) => Promise<void>;
+}
+
+const TeamHooperIndex = ({ initPage, getData }: TeamHooperIndexProps) => {
   const hooperIndex = useRecoilValue(teamHooperIndexState);
   const [teamCaution, setTeamCaution] = useState<TeamHooperIndexInfoType[]>([]);
   const [isOpen, setIsOpen] = useState<boolean[]>([]);
@@ -39,10 +44,18 @@ const TeamHooperIndex = () => {
   };
 
   useEffect(() => {
-    setTeamCaution(hooperIndex);
+    handlePageChange(0);
+  }, [initPage]);
+
+  useEffect(() => {
+    getData(currentPage);
+  }, [page]);
+
+  useEffect(() => {
     if (hooperIndex) {
-      const length = hooperIndex.length;
-      setTotalLength(length);
+      setTeamCaution(hooperIndex.content);
+      const length = hooperIndex.content.length;
+      setTotalLength(hooperIndex.totalElements);
       setIsOpen(Array.from({ length }, () => false));
     }
   }, [hooperIndex]);

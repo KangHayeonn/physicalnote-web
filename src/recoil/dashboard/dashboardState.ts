@@ -1,7 +1,7 @@
 import { atom } from "recoil";
 import {
   TeamConditionInfoType,
-  TeamHooperIndexInfoType,
+  TeamCautionPageType,
   TeamInjuryInfoType,
   TeamNoteInfoType,
   TodayTrainingPlanInfoType,
@@ -23,26 +23,12 @@ const teamConditionState = atom<TeamConditionInfoType>({
   },
 });
 
-const teamHooperIndexState = atom<TeamHooperIndexInfoType[]>({
+const teamHooperIndexState = atom<TeamCautionPageType>({
   key: "teamHooperIndex",
-  default: [
-    {
-      userInfo: {
-        userId: 0,
-        profile: null,
-        name: "홍길동",
-        positions: ["미드필더"],
-      },
-      hooperIndexInfo: {
-        id: 40,
-        sleep: "적정(1단계)",
-        stress: "적정(1단계)",
-        fatigue: "적정(1단계)",
-        muscleSoreness: "적정(1단계)",
-        recordDate: "2024-02-13",
-      },
-    },
-  ],
+  default: {
+    content: [],
+    totalElements: 0,
+  },
 });
 
 const teamInjuryState = atom<TeamInjuryInfoType>({

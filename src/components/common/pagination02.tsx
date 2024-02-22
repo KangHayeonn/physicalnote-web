@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Button from "@/components/common/button";
 
 interface PaginationProps {
@@ -14,14 +14,23 @@ const Pagination2: React.FC<PaginationProps> = ({
   next,
   prev,
 }) => {
+  const [page, setPage] = useState<number>(0);
+  const [total, setTotal] = useState<number>(0);
+
+  useEffect(() => {
+    setPage(currentPage);
+    setTotal(totalPage);
+  }, [currentPage, totalPage]);
+
   return (
     <div className="flex items-center justify-center space-x-2">
-      {currentPage === 0 ? (
+      {page === 0 ? (
         <Button
           type="button"
           text="이전"
-          classnames="text-[#B9B9C3] text-[13px] font-[700]"
+          classnames="text-[#B9B9C3] text-[13px] font-[700] disabled:hover:bg-[#fff] disabled:hover:text-[#B9B9C3] disabled:hover:cursor-default"
           onClick={prev}
+          disabled
         />
       ) : (
         <Button
@@ -31,12 +40,13 @@ const Pagination2: React.FC<PaginationProps> = ({
           onClick={prev}
         />
       )}
-      {currentPage === totalPage - 1 || totalPage === 0 ? (
+      {page === total - 1 || total === 0 ? (
         <Button
           type="button"
           text="다음"
-          classnames="text-[#B9B9C3] text-[13px] font-[700]"
+          classnames="text-[#B9B9C3] text-[13px] font-[700] disabled:hover:bg-[#fff] disabled:hover:text-[#B9B9C3] disabled:hover:cursor-default"
           onClick={next}
+          disabled
         />
       ) : (
         <Button

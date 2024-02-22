@@ -25,6 +25,11 @@ export interface TeamHooperIndexInfoType {
   hooperIndexInfo: HooperIndexInfoType | null;
 }
 
+export interface TeamCautionPageType {
+  content: TeamHooperIndexInfoType[];
+  totalElements: number;
+}
+
 export interface UserInfoType {
   userId: number;
   profile: string | null;

@@ -29,6 +29,7 @@ import { DashboardResponseType } from "@/types/dashboard";
 const Dashboard: NextPage = () => {
   const [initDate, setInitDate] = useState<Date>(new Date());
   const [searchDate, setSearchDate] = useState<Date>(new Date());
+
   const setTeamCondition = useSetRecoilState(teamConditionState);
   const setTeamCaution = useSetRecoilState(teamHooperIndexState);
   const setTeamInjury = useSetRecoilState(teamInjuryState);
@@ -69,11 +70,14 @@ const Dashboard: NextPage = () => {
     });
   };
 
-  const getTeamCautionInfo = async () => {
-    await Api.v1GetTeamCaution(getFullDateToString(searchDate), 0, 6).then(
+  const getTeamCautionInfo = async (page: number = 0) => {
+    await Api.v1GetTeamCaution(getFullDateToString(searchDate), page, 6).then(
       (res) => {
-        const { content } = res.data;
-        setTeamCaution(content);
+        const { content, totalElements } = res.data;
+        setTeamCaution({
+          content,
+          totalElements,
+        });
       }
     );
   };
@@ -97,30 +101,6 @@ const Dashboard: NextPage = () => {
     getTeamCautionInfo();
     getTeamInjuryInfo();
   }, [searchDate]);
-
-  // X축 데이터와 seriesData를 생성합니다.
-  // const xAxisData: Array<string> = [];
-  // const seriesData: any = [];
-  /*
-  Object.keys(monthsData).forEach((month) => {
-    const monthData = monthsData[month];
-
-    for (let i = 1; i <= 4; i++) {
-      xAxisData.push(`${month}-${i}주차`);
-    }
-
-    monthData.forEach((data: any) => {
-      data.data.forEach((weekData, i) => {
-        seriesData.push({
-          type: data.type,
-          yAxisKey: data.yAxisKey,
-          data: [weekData],
-          name: `${month}-${i + 1}주차`,
-          color: data.color,
-        });
-      });
-    });
-  });*/
 
   return (
     <div className="min-w-[2050px]">
@@ -164,7 +144,10 @@ const Dashboard: NextPage = () => {
             <h2 className="text-[20px] font-[500]">팀 컨디션</h2>
             <div className="grid grid-cols-12 space-x-10">
               <TeamCondition />
-              <TeamHooperIndex />
+              <TeamHooperIndex
+                initPage={searchDate}
+                getData={getTeamCautionInfo}
+              />
             </div>
           </div>
           <div className="flex flex-col space-y-2">
