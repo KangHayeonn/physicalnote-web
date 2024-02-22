@@ -1,14 +1,14 @@
 import React from "react";
 
 interface ItemProps {
-  imageUrl?: string;
+  imageUrl?: string | null;
   position: string;
   name: string;
 }
 
 const Item = ({ imageUrl, position, name }: ItemProps) => {
   return (
-    <div className="cursor-pointer shadow-[0_2px_10px_0px_rgba(0,0,0,0.25)] rounded-[20px] w-[135px] h-[182px] flex flex-col justify-center items-center space-y-1">
+    <div className="cursor-pointer shadow-[0_2px_10px_0px_rgba(0,0,0,0.25)] rounded-[20px] w-[150px] h-[182px] flex flex-col justify-center items-center space-y-1">
       <div>
         {imageUrl ? (
           <div>

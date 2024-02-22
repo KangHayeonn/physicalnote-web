@@ -7,22 +7,27 @@ import { setHours, setMinutes } from "date-fns";
 
 interface CalendarProps {
   calendarType?: string;
-  changeDate?: React.Dispatch<React.SetStateAction<Date | null>> | undefined;
+  initDate?: Date;
+  changeDate?: React.Dispatch<React.SetStateAction<Date>> | undefined;
   changeTime?: React.Dispatch<React.SetStateAction<Date | null>> | undefined;
   changeYear?: React.Dispatch<React.SetStateAction<Date | null>> | undefined;
+  onClick?: () => void;
 }
 
 const DatePickerComponent = ({
   calendarType,
+  initDate,
   changeDate,
   changeTime,
   changeYear,
+  onClick,
 }: CalendarProps) => {
-  const [startDate, setStartDate] = useState<Date | null>(null);
+  const [startDate, setStartDate] = useState<Date>(initDate || new Date());
   const [time, setTime] = useState<Date | null>(null);
   const [year, setYear] = useState<Date | null>(new Date());
 
   const today = new Date();
+  const yesterday = new Date(today.setDate(today.getDate() - 1));
   const tomorrow = new Date(today.setDate(today.getDate() + 1));
 
   useEffect(() => {
@@ -35,7 +40,12 @@ const DatePickerComponent = ({
 
   useEffect(() => {
     if (changeYear) changeYear(year);
+    if (onClick) onClick();
   }, [changeYear, year]);
+
+  useEffect(() => {
+    if (initDate) setStartDate(initDate);
+  }, [initDate]);
 
   if (calendarType === "time") {
     return (
@@ -69,6 +79,35 @@ const DatePickerComponent = ({
     );
   }
 
+  if (calendarType === "yearMonth") {
+    return (
+      <div className="calendar-wrapper">
+        <DatePicker
+          showIcon
+          toggleCalendarOnIconClick
+          icon={
+            <Image
+              src="/images/arrow_down.svg"
+              width={0}
+              height={0}
+              alt="Clock Icon"
+              className="calendar-icon"
+              style={{ width: "100%", height: "auto" }}
+            />
+          }
+          showMonthYearPicker
+          locale={ko}
+          maxDate={today}
+          selected={year}
+          dateFormat="yyyy년 MM월"
+          onChange={(date) => {
+            setYear(date);
+          }}
+        />
+      </div>
+    );
+  }
+
   if (calendarType === "year") {
     return (
       <div className="calendar-wrapper">
@@ -87,13 +126,40 @@ const DatePickerComponent = ({
           }
           showYearPicker
           locale={ko}
-          maxDate={tomorrow}
+          maxDate={today}
           selected={year}
           dateFormat="yyyy"
           onChange={(date) => {
             setYear(date);
           }}
           placeholderText="연도 입력"
+        />
+      </div>
+    );
+  }
+
+  if (calendarType === "date") {
+    return (
+      <div className="calendar-wrapper">
+        <DatePicker
+          showIcon
+          toggleCalendarOnIconClick
+          icon={
+            <Image
+              src="/images/arrow_down.svg"
+              width={10}
+              height={10}
+              alt="Clock Icon"
+              className="calendar-icon"
+            />
+          }
+          locale={ko}
+          selected={startDate}
+          maxDate={today}
+          dateFormat="yy년 MM월 dd일"
+          onChange={(date) => {
+            if (date) setStartDate(date);
+          }}
         />
       </div>
     );
@@ -118,7 +184,7 @@ const DatePickerComponent = ({
         minDate={tomorrow}
         dateFormat="yyyy.MM.dd"
         onChange={(date) => {
-          setStartDate(date);
+          if (date) setStartDate(date);
         }}
         placeholderText="날짜 입력"
       />
