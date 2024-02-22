@@ -156,7 +156,7 @@ const DatePickerComponent = ({
           locale={ko}
           selected={startDate}
           maxDate={today}
-          dateFormat="yy.MM.dd"
+          dateFormat="yy년 MM월 dd일"
           onChange={(date) => {
             if (date) setStartDate(date);
           }}

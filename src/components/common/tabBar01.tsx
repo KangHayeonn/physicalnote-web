@@ -21,8 +21,9 @@ const TabBar01 = ({ tabs, activeTab, onTabClick, classnames }: TabBarProps) => {
         classnames || "justify-start"
       )}
     >
-      {tabs.map((tab) => (
+      {tabs.map((tab, idx) => (
         <button
+          key={`tab${idx}`}
           type="button"
           onClick={() => onTabClick(tab.key)}
           className={cls(
