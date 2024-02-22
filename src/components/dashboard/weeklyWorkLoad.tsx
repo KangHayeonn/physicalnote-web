@@ -1,7 +1,34 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { LineChart } from "@mui/x-charts";
+import { useRecoilValue } from "recoil";
+import { weeklyWorkloadState } from "@/recoil/dashboard/dashboardState";
+import { WeeklyWorkLoadInfoType } from "@/types/dashboard";
 
 const WeeklyWorkLoad = () => {
+  const weeklyWorkLoad = useRecoilValue(weeklyWorkloadState);
+  const [weeklyData, setWeeklyData] = useState<WeeklyWorkLoadInfoType>({
+    stringOfWeekly: "",
+    workloadInfoList: [],
+  });
+  const [xvalue, setXvalue] = useState<Array<string>>([]);
+  const [value, setValue] = useState<Array<number>>([]);
+
+  useEffect(() => {
+    if (weeklyWorkLoad) {
+      const tempXvalue: Array<string> = [];
+      const tempValue: Array<number> = [];
+
+      weeklyWorkLoad.workloadInfoList.map((item) => {
+        tempXvalue.push(item.xvalue);
+        tempValue.push(item.value);
+      });
+
+      setWeeklyData(weeklyWorkLoad);
+      setXvalue(tempXvalue);
+      setValue(tempValue);
+    }
+  }, [weeklyWorkLoad]);
+
   return (
     <div className="flex flex-col col-span-5">
       <div className="text-[15px] font-[400] space-x-2">
@@ -12,7 +39,7 @@ const WeeklyWorkLoad = () => {
       </div>
       <div className="flex flex-col items-end space-y-1">
         <span className="text-[12px] font-[400] mr-4">
-          [ 2023년 10월 2주차 ]
+          {`[ ${weeklyData.stringOfWeekly} ]`}
         </span>
         <div className="w-full rounded-[25px] shadow-[0_2px_10px_0px_rgba(0,0,0,0.25)]">
           <LineChart
@@ -20,22 +47,14 @@ const WeeklyWorkLoad = () => {
             xAxis={[
               {
                 scaleType: "point",
-                data: [
-                  "월(1일)",
-                  "화(2일)",
-                  "수(3일)",
-                  "목(4일)",
-                  "금(5일)",
-                  "토(6일)",
-                  "일(7일)",
-                ],
+                data: xvalue,
               },
             ]}
             series={[
               {
                 type: "line",
                 curve: "linear",
-                data: [125, 100, 150, 175, 125, 75, 0],
+                data: value,
                 color: "#8DBE3D",
               },
             ]}
