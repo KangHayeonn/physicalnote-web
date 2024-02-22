@@ -110,3 +110,7 @@ export interface TeamNoteInfoType {
 export interface LevelCircleType {
   level: string | undefined;
 }
+
+export interface TeamNoteType {
+  searchDate: Date;
+}

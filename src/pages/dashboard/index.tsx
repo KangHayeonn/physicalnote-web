@@ -179,7 +179,7 @@ const Dashboard: NextPage = () => {
               <WeeklyWorkLoad />
               <div className="flex col-span-7 space-x-10">
                 <TrainingBalance />
-                <TeamNote />
+                <TeamNote searchDate={searchDate} />
               </div>
             </div>
           </div>

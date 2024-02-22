@@ -35,6 +35,15 @@ const Dashboard = {
       return Promise.reject(err);
     }
   },
+  async v1UpdateTeamNote(content: string, recordDate: string) {
+    try {
+      const url = `${prefix}/note`;
+      const result = await instanceWithToken.post(url, { content, recordDate });
+      return result;
+    } catch (err) {
+      return Promise.reject(err);
+    }
+  },
 };
 
 export default Dashboard;

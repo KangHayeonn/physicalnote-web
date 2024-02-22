@@ -1,7 +1,7 @@
-import { trainingBalanceState } from "@/recoil/dashboard/dashboardState";
-import { TrainingBalanceInfoType } from "@/types/dashboard";
 import React, { useState, useEffect } from "react";
 import { useRecoilValue } from "recoil";
+import { trainingBalanceState } from "@/recoil/dashboard/dashboardState";
+import { TrainingBalanceInfoType } from "@/types/dashboard";
 
 const TrainingBalance = () => {
   const trainingBalanceInfo = useRecoilValue(trainingBalanceState);
