@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from "react";
 import { NextPage } from "next";
 import Layout from "@/components/layout";
 import Button from "@/components/common/button";
@@ -10,8 +11,93 @@ import WeeklyWorkLoad from "@/components/dashboard/weeklyWorkLoad";
 import TrainingBalance from "@/components/dashboard/trainingBalance";
 import TeamNote from "@/components/dashboard/teamNote";
 import TrainingLoadGraph from "@/components/dashboard/trainingLoadGraph";
+import { useSetRecoilState } from "recoil";
+import {
+  teamConditionState,
+  teamHooperIndexState,
+  teamInjuryState,
+  todayTrainingPlanState,
+  weeklyWorkloadState,
+  trainingBalanceState,
+  trainingLoadGraphState,
+  teamNoteState,
+} from "@/recoil/dashboard/dashboardState";
+import Api from "@/api/dashboard";
+import { getFullDateToString } from "@/utils/dateFormat";
+import { DashboardResponseType } from "@/types/dashboard";
 
 const Dashboard: NextPage = () => {
+  const [initDate, setInitDate] = useState<Date>(new Date());
+  const [searchDate, setSearchDate] = useState<Date>(new Date());
+  const setTeamCondition = useSetRecoilState(teamConditionState);
+  const setTeamCaution = useSetRecoilState(teamHooperIndexState);
+  const setTeamInjury = useSetRecoilState(teamInjuryState);
+  const setTodayTrainingPlan = useSetRecoilState(todayTrainingPlanState);
+  const setWeeklyWorkload = useSetRecoilState(weeklyWorkloadState);
+  const setTrainingBalance = useSetRecoilState(trainingBalanceState);
+  const setTrainingLoadGraph = useSetRecoilState(trainingLoadGraphState);
+  const setTeamNote = useSetRecoilState(teamNoteState);
+
+  const toggleDate = (type: string) => {
+    const today = new Date();
+
+    if (type === "lastWeek") {
+      const lastWeek = today.setDate(today.getDate() - 7);
+      setInitDate(new Date(lastWeek));
+    }
+
+    if (type === "yesterday") {
+      const yesterday = today.setDate(today.getDate() - 1);
+      setInitDate(new Date(yesterday));
+    }
+
+    if (type === "today") {
+      setInitDate(today);
+    }
+  };
+
+  const getDashboardInfo = async () => {
+    await Api.v1GetDashboard(getFullDateToString(searchDate)).then((res) => {
+      const result: DashboardResponseType = res.data;
+
+      setTeamCondition({ ...result.teamConditionInfo });
+      setTodayTrainingPlan([...result.todayTrainingPlanInfo]);
+      setWeeklyWorkload(result.weeklyWorkloadInfo);
+      setTrainingBalance({ ...result.trainingBalanceInfo });
+      setTeamNote({ ...result.teamNoteInfo });
+      setTrainingLoadGraph([...result.trainingLoadGraphInfo]);
+    });
+  };
+
+  const getTeamCautionInfo = async () => {
+    await Api.v1GetTeamCaution(getFullDateToString(searchDate), 0, 6).then(
+      (res) => {
+        const { content } = res.data;
+        setTeamCaution(content);
+      }
+    );
+  };
+
+  const getTeamInjuryInfo = async () => {
+    await Api.v1GetTeamInjury(0, 4).then((res) => {
+      const { teamInjuryCnt, userInjuryInfoList } = res.data;
+      setTeamInjury({
+        teamInjuryCnt,
+        injuryInfoList: userInjuryInfoList,
+      });
+    });
+  };
+
+  const init = () => {
+    setInitDate(new Date());
+  };
+
+  useEffect(() => {
+    getDashboardInfo();
+    getTeamCautionInfo();
+    getTeamInjuryInfo();
+  }, [searchDate]);
+
   // X축 데이터와 seriesData를 생성합니다.
   // const xAxisData: Array<string> = [];
   // const seriesData: any = [];
@@ -47,26 +133,30 @@ const Dashboard: NextPage = () => {
             type="button"
             text="2주전"
             classnames="text-[#8DBE3D] text-[13px] font-[700]"
-            onClick={() => {}}
+            onClick={() => toggleDate("lastWeek")}
           />
           <Button
             type="button"
             text="지난주"
             classnames="text-[#8DBE3D] text-[13px] font-[700]"
-            onClick={() => {}}
+            onClick={() => toggleDate("lastWeek")}
           />
           <Button
             type="button"
             text="오늘"
             classnames="text-[#8DBE3D] text-[13px] font-[700]"
-            onClick={() => {}}
+            onClick={() => toggleDate("today")}
           />
-          <DatePickerComponent calendarType="date" initDate={new Date()} />
+          <DatePickerComponent
+            calendarType="date"
+            initDate={initDate}
+            changeDate={setSearchDate}
+          />
           <Button
             type="button"
             text="초기화"
             classnames="text-[#000] text-[13px] font-[700]"
-            onClick={() => {}}
+            onClick={init}
           />
         </div>
         <div className="space-y-8">

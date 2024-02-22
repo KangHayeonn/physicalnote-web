@@ -1,9 +1,25 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import Image from "next/image";
 import { Box, Slider, styled } from "@mui/material";
+import { useRecoilValue } from "recoil";
+import { TeamConditionInfoType } from "@/types/dashboard";
+import { teamConditionState } from "@/recoil/dashboard/dashboardState";
+import { marks, marks2 } from "@/constants/mock/dashboard";
 
 const TeamCondition = () => {
+  const [condition, setCondition] = useState<TeamConditionInfoType>({
+    hooperIndexValue: 0,
+    hooperIndexString: "",
+    urineValue: 0,
+    registeredPlayerIds: [],
+    registeredPlayerCnt: 0,
+    unRegisteredPlayerIds: [],
+    unRegisteredPlayerCnt: 0,
+  });
+  const teamCondition = useRecoilValue(teamConditionState);
+
   const PrettoSlider = styled(Slider)({
-    color: "#52af77",
+    color: "#4D73BA",
     height: 8,
     "& .MuiSlider-track": {
       border: "none",
@@ -21,48 +37,69 @@ const TeamCondition = () => {
       },
     },
     "& .MuiSlider-valueLabel": {
-      lineHeight: 1.2,
       fontSize: 12,
-      background: "unset",
-      padding: 0,
-      width: 32,
-      height: 32,
-      borderRadius: "50% 50% 50% 0",
-      backgroundColor: "#52af77",
-      transformOrigin: "bottom left",
-      transform: "translate(50%, -100%) rotate(-45deg) scale(0)",
-      "&:before": { display: "none" },
-      "&.MuiSlider-valueLabelOpen": {
-        transform: "translate(50%, -100%) rotate(-45deg) scale(1)",
+      fontWeight: "normal",
+      top: 23,
+      backgroundColor: "unset",
+      color: "#4D73BA",
+      "&:before": {
+        display: "none",
       },
-      "& > *": {
-        transform: "rotate(45deg)",
+      "& *": {
+        background: "transparent",
+        color: "#000",
+        fontWeight: 700,
       },
+    },
+    "&.Mui-disabled": {
+      color: "#4D73BA",
     },
   });
-
-  const marks = [
-    {
-      value: 4,
-      label: "4",
+  const PrettoSlider2 = styled(Slider)({
+    color: "#E6E68C",
+    height: 8,
+    "& .MuiSlider-track": {
+      border: "none",
     },
-    {
-      value: 7,
-      label: "7",
+    "& .MuiSlider-thumb": {
+      height: 24,
+      width: 24,
+      backgroundColor: "#fff",
+      border: "2px solid currentColor",
+      "&:focus, &:hover, &.Mui-active, &.Mui-focusVisible": {
+        boxShadow: "inherit",
+      },
+      "&:before": {
+        display: "none",
+      },
     },
-    {
-      value: 14,
-      label: "14",
+    "& .MuiSlider-valueLabel": {
+      fontSize: 12,
+      fontWeight: "normal",
+      top: 23,
+      backgroundColor: "unset",
+      color: "#E6E68C",
+      "&:before": {
+        display: "none",
+      },
+      "& *": {
+        background: "transparent",
+        color: "#000",
+        fontWeight: 700,
+      },
     },
-    {
-      value: 21,
-      label: "21이상",
+    "&.Mui-disabled": {
+      color: "#E6E68C",
     },
-  ];
+  });
 
   function valuetext(value: number) {
     return `${value}`;
   }
+
+  useEffect(() => {
+    setCondition(teamCondition);
+  }, [teamCondition]);
 
   return (
     <div className="flex flex-col col-span-5 space-y-4">
@@ -71,18 +108,24 @@ const TeamCondition = () => {
           <span className="text-[15px] font-[400]">■ 훈련준비 상태</span>
           <div className="w-full">
             <Box sx={{ width: 300 }}>
-              <PrettoSlider
-                // aria-label="Temperature"
-                defaultValue={11}
-                getAriaValueText={valuetext}
-                valueLabelDisplay="auto"
-                step={1}
-                marks={marks}
-                min={4}
-                max={21}
-                // disabled
-              />
+              {condition.hooperIndexValue !== 0 ? (
+                <PrettoSlider
+                  defaultValue={condition.hooperIndexValue}
+                  getAriaValueText={valuetext}
+                  valueLabelDisplay="on"
+                  step={1}
+                  marks={marks}
+                  min={4}
+                  max={21}
+                  disabled
+                />
+              ) : (
+                <PrettoSlider disabled />
+              )}
             </Box>
+            {condition.hooperIndexValue !== 0 && (
+              <em className="text-[12px] text-[#000] font-[400] not-italic">{`Hooper Index(평균값) : ${condition.hooperIndexValue}(${condition.hooperIndexString})`}</em>
+            )}
           </div>
         </div>
         <div className="flex flex-col space-y-2">
@@ -90,33 +133,39 @@ const TeamCondition = () => {
             <div className="py-2 text-[12px] font-[400] space-x-4">
               <span>등록선수</span>
               <span>:</span>
-              <span>08명</span>
+              <span>
+                {condition.registeredPlayerCnt < 10
+                  ? `0${condition.registeredPlayerCnt}`
+                  : condition.registeredPlayerCnt}
+                명
+              </span>
             </div>
             <div className="py-2 text-[12px] font-[400] space-x-4">
               <span>미등록선수</span>
               <span>:</span>
-              <span>14명</span>
+              <span>
+                {condition.unRegisteredPlayerCnt < 10
+                  ? `0${condition.unRegisteredPlayerCnt}`
+                  : condition.unRegisteredPlayerCnt}
+                명
+              </span>
             </div>
           </div>
-          <button className="bg-white shadow-[0_2px_10px_0px_rgba(0,0,0,0.25)] rounded-[5px] w-[170px] h-[25px] flex justify-center items-center space-x-2">
-            <span className="text-[12px] text-[#8DBE3D] font-[400]">
-              미등록 선수(14명) 알림
-            </span>
-            <span>
-              <svg
-                width="17"
-                height="17"
-                viewBox="0 0 17 17"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M0 6.70833C0 5.31944 0.309028 4.04514 0.927083 2.88542C1.54514 1.72569 2.375 0.763889 3.41667 0L4.39583 1.33333C3.5625 1.94444 2.89931 2.71528 2.40625 3.64583C1.91319 4.57639 1.66667 5.59722 1.66667 6.70833H0ZM15 6.70833C15 5.59722 14.7535 4.57639 14.2604 3.64583C13.7674 2.71528 13.1042 1.94444 12.2708 1.33333L13.25 0C14.2917 0.763889 15.1215 1.72569 15.7396 2.88542C16.3576 4.04514 16.6667 5.31944 16.6667 6.70833H15ZM1.66667 14.2083V12.5417H3.33333V6.70833C3.33333 5.55556 3.68056 4.53125 4.375 3.63542C5.06945 2.73958 5.97222 2.15278 7.08333 1.875V1.29167C7.08333 0.944444 7.20486 0.649306 7.44792 0.40625C7.69097 0.163194 7.98611 0.0416667 8.33333 0.0416667C8.68056 0.0416667 8.9757 0.163194 9.21875 0.40625C9.46181 0.649306 9.58333 0.944444 9.58333 1.29167V1.875C10.6944 2.15278 11.5972 2.73958 12.2917 3.63542C12.9861 4.53125 13.3333 5.55556 13.3333 6.70833V12.5417H15V14.2083H1.66667ZM8.33333 16.7083C7.875 16.7083 7.48264 16.5451 7.15625 16.2188C6.82986 15.8924 6.66667 15.5 6.66667 15.0417H10C10 15.5 9.83681 15.8924 9.51042 16.2188C9.18403 16.5451 8.79167 16.7083 8.33333 16.7083ZM5 12.5417H11.6667V6.70833C11.6667 5.79167 11.3403 5.00694 10.6875 4.35417C10.0347 3.70139 9.25 3.375 8.33333 3.375C7.41667 3.375 6.63195 3.70139 5.97917 4.35417C5.32639 5.00694 5 5.79167 5 6.70833V12.5417Z"
-                  fill="#8DBE3D"
+          {condition.unRegisteredPlayerCnt !== 0 && (
+            <button className="bg-white shadow-[0_2px_10px_0px_rgba(0,0,0,0.25)] rounded-[5px] w-[170px] h-[25px] flex justify-center items-center space-x-2">
+              <span className="text-[12px] text-[#8DBE3D] font-[400]">
+                미등록 선수({condition.unRegisteredPlayerCnt}명) 알림
+              </span>
+              <span>
+                <Image
+                  src="/images/alert.svg"
+                  width={17}
+                  height={17}
+                  alt="alert icon"
                 />
-              </svg>
-            </span>
-          </button>
+              </span>
+            </button>
+          )}
         </div>
       </div>
       <div className="flex items-center space-x-24">
@@ -124,52 +173,22 @@ const TeamCondition = () => {
           <span className="text-[15px] font-[400]">■ 수분섭취 상태</span>
           <div className="w-full">
             <Box sx={{ width: 300 }}>
-              <PrettoSlider
-                // aria-label="Temperature"
-                defaultValue={7}
-                getAriaValueText={valuetext}
-                valueLabelDisplay="auto"
-                step={1}
-                marks={marks}
-                min={4}
-                max={21}
-                // disabled
-              />
+              {condition.urineValue !== 0 ? (
+                <PrettoSlider2
+                  defaultValue={condition.urineValue}
+                  getAriaValueText={valuetext}
+                  valueLabelDisplay="on"
+                  step={1}
+                  marks={marks2}
+                  min={1}
+                  max={7}
+                  disabled
+                />
+              ) : (
+                <PrettoSlider2 disabled />
+              )}
             </Box>
           </div>
-        </div>
-        <div className="flex flex-col space-y-2">
-          <div className="flex flex-col items-center divide-dotted divide-y-2">
-            <div className="py-2 text-[12px] font-[400] space-x-4 flex justify-between items-center">
-              <span>등록선수</span>
-              <span>:</span>
-              <span>08명</span>
-            </div>
-            <div className="py-2 text-[12px] font-[400] space-x-4">
-              <span>미등록선수</span>
-              <span>:</span>
-              <span>14명</span>
-            </div>
-          </div>
-          <button className="bg-white shadow-[0_2px_10px_0px_rgba(0,0,0,0.25)] rounded-[5px] w-[170px] h-[25px] flex justify-center items-center space-x-2">
-            <span className="text-[12px] text-[#8DBE3D] font-[400]">
-              미등록 선수(14명) 알림
-            </span>
-            <span>
-              <svg
-                width="17"
-                height="17"
-                viewBox="0 0 17 17"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M0 6.70833C0 5.31944 0.309028 4.04514 0.927083 2.88542C1.54514 1.72569 2.375 0.763889 3.41667 0L4.39583 1.33333C3.5625 1.94444 2.89931 2.71528 2.40625 3.64583C1.91319 4.57639 1.66667 5.59722 1.66667 6.70833H0ZM15 6.70833C15 5.59722 14.7535 4.57639 14.2604 3.64583C13.7674 2.71528 13.1042 1.94444 12.2708 1.33333L13.25 0C14.2917 0.763889 15.1215 1.72569 15.7396 2.88542C16.3576 4.04514 16.6667 5.31944 16.6667 6.70833H15ZM1.66667 14.2083V12.5417H3.33333V6.70833C3.33333 5.55556 3.68056 4.53125 4.375 3.63542C5.06945 2.73958 5.97222 2.15278 7.08333 1.875V1.29167C7.08333 0.944444 7.20486 0.649306 7.44792 0.40625C7.69097 0.163194 7.98611 0.0416667 8.33333 0.0416667C8.68056 0.0416667 8.9757 0.163194 9.21875 0.40625C9.46181 0.649306 9.58333 0.944444 9.58333 1.29167V1.875C10.6944 2.15278 11.5972 2.73958 12.2917 3.63542C12.9861 4.53125 13.3333 5.55556 13.3333 6.70833V12.5417H15V14.2083H1.66667ZM8.33333 16.7083C7.875 16.7083 7.48264 16.5451 7.15625 16.2188C6.82986 15.8924 6.66667 15.5 6.66667 15.0417H10C10 15.5 9.83681 15.8924 9.51042 16.2188C9.18403 16.5451 8.79167 16.7083 8.33333 16.7083ZM5 12.5417H11.6667V6.70833C11.6667 5.79167 11.3403 5.00694 10.6875 4.35417C10.0347 3.70139 9.25 3.375 8.33333 3.375C7.41667 3.375 6.63195 3.70139 5.97917 4.35417C5.32639 5.00694 5 5.79167 5 6.70833V12.5417Z"
-                  fill="#8DBE3D"
-                />
-              </svg>
-            </span>
-          </button>
         </div>
       </div>
     </div>

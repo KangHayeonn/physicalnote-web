@@ -1,7 +1,5 @@
 export interface DashboardResponseType {
   teamConditionInfo: TeamConditionInfoType;
-  teamHooperIndexInfo: TeamHooperIndexInfoType[];
-  teamInjuryInfo: TeamInjuryInfoType;
   todayTrainingPlanInfo: TodayTrainingPlanInfoType[];
   weeklyWorkloadInfo: WeeklyWorkLoadInfoType;
   trainingBalanceInfo: TrainingBalanceInfoType;
@@ -13,6 +11,7 @@ export interface DashboardResponseType {
 // 팀 컨디션 정보
 export interface TeamConditionInfoType {
   hooperIndexValue: number;
+  hooperIndexString: string;
   urineValue: number;
   registeredPlayerIds: Array<number>;
   registeredPlayerCnt: number;
@@ -45,8 +44,12 @@ export interface HooperIndexInfoType {
 // 부상 정보
 export interface TeamInjuryInfoType {
   teamInjuryCnt: number;
-  userInjuryInfoList: UserInfoType[];
+  injuryInfoList: InjuryInfoListType[];
+}
+
+export interface InjuryInfoListType {
   injuryInfo: InjuryInfoType[];
+  userInfo: UserInfoType[];
 }
 
 export interface InjuryInfoType {

@@ -14,6 +14,7 @@ const teamConditionState = atom<TeamConditionInfoType>({
   key: "teamCondition",
   default: {
     hooperIndexValue: 12,
+    hooperIndexString: "",
     urineValue: 5,
     registeredPlayerIds: [1],
     registeredPlayerCnt: 1,
@@ -48,20 +49,7 @@ const teamInjuryState = atom<TeamInjuryInfoType>({
   key: "teamInjury",
   default: {
     teamInjuryCnt: 1,
-    userInjuryInfoList: [
-      {
-        userId: 0,
-        profile: null,
-        name: "홍길동",
-        positions: ["미드필더"],
-      },
-    ],
-    injuryInfo: [
-      {
-        injuryOfString: "",
-        injuryDetails: "",
-      },
-    ],
+    injuryInfoList: [],
   },
 });
 
