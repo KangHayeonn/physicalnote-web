@@ -123,7 +123,7 @@ const Dashboard: NextPage = () => {
   });*/
 
   return (
-    <div className="min-w-[1920px]">
+    <div className="min-w-[2000px]">
       <Layout>
         <div className="flex items-center space-x-[30px]">
           <h1 className="text-[28px] font-[700]">대시보드</h1>

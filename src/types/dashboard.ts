@@ -106,3 +106,7 @@ export interface TeamNoteInfoType {
   content: string;
   recordDate: string;
 }
+
+export interface LevelCircleType {
+  level: string | undefined;
+}
