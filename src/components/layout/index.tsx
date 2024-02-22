@@ -11,7 +11,7 @@ const Layout = ({ children }: LayoutProps) => {
   const router = useRouter();
 
   return (
-    <div className="flex relative">
+    <div className="flex relative min-w-[1080px]">
       <div className="flex flex-col flex-1 h-screen bg-[#C7E19B] fixed w-full py-10 pl-5">
         <div className="pl-2">
           <svg

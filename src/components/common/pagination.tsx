@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import Image from "next/image";
 import { cls } from "@/utils";
 
 interface PaginationProps {
@@ -116,57 +117,23 @@ const Pagination: React.FC<PaginationProps> = ({
   return (
     <div className="flex items-center justify-center my-2">
       <span onClick={prev} className="cursor-pointer">
-        <svg
-          width="25"
-          height="24"
-          viewBox="0 0 25 24"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <g clipPath="url(#clip0_3800_103027)">
-            <path
-              d="M11.5 18V6L3 12L11.5 18ZM12 12L20.5 18V6L12 12Z"
-              fill="#7E8083"
-            />
-          </g>
-          <defs>
-            <clipPath id="clip0_3800_103027">
-              <rect
-                width="24"
-                height="24"
-                fill="white"
-                transform="translate(0.5)"
-              />
-            </clipPath>
-          </defs>
-        </svg>
+        <Image
+          src="/images/arrow_left.svg"
+          width={0}
+          height={0}
+          alt="Pagination Left Button"
+          style={{ width: "7px", height: "auto" }}
+        />
       </span>
       <span>{renderPageNumbers()}</span>
       <span onClick={next} className="cursor-pointer">
-        <svg
-          width="25"
-          height="24"
-          viewBox="0 0 25 24"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <g clipPath="url(#clip0_3800_103034)">
-            <path
-              d="M4.5 18L13 12L4.5 6V18ZM13.5 6V18L22 12L13.5 6Z"
-              fill="#7E8083"
-            />
-          </g>
-          <defs>
-            <clipPath id="clip0_3800_103034">
-              <rect
-                width="24"
-                height="24"
-                fill="white"
-                transform="translate(0.5)"
-              />
-            </clipPath>
-          </defs>
-        </svg>
+        <Image
+          src="/images/arrow_right.svg"
+          width={0}
+          height={0}
+          alt="Pagination Right Button"
+          style={{ width: "7px", height: "auto" }}
+        />
       </span>
     </div>
   );
