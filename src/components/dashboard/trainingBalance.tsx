@@ -1,6 +1,45 @@
-import React from "react";
+import { trainingBalanceState } from "@/recoil/dashboard/dashboardState";
+import { TrainingBalanceInfoType } from "@/types/dashboard";
+import React, { useState, useEffect } from "react";
+import { useRecoilValue } from "recoil";
 
 const TrainingBalance = () => {
+  const trainingBalanceInfo = useRecoilValue(trainingBalanceState);
+  const [trainingBalance, setTrainingBalance] =
+    useState<TrainingBalanceInfoType>(trainingBalanceInfo);
+
+  interface BalanceLabelType {
+    value: number;
+    type: string;
+  }
+  const BalanceLabel = ({ value, type }: BalanceLabelType) => {
+    return (
+      <>
+        {type === "부족" && (
+          <div className="px-2 bg-[#FFCFA1] rounded-[5px] font-[700]">
+            {value.toFixed(2)}
+          </div>
+        )}
+        {type === "충분" && (
+          <div className="px-2 bg-[#C7DF9F] rounded-[5px] font-[700]">
+            {value.toFixed(2)}
+          </div>
+        )}
+        {type === "과다" && (
+          <div className="px-2 bg-[#FFA1A1] rounded-[5px] font-[700]">
+            {value.toFixed(2)}
+          </div>
+        )}
+      </>
+    );
+  };
+
+  useEffect(() => {
+    if (trainingBalanceInfo) {
+      setTrainingBalance(trainingBalanceInfo);
+    }
+  }, [trainingBalanceInfo]);
+
   return (
     <div className="grid grid-rows-1 min-w-[457px]">
       <div className="text-[15px] font-[400] space-x-2">
@@ -11,34 +50,38 @@ const TrainingBalance = () => {
       </div>
       <div className="w-full">
         <span className="text-[15px] font-[400]">
-          [ 이번주 운동부하 평균 : 300 ]
+          {`[ 이번주 운동부하 평균 : ${Math.ceil(trainingBalance.thisWeekValue)} ]`}
         </span>
         <div className="flex space-x-10 mt-6 mb-5">
           <div className="w-full h-[42px] flex justify-around items-center rounded-[25px] shadow-[0_2px_10px_0px_rgba(0,0,0,0.25)]">
-            <div>지난 4주 (400)</div>
-            <div className="px-2 bg-[#FFCFA1] rounded-[5px] font-[700]">
-              0.75
-            </div>
+            <div>{`지난 2주 (${Math.ceil(trainingBalance.lastTwoWeekValue)})`}</div>
+            <BalanceLabel
+              value={trainingBalance.lastTwoWeekBalanceValue}
+              type={trainingBalance.lastTwoWeekValueOfString}
+            />
           </div>
           <div className="w-full h-[42px] flex justify-around items-center rounded-[25px] shadow-[0_2px_10px_0px_rgba(0,0,0,0.25)]">
-            <div>지난 6주 (500)</div>
-            <div className="px-2 bg-[#FFCFA1] rounded-[5px] font-[700]">
-              0.60
-            </div>
+            <div>{`지난 4주 (${Math.ceil(trainingBalance.lastFourWeekValue)})`}</div>
+            <BalanceLabel
+              value={trainingBalance.lastFourWeekBalanceValue}
+              type={trainingBalance.lastFourWeekValueOfString}
+            />
           </div>
         </div>
         <div className="flex space-x-10 mb-9">
           <div className="w-full h-[42px] flex justify-around items-center rounded-[25px] shadow-[0_2px_10px_0px_rgba(0,0,0,0.25)]">
-            <div>지난 8주 (420)</div>
-            <div className="px-2 bg-[#C7DF9F] rounded-[5px] font-[700]">
-              1.40
-            </div>
+            <div>{`지난 6주 (${Math.ceil(trainingBalance.lastSixWeekValue)})`}</div>
+            <BalanceLabel
+              value={trainingBalance.lastSixWeekBalanceValue}
+              type={trainingBalance.lastSixWeekOfString}
+            />
           </div>
           <div className="w-full h-[42px] flex justify-around items-center rounded-[25px] shadow-[0_2px_10px_0px_rgba(0,0,0,0.25)]">
-            <div>지난 10주 (170)</div>
-            <div className="px-2 bg-[#FFA1A1] rounded-[5px] font-[700]">
-              1.76
-            </div>
+            <div>{`지난 8주 (${Math.ceil(trainingBalance.lastEightWeekValue)})`}</div>
+            <BalanceLabel
+              value={trainingBalance.lastEightWeekBalanceValue}
+              type={trainingBalance.lastEightWeekValueOfString}
+            />
           </div>
         </div>
         <div className="w-full text-[15px] p-2 rounded-[25px] shadow-[0_2px_10px_0px_rgba(0,0,0,0.25)] space-y-1">

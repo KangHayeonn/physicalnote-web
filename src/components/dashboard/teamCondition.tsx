@@ -110,7 +110,7 @@ const TeamCondition = () => {
             <Box sx={{ width: 300 }}>
               {condition.hooperIndexValue !== 0 ? (
                 <PrettoSlider
-                  defaultValue={Math.floor(condition.hooperIndexValue)}
+                  defaultValue={Math.ceil(condition.hooperIndexValue)}
                   getAriaValueText={valuetext}
                   valueLabelDisplay="on"
                   step={1}
@@ -124,7 +124,7 @@ const TeamCondition = () => {
               )}
             </Box>
             {condition.hooperIndexValue !== 0 && (
-              <em className="text-[12px] text-[#000] font-[400] not-italic">{`Hooper Index(평균값) : ${Math.floor(condition.hooperIndexValue)} (${condition.hooperIndexString})`}</em>
+              <em className="text-[12px] text-[#000] font-[400] not-italic">{`Hooper Index(평균값) : ${Math.ceil(condition.hooperIndexValue)} (${condition.hooperIndexString})`}</em>
             )}
           </div>
         </div>
@@ -175,7 +175,7 @@ const TeamCondition = () => {
             <Box sx={{ width: 300 }}>
               {condition.urineValue !== 0 ? (
                 <PrettoSlider2
-                  defaultValue={Math.floor(condition.urineValue)}
+                  defaultValue={Math.ceil(condition.urineValue)}
                   getAriaValueText={valuetext}
                   valueLabelDisplay="on"
                   step={1}
