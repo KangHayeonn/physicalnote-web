@@ -67,7 +67,7 @@ const TrainingLoadGraph = () => {
               seriesData={progressData}
               yAxisIds={yAxisIds}
               height={260}
-              margin={{ left: 40, right: 40 }}
+              margin={{ left: 60, right: 60 }}
             />
           </div>
         </div>
