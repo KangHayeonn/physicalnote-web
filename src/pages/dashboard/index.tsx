@@ -82,8 +82,8 @@ const Dashboard: NextPage = () => {
     );
   };
 
-  const getTeamInjuryInfo = async () => {
-    await Api.v1GetTeamInjury(0, 4).then((res) => {
+  const getTeamInjuryInfo = async (page: number = 0) => {
+    await Api.v1GetTeamInjury(page, 4).then((res) => {
       const { teamInjuryCnt, userInjuryInfoList } = res.data;
       setTeamInjury({
         teamInjuryCnt,
@@ -152,7 +152,7 @@ const Dashboard: NextPage = () => {
           </div>
           <div className="flex flex-col space-y-2">
             <div className="grid grid-cols-12 space-x-10">
-              <TeamInjury />
+              <TeamInjury initPage={searchDate} getData={getTeamInjuryInfo} />
               <TodayTrainingPlan />
             </div>
           </div>

@@ -119,3 +119,8 @@ export interface LevelCircleType {
 export interface TeamNoteType {
   searchDate: Date;
 }
+
+export interface PaginationProps {
+  initPage: Date;
+  getData: (page?: number) => Promise<void>;
+}

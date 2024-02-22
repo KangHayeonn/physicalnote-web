@@ -4,9 +4,13 @@ import Item from "@/components/common/item";
 import { useRecoilValue } from "recoil";
 import Pagination2 from "@/components/common/pagination02";
 import { teamInjuryState } from "@/recoil/dashboard/dashboardState";
-import { TeamInjuryInfoType, LevelCircleType } from "@/types/dashboard";
+import {
+  TeamInjuryInfoType,
+  LevelCircleType,
+  PaginationProps,
+} from "@/types/dashboard";
 
-const TeamInjury = () => {
+const TeamInjury = ({ initPage, getData }: PaginationProps) => {
   const teamInjuryInfo = useRecoilValue(teamInjuryState);
   const [teamInjury, setTeamInjury] = useState<TeamInjuryInfoType>({
     teamInjuryCnt: 0,
@@ -91,10 +95,18 @@ const TeamInjury = () => {
   };
 
   useEffect(() => {
+    handlePageChange(0);
+  }, [initPage]);
+
+  useEffect(() => {
+    getData(currentPage);
+  }, [page]);
+
+  useEffect(() => {
     if (teamInjuryInfo) {
       setTeamInjury(teamInjuryInfo);
-      const length = teamInjuryInfo.teamInjuryCnt;
-      setTotalLength(length);
+      const length = teamInjuryInfo.injuryInfoList.length;
+      setTotalLength(teamInjuryInfo.teamInjuryCnt);
       setIsOpen(Array.from({ length }, () => false));
     }
   }, [teamInjuryInfo]);

@@ -3,15 +3,14 @@ import usePagination from "@/utils/hooks/usePagination";
 import Item from "@/components/common/item";
 import { useRecoilValue } from "recoil";
 import { teamHooperIndexState } from "@/recoil/dashboard/dashboardState";
-import { TeamHooperIndexInfoType, LevelCircleType } from "@/types/dashboard";
+import {
+  TeamHooperIndexInfoType,
+  LevelCircleType,
+  PaginationProps,
+} from "@/types/dashboard";
 import Pagination2 from "@/components/common/pagination02";
 
-interface TeamHooperIndexProps {
-  initPage: Date;
-  getData: (page?: number) => Promise<void>;
-}
-
-const TeamHooperIndex = ({ initPage, getData }: TeamHooperIndexProps) => {
+const TeamHooperIndex = ({ initPage, getData }: PaginationProps) => {
   const hooperIndex = useRecoilValue(teamHooperIndexState);
   const [teamCaution, setTeamCaution] = useState<TeamHooperIndexInfoType[]>([]);
   const [isOpen, setIsOpen] = useState<boolean[]>([]);
