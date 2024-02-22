@@ -49,7 +49,7 @@ export interface TeamInjuryInfoType {
 
 export interface InjuryInfoListType {
   injuryInfo: InjuryInfoType[];
-  userInfo: UserInfoType[];
+  userInfo: UserInfoType;
 }
 
 export interface InjuryInfoType {

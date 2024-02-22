@@ -111,18 +111,18 @@ const TeamHooperIndex = () => {
       {teamCaution.length !== 0 ? (
         <div className="grid grid-cols-6 gap-10">
           {teamCaution.map((el, idx) => (
-            <div onClick={() => toggleEvent(idx)}>
+            <div key={`hooper-index${idx}`} onClick={() => toggleEvent(idx)}>
               {!isOpen[idx] ? (
                 <Item
                   key={`teamCaution${idx}`}
                   imageUrl={el.userInfo.profile}
-                  position={el.userInfo.positions.join(", ")}
+                  position={el.userInfo.positions.join("/")}
                   name={el.userInfo.name}
                 />
               ) : (
                 <div className="cursor-pointer shadow-[0_2px_10px_0px_rgba(0,0,0,0.25)] rounded-[20px] w-[150px] h-[182px] flex flex-col justify-center items-center space-y-1 p-2">
                   <div className="w-full flex justify-start text-[14px] font-[700] mb-3">
-                    <span>{`${el.userInfo.positions.join(",")} ${el.userInfo.name}`}</span>
+                    <span>{`${el.userInfo.positions.join("/")} ${el.userInfo.name}`}</span>
                   </div>
                   <div className="w-full flex justify-between text-[12px]">
                     <div className="text-[14px]">수면의 질</div>

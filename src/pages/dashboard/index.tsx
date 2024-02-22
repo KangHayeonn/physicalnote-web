@@ -83,7 +83,7 @@ const Dashboard: NextPage = () => {
       const { teamInjuryCnt, userInjuryInfoList } = res.data;
       setTeamInjury({
         teamInjuryCnt,
-        injuryInfoList: userInjuryInfoList,
+        injuryInfoList: userInjuryInfoList.content,
       });
     });
   };

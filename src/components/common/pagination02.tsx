@@ -31,7 +31,7 @@ const Pagination2: React.FC<PaginationProps> = ({
           onClick={prev}
         />
       )}
-      {currentPage === totalPage - 1 ? (
+      {currentPage === totalPage - 1 || totalPage === 0 ? (
         <Button
           type="button"
           text="다음"
