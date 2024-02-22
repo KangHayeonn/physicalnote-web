@@ -14,3 +14,24 @@
   background-image: url("/icons/selectbox_arrow.svg");
   background-size: auto;
 }
+
+/* 스크롤바의 모양을 정의 */
+::-webkit-scrollbar {
+  width: 10px; /* 스크롤바의 너비 */
+}
+
+/* 스크롤바의 track 부분(배경)을 정의 */
+::-webkit-scrollbar-track {
+  background: #f1f1f1; /* 스크롤바의 배경색 */
+}
+
+/* 스크롤바의 thumb 부분(드래그 가능한 부분)을 정의 */
+::-webkit-scrollbar-thumb {
+  background: #c1c1c1; /* 스크롤바의 색상 */
+  border-radius: 5px; /* 스크롤바의 모서리 반경 */
+}
+
+/* 스크롤바가 마우스 오버됐을 때의 thumb 부분의 색상을 정의 */
+::-webkit-scrollbar-thumb:hover {
+  background: #c6e19b; /* 마우스 오버시 색상 */
+}

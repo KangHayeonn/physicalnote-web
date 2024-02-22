@@ -124,7 +124,7 @@ const TeamInjury = () => {
         </div>
       </div>
       {teamInjury.teamInjuryCnt !== 0 ? (
-        <div className="w-full grid grid-cols-4">
+        <div className="w-full grid grid-cols-4 gap-10">
           {teamInjury?.injuryInfoList.map((el, idx) => (
             <div key={`injury${idx}`} onClick={() => toggleEvent(idx)}>
               {!isOpen[idx] ? (

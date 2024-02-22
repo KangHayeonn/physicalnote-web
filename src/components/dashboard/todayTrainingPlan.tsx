@@ -1,6 +1,25 @@
-import React from "react";
+import { todayTrainingPlanState } from "@/recoil/dashboard/dashboardState";
+import { TodayTrainingPlanInfoType } from "@/types/dashboard";
+import React, { useState, useEffect } from "react";
+import { useRecoilValue } from "recoil";
+import { getTimeFormat } from "@/utils/strFormat";
 
 const TodayTrainingPlan = () => {
+  const todayTrainingPlan = useRecoilValue(todayTrainingPlanState);
+  const [trainingPlan, setTrainingPlan] = useState<TodayTrainingPlanInfoType[]>(
+    []
+  );
+
+  const goUpdateSchedule = (id: number) => {
+    // todo : 일정 관리 수정 페이지 이동
+  };
+
+  useEffect(() => {
+    if (todayTrainingPlan) {
+      setTrainingPlan(todayTrainingPlan);
+    }
+  }, [todayTrainingPlan]);
+
   return (
     <div className="flex flex-col col-span-7 space-y-4">
       <div className="flex items-center space-x-4">
@@ -25,65 +44,66 @@ const TodayTrainingPlan = () => {
           </span>
         </button>
       </div>
-      <div className="grid grid-cols-2 space-x-10">
-        <div className="flex space-x-8">
-          <div className="flex flex-col space-y-4">
-            <span className="text-[15px] font-[400]">■ 시간</span>
-            <div className="flex flex-col justify-between space-y-10 h-full">
-              <div className="w-[195px] h-[42px] text-[15px] font-[400] flex justify-center items-center rounded-[20px] shadow-[0_2px_10px_0px_rgba(0,0,0,0.25)]">
-                필드 - 09:30 ~ 11:00
+      {trainingPlan.length !== 0 ? (
+        <div>
+          <div className="grid grid-cols-2 space-x-10 px-3">
+            <div className="flex space-x-8">
+              <div className="w-[255px]">
+                <span className="text-[15px] font-[400]">■ 시간</span>
               </div>
-              <div className="w-[195px] h-[42px] text-[15px] font-[400] flex justify-center items-center rounded-[20px] shadow-[0_2px_10px_0px_rgba(0,0,0,0.25)]">
-                피지컬 - 14:30 ~ 15:00
+              <div className="w-[175px]">
+                <span className="text-[15px] font-[400]">■ 장소</span>
               </div>
+            </div>
+            <div>
+              <span className="text-[15px] font-[400]">■ 훈련상세계획</span>
             </div>
           </div>
-          <div className="flex flex-col space-y-4">
-            <span className="text-[15px] font-[400]">■ 장소</span>
-            <div className="flex flex-col justify-between space-y-10 h-full">
-              <div className="w-[195px] h-[42px] text-[15px] font-[400] flex justify-center items-center rounded-[20px] shadow-[0_2px_10px_0px_rgba(0,0,0,0.25)]">
-                강릉종합운동장
+          <div className="h-[230px] overflow-y-scroll space-y-3 p-3">
+            {trainingPlan.map((el, idx) => (
+              <div key={`plan${idx}`} className="grid grid-cols-2 space-x-10">
+                <div className="flex space-x-8">
+                  <div className="flex flex-col space-y-4">
+                    <div className="flex flex-col justify-between space-y-10 h-full">
+                      <div className="w-[255px] h-[42px] text-[15px] font-[400] flex justify-center items-center rounded-[20px] shadow-[0_2px_10px_0px_rgba(0,0,0,0.25)]">
+                        {el.categoryName} - {getTimeFormat(el.startTime)}~
+                        {getTimeFormat(el.endTime)}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex flex-col space-y-4">
+                    <div className="flex flex-col justify-between space-y-10 h-full">
+                      <div className="w-[195px] h-[42px] text-[15px] font-[400] flex justify-center items-center rounded-[20px] shadow-[0_2px_10px_0px_rgba(0,0,0,0.25)]">
+                        {el.address}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="flex flex-col space-y-4">
+                  <div className="flex flex-col space-y-8 space-x-8">
+                    <div className="flex items-center justify-between space-x-2">
+                      <div className="w-full py-[10px] px-[20px] text-[15px] font-[400] flex-1 flex justify-start items-center rounded-[20px] shadow-[0_2px_10px_0px_rgba(0,0,0,0.25)] overflow-hidden overflow-ellipsis">
+                        <div className="w-full line-clamp-3">{el.content}</div>
+                      </div>
+                      <button
+                        className="shadow-[0_2px_10px_0px_rgba(0,0,0,0.25)] py-1 px-3 rounded-[5px] text-[12px] text-[#8DBE3D] font-[700]"
+                        type="button"
+                        onClick={() => goUpdateSchedule(el.id)}
+                      >
+                        수정
+                      </button>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div className="w-[195px] h-[42px] text-[15px] font-[400] flex justify-center items-center rounded-[20px] shadow-[0_2px_10px_0px_rgba(0,0,0,0.25)]">
-                파워베이스
-              </div>
-            </div>
+            ))}
           </div>
         </div>
-        <div className="grid grid-cols-1">
-          <div className="flex flex-col space-y-4">
-            <span className="text-[15px] font-[400]">■ 훈련상세계획</span>
-            <div className="flex flex-col space-y-8">
-              <div className="flex items-center justify-between space-x-2">
-                <div className="py-[10px] px-[20px] text-[15px] font-[400] flex-1 flex justify-start items-center rounded-[20px] shadow-[0_2px_10px_0px_rgba(0,0,0,0.25)]">
-                  전술훈련을 해야된당 저기서 저기로 가는 훈련
-                  <br />
-                  전술훈련을 해야된당 저기서 저기로 가는 훈련
-                  <br />
-                  전술훈련을 해야된당 저기서 저기로 가는 훈련
-                </div>
-                <button
-                  className="shadow-[0_2px_10px_0px_rgba(0,0,0,0.25)] py-1 px-3 rounded-[5px] text-[12px] text-[#8DBE3D] font-[700]"
-                  type="button"
-                >
-                  수정
-                </button>
-              </div>
-              <div className="flex items-center justify-between space-x-2">
-                <div className="py-[10px] px-[20px] flex-1 h-[42px] text-[15px] font-[400] flex justify-start items-center rounded-[20px] shadow-[0_2px_10px_0px_rgba(0,0,0,0.25)]">
-                  하체훈련
-                </div>
-                <button
-                  className="shadow-[0_2px_10px_0px_rgba(0,0,0,0.25)] py-1 px-3 rounded-[5px] text-[12px] text-[#8DBE3D] font-[700]"
-                  type="button"
-                >
-                  수정
-                </button>
-              </div>
-            </div>
-          </div>
+      ) : (
+        <div className="flex items-center justify-center w-full py-10 font-[400]">
+          오늘 일정이 없습니다.
         </div>
-      </div>
+      )}
     </div>
   );
 };
