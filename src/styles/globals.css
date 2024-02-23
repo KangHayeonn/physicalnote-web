@@ -76,3 +76,44 @@
 .ant-picker-time-panel-cell-selected .ant-picker-time-panel-cell-inner {
   background-color: #eff7e1 !important;
 }
+
+/* Full Calendar Custom */
+
+.fc button {
+  background-color: #fff;
+  border: none;
+}
+
+.fc .fc-button-primary {
+  background-color: #fff;
+  color: #6c757d;
+  border: none;
+}
+
+.fc .fc-button-primary:hover {
+  background-color: #fff;
+  color: #000;
+  border: none;
+}
+
+.fc .fc-button {
+  background-color: #fff !important;
+}
+
+.fc .fc-button-primary:focus,
+.fc .fc-button-primary:active {
+  background-color: #fff;
+  border: none;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/*
+.fc-day-sun {
+  color: red;
+}
+
+.fc-day-sat {
+  color: blue;
+}
+*/

@@ -48,3 +48,13 @@ export interface TableRowType {
     | ((e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void)
     | undefined;
 }
+
+export interface EventType {
+  title: string;
+  start: Date;
+  type: string;
+}
+
+export interface FullCalendarComponentType {
+  events: EventType[];
+}

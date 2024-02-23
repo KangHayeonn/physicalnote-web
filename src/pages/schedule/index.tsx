@@ -52,8 +52,8 @@ const ManageSchedule: NextPage = () => {
   };
 
   const events = [
-    { title: "Meeting1", start: new Date("2023-12-29") },
-    { title: "Meeting2", start: new Date("2023-12-30") },
+    { title: "Meeting1", start: new Date("2023-12-29"), type: "important" },
+    { title: "Meeting2", start: new Date("2023-12-30"), type: "important" },
   ];
 
   return (
@@ -81,7 +81,7 @@ const ManageSchedule: NextPage = () => {
                 </span>
                 <span>월간 주요 일정</span>
               </div>
-              <div className="h-full space-y-4">
+              <div className="min-w-[482px] h-full space-y-4">
                 {importantSchedule.length !== 0 ? (
                   <div className="h-full flex flex-col justify-start items-center space-y-4 mt-3">
                     <ImportantScheduleItem />
@@ -114,7 +114,7 @@ const ManageSchedule: NextPage = () => {
                 )}
               </div>
             </div>
-            <div className="h-[700px]">
+            <div className="min-w-[482px] h-[700px]">
               <div className="flex items-center space-x-4">
                 <div className="flex items-center space-x-2">
                   <span>
