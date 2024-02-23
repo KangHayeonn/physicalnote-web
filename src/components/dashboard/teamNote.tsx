@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useRecoilValue } from "recoil";
-import { teamNoteState } from "@/recoil/dashboard/dashboardState";
+import { teamNoteSelector } from "@/recoil/dashboard/dashboardState";
 import { TeamNoteInfoType, TeamNoteType } from "@/types/dashboard";
 import { getFullDateToString } from "@/utils/dateFormat";
 import Api from "@/api/dashboard";
 import { showToast } from "@/utils";
 
 const TeamNote = ({ searchDate }: TeamNoteType) => {
-  const teamNote = useRecoilValue(teamNoteState);
+  const teamNote = useRecoilValue(teamNoteSelector);
   const [note, setNote] = useState<TeamNoteInfoType>({
     content: "",
     recordDate: "",
