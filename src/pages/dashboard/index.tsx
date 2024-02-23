@@ -112,19 +112,19 @@ const Dashboard: NextPage = () => {
           <Button
             type="button"
             text="2주전"
-            classnames="text-[#8DBE3D] text-[13px] font-[700]"
+            classnames="h-[36px] px-4 text-[#8DBE3D] text-[13px] font-[700]"
             onClick={() => toggleDate("lastWeek")}
           />
           <Button
             type="button"
             text="지난주"
-            classnames="text-[#8DBE3D] text-[13px] font-[700]"
+            classnames="h-[36px] px-4 text-[#8DBE3D] text-[13px] font-[700]"
             onClick={() => toggleDate("lastWeek")}
           />
           <Button
             type="button"
             text="오늘"
-            classnames="text-[#8DBE3D] text-[13px] font-[700]"
+            classnames="h-[36px] px-4 text-[#8DBE3D] text-[13px] font-[700]"
             onClick={() => toggleDate("today")}
           />
           <DatePickerComponent
@@ -135,7 +135,7 @@ const Dashboard: NextPage = () => {
           <Button
             type="button"
             text="초기화"
-            classnames="text-[#000] text-[13px] font-[700]"
+            classnames="h-[36px] px-4 text-[#000] text-[13px] font-[700]"
             onClick={init}
           />
         </div>

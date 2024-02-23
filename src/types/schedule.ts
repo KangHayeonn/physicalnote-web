@@ -70,7 +70,7 @@ export interface ImportantScheduleResponseType {
 export interface PlayerSimpleResponseType {
   id: number;
   name: string;
-  phone: string;
+  phone: string | null;
   positions: Array<string>;
   playerGrade: string;
 }

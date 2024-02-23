@@ -1,41 +1,100 @@
-import Button from "@/components/common/button";
-import Layout from "@/components/layout";
+import React, { useState, useMemo } from "react";
 import { NextPage } from "next";
-import React from "react";
+import Image from "next/image";
+import Layout from "@/components/layout";
+import Button from "@/components/common/button";
+import { searchCategoryList } from "@/constants/mock/searchCategoryList";
+import DropDown from "@/components/common/dropdown";
+import Table from "@/components/common/table";
+import Pagination from "@/components/common/pagination";
+import usePagination from "@/utils/hooks/usePagination";
+import { useSetRecoilState } from "recoil";
+import { searchPlayerGraderState } from "@/recoil/search/searchState";
+import { PlayerSimpleResponseType } from "@/types/schedule";
+import DatePickerComponent from "@/components/common/datepicker";
+import TimePickerComponent from "@/components/common/timepicker";
 
 const CreateSchedule: NextPage = () => {
+  const setSearchGrader = useSetRecoilState(searchPlayerGraderState);
+  const onSearchGraderChange = (grader: string) => {
+    setSearchGrader(grader);
+  };
+  const [titleTextCnt, setTitleTextCnt] = useState<number>(0);
+  const [data, setData] = useState<PlayerSimpleResponseType[]>([
+    {
+      id: 26,
+      name: "김영건",
+      phone: null,
+      positions: ["공격수"],
+      playerGrade: "1군",
+    },
+  ]);
+  const [page, setPage] = useState<number>(0);
+  const [totalLen, setTotalLen] = useState<number>(1);
+
+  const getTitleTextCnt = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setTitleTextCnt(e.target.value.length);
+  };
+
+  const columnData = [
+    {
+      Header: "선수이름",
+      accessor: "name",
+    },
+    {
+      Header: "전화번호",
+      accessor: "phone",
+    },
+    {
+      Header: "포지션",
+      accessor: "position",
+    },
+    {
+      Header: "소속",
+      accessor: "playerGrade",
+    },
+  ];
+
+  const columns = useMemo(() => columnData, []);
+
+  const itemPerPage = 10;
+  const totalItems = totalLen;
+  const { currentPage, totalPages, currentItems, handlePageChange } =
+    usePagination((page) => setPage(page), itemPerPage, totalItems);
+
+  const next = () => {
+    if (currentPage + 1 < totalPages) {
+      handlePageChange(currentPage + 1);
+    }
+  };
+
+  const prev = () => {
+    if (currentPage > 0) {
+      handlePageChange(currentPage - 1);
+    }
+  };
+
   return (
     <Layout>
       <div className="flex items-center space-x-[30px]">
         <h1 className="text-[28px] font-[700]">일정관리</h1>
-        <select className="w-[127px] h-[25px] rounded-[5px] py-0 border-[#B9B9C3] text-[12px] font-[700] shadow-xl">
-          <option value="">구분</option>
-          <option value="first">1군</option>
-          <option value="second">2군</option>
-          <option value="second">부상자</option>
-        </select>
+        <DropDown
+          dropDownList={searchCategoryList}
+          changeText={onSearchGraderChange}
+        />
       </div>
       <div className="flex mt-10 space-x-10">
-        <div className="flex flex-col space-y-6 w-[40%]">
-          <div className="flex items-center space-x-4">
-            <h2 className="text-[20px] font-[500]">일정 기록하기</h2>
+        <div className="flex flex-col space-y-6 w-[624px]">
+          <div className="flex items-center space-x-3">
+            <h2 className="text-[20px] font-[700]">일정 기록하기</h2>
             <div className="cursor-pointer">
-              <svg
-                width="24"
-                height="22"
-                viewBox="0 0 24 22"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M9.36328 8.06489L11.5736 2.1424C11.73 1.72346 12.3156 1.70475 12.4984 2.11286L15.1773 8.09443C15.2528 8.26306 15.4152 8.37629 15.5995 8.38889L21.6994 8.80584C22.1567 8.8371 22.3345 9.41582 21.9736 9.69836L17.1987 13.4369C17.0468 13.5558 16.9769 13.7515 17.019 13.9398L18.3558 19.9094C18.4502 20.3311 18.0014 20.6659 17.6242 20.4553L12.2437 17.4518C12.0922 17.3673 11.9078 17.3673 11.7563 17.4518L6.47504 20.3999C6.08316 20.6187 5.62384 20.2503 5.75224 19.8203L7.49805 13.973C7.55906 13.7687 7.48374 13.5481 7.31048 13.4238L2.13708 9.71082C1.75543 9.43691 1.92797 8.83554 2.39678 8.80563L8.92668 8.38905C9.12338 8.3765 9.29436 8.24956 9.36328 8.06489Z"
-                  fill="#CBCCCD"
-                  fillOpacity="0.3"
-                  stroke="#CBCCCD"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                />
-              </svg>
+              <Image
+                src="/images/star_checked.svg"
+                width={0}
+                height={0}
+                alt="like button"
+                style={{ width: "24px", height: "auto" }}
+              />
             </div>
           </div>
           <div className="flex flex-col space-y-2">
@@ -46,78 +105,66 @@ const CreateSchedule: NextPage = () => {
               <Button
                 text="추가"
                 type="button"
-                classnames="text-[12px] h-[25px] text-[#B9B9C3]"
+                classnames="text-[12px] h-[25px] text-[#8DBE3D] font-[700]"
               />
             </div>
-            <div className="flex items-center justify-between space-x-4">
-              <span className="w-10 font-[500] text-[15px]">이름</span>
+            <div className="flex items-center justify-between space-x-6 relative">
+              <span className="w-10 font-[700] text-[15px]">이름</span>
               <input
                 type="text"
                 placeholder="일정 이름을 입력하세요."
-                className="w-[484px] h-[36px] border-none placeholder:text-[#CBCCCD] placeholder:text-[12px] rounded-[5px] shadow-[0_2px_10px_0px_rgba(0,0,0,0.25)]"
+                className="w-[684px] h-[36px] border-none placeholder:text-[#CBCCCD] placeholder:text-[12px] rounded-[5px] shadow-[0_2px_10px_0px_rgba(0,0,0,0.25)] focus:border-transparent focus:ring-0"
+                onChange={getTitleTextCnt}
               />
+              <div className="absolute right-4 bottom-2 text-[14px] text-[#B9B9C3] font-[400]">
+                <span>{titleTextCnt}</span>
+                <span>/10</span>
+              </div>
             </div>
-            <div className="flex items-center justify-between space-x-4">
-              <span className="w-10 font-[500] text-[15px]">위치</span>
+            <div className="flex items-center justify-between space-x-6">
+              <span className="w-10 font-[700] text-[15px]">위치</span>
               <input
                 type="text"
                 placeholder="일정 위치를 입력하세요."
-                className="w-[484px] h-[36px] border-none placeholder:text-[#CBCCCD] placeholder:text-[12px] rounded-[5px] shadow-[0_2px_10px_0px_rgba(0,0,0,0.25)]"
+                className="w-[684px] h-[36px] border-none placeholder:text-[#CBCCCD] placeholder:text-[12px] rounded-[5px] shadow-[0_2px_10px_0px_rgba(0,0,0,0.25)] focus:border-transparent focus:ring-0"
               />
             </div>
-            <div className="flex items-center justify-between space-x-4">
-              <span className="w-10 font-[500] text-[15px]">시간</span>
+            <div className="flex items-center justify-between space-x-6">
+              <span className="w-10 font-[700] text-[15px]">시간</span>
               <div className="flex items-center space-x-2">
-                <input
-                  type="date"
-                  className="h-[36px] border-none placeholder:text-[#CBCCCD] placeholder:text-[12px] rounded-[5px] shadow-[0_2px_10px_0px_rgba(0,0,0,0.25)]"
-                />
+                <DatePickerComponent calendarType="date" />
                 <div className="flex items-center space-x-1">
-                  <input
-                    type="date"
-                    className="h-[36px] border-none placeholder:text-[#CBCCCD] placeholder:text-[12px] rounded-[5px] shadow-[0_2px_10px_0px_rgba(0,0,0,0.25)]"
-                  />
+                  <TimePickerComponent />
                   <span>~</span>
-                  <input
-                    type="date"
-                    className="h-[36px] border-none placeholder:text-[#CBCCCD] placeholder:text-[12px] rounded-[5px] shadow-[0_2px_10px_0px_rgba(0,0,0,0.25)]"
-                  />
+                  <TimePickerComponent />
                 </div>
               </div>
             </div>
-            <div className="flex items-center justify-between space-x-4">
-              <span className="w-10 font-[500] text-[15px]">선수</span>
+            <div className="flex items-center justify-between space-x-6">
+              <span className="w-10 font-[700] text-[15px]">선수</span>
               <input
                 type="text"
                 placeholder="선수를 선택하세요."
-                className="w-[484px] h-[36px] border-none placeholder:text-[#CBCCCD] placeholder:text-[12px] rounded-[5px] shadow-[0_2px_10px_0px_rgba(0,0,0,0.25)]"
+                className="w-[684px] h-[36px] border-none placeholder:text-[#CBCCCD] placeholder:text-[12px] rounded-[5px] shadow-[0_2px_10px_0px_rgba(0,0,0,0.25)] focus:border-transparent focus:ring-0"
               />
             </div>
             <div className="flex items-center space-x-4 py-4">
-              <span className="font-[500] text-[15px]">이미지첨부</span>
-              <div className="flex items-center space-x-2">
+              <span className="font-[700] text-[15px]">이미지첨부</span>
+              <div className="flex items-center space-x-5">
                 <div className="text-[12px]">0/3</div>
-                <label
-                  htmlFor="image"
-                  className="py-1 px-3 text-[12px] text-[#8DBE3D] shadow-[0_2px_10px_0px_rgba(0,0,0,0.25)] rounded-[5px] border cursor-pointer flex justify-center items-center"
-                >
-                  추가
-                  <input
-                    id="image"
-                    type="file"
-                    className="hidden"
-                    accept="image/*"
-                    // onChange={handleFileChange}
-                    // disabled={uploading}
-                  />
-                </label>
+                <Button
+                  text="추가"
+                  type="button"
+                  classnames="text-[12px] h-[25px] text-[#8DBE3D] font-[700]"
+                />
               </div>
             </div>
-            <div className="flex flex-col space-y-6">
-              <span className="font-[500] text-[15px]">훈련내용</span>
+            <div className="flex flex-col space-y-4">
+              <span className="font-[700] text-[15px]">훈련내용</span>
               <textarea
                 placeholder="훈련 내용을 입력하세요."
-                className="resize-none py-5 px-4 h-[324px] border-none shadow-[0_2px_10px_0px_rgba(0,0,0,0.25)] rounded-[5px]"
+                className="resize-none py-5 px-4 h-[324px] border-none shadow-[0_2px_10px_0px_rgba(0,0,0,0.25)] rounded-[5px] outline-none focus:border-transparent focus:ring-0 p-0 placeholder:text-[#CBCCCD]"
+                maxLength={1000}
               ></textarea>
             </div>
             <div className="flex items-center space-x-2 justify-end py-4">
@@ -134,6 +181,23 @@ const CreateSchedule: NextPage = () => {
             </div>
           </div>
         </div>
+        {data.length !== 0 ? (
+          <div className="w-full mt-20 bg-white py-4 my-4 px-4 rounded-[4px]">
+            <Table columns={columns} data={data || []} />
+            <Pagination
+              currentPage={currentPage}
+              totalPage={totalPages}
+              onPageChange={handlePageChange}
+              setPage={setPage}
+              next={next}
+              prev={prev}
+            />
+          </div>
+        ) : (
+          <div className="flex items-center justify-center w-full py-10 font-bold">
+            선수 데이터가 없습니다.
+          </div>
+        )}
       </div>
     </Layout>
   );
