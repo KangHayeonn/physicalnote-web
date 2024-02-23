@@ -10,7 +10,7 @@ permissions: write-all
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 11
     if: ${{ github.ref == 'refs/heads/deploy' && github.event_name == 'push' }}
 
     steps:
