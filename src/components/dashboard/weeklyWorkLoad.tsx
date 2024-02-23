@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { LineChart } from "@mui/x-charts";
 import { useRecoilValue } from "recoil";
-import { weeklyWorkloadState } from "@/recoil/dashboard/dashboardState";
+import { weeklyWorkloadSelector } from "@/recoil/dashboard/dashboardState";
 import { WeeklyWorkLoadInfoType } from "@/types/dashboard";
 
 const WeeklyWorkLoad = () => {
-  const weeklyWorkLoad = useRecoilValue(weeklyWorkloadState);
+  const weeklyWorkLoad = useRecoilValue(weeklyWorkloadSelector);
   const [weeklyData, setWeeklyData] = useState<WeeklyWorkLoadInfoType>({
     stringOfWeekly: "",
     workloadInfoList: [],

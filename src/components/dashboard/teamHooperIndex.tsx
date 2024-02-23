@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import usePagination from "@/utils/hooks/usePagination";
 import Item from "@/components/common/item";
 import { useRecoilValue } from "recoil";
-import { teamHooperIndexState } from "@/recoil/dashboard/dashboardState";
+import { teamHooperIndexSelector } from "@/recoil/dashboard/dashboardState";
 import {
   TeamHooperIndexInfoType,
   LevelCircleType,
@@ -11,7 +11,7 @@ import {
 import Pagination2 from "@/components/common/pagination02";
 
 const TeamHooperIndex = ({ initPage, getData }: PaginationProps) => {
-  const hooperIndex = useRecoilValue(teamHooperIndexState);
+  const hooperIndex = useRecoilValue(teamHooperIndexSelector);
   const [teamCaution, setTeamCaution] = useState<TeamHooperIndexInfoType[]>([]);
   const [isOpen, setIsOpen] = useState<boolean[]>([]);
   const [totalLength, setTotalLength] = useState<number>(0);

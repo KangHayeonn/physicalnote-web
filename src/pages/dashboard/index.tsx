@@ -13,14 +13,14 @@ import TeamNote from "@/components/dashboard/teamNote";
 import TrainingLoadGraph from "@/components/dashboard/trainingLoadGraph";
 import { useSetRecoilState } from "recoil";
 import {
-  teamConditionState,
-  teamHooperIndexState,
-  teamInjuryState,
-  todayTrainingPlanState,
-  weeklyWorkloadState,
-  trainingBalanceState,
-  trainingLoadGraphState,
-  teamNoteState,
+  teamConditionSelector,
+  teamHooperIndexSelector,
+  teamInjurySelector,
+  todayTrainingPlanSelector,
+  weeklyWorkloadSelector,
+  trainingBalanceSelector,
+  trainingLoadGraphSelector,
+  teamNoteSelector,
 } from "@/recoil/dashboard/dashboardState";
 import Api from "@/api/dashboard";
 import { getFullDateToString } from "@/utils/dateFormat";
@@ -30,14 +30,14 @@ const Dashboard: NextPage = () => {
   const [initDate, setInitDate] = useState<Date>(new Date());
   const [searchDate, setSearchDate] = useState<Date>(new Date());
 
-  const setTeamCondition = useSetRecoilState(teamConditionState);
-  const setTeamCaution = useSetRecoilState(teamHooperIndexState);
-  const setTeamInjury = useSetRecoilState(teamInjuryState);
-  const setTodayTrainingPlan = useSetRecoilState(todayTrainingPlanState);
-  const setWeeklyWorkload = useSetRecoilState(weeklyWorkloadState);
-  const setTrainingBalance = useSetRecoilState(trainingBalanceState);
-  const setTrainingLoadGraph = useSetRecoilState(trainingLoadGraphState);
-  const setTeamNote = useSetRecoilState(teamNoteState);
+  const setTeamCondition = useSetRecoilState(teamConditionSelector);
+  const setTeamCaution = useSetRecoilState(teamHooperIndexSelector);
+  const setTeamInjury = useSetRecoilState(teamInjurySelector);
+  const setTodayTrainingPlan = useSetRecoilState(todayTrainingPlanSelector);
+  const setWeeklyWorkload = useSetRecoilState(weeklyWorkloadSelector);
+  const setTrainingBalance = useSetRecoilState(trainingBalanceSelector);
+  const setTrainingLoadGraph = useSetRecoilState(trainingLoadGraphSelector);
+  const setTeamNote = useSetRecoilState(teamNoteSelector);
 
   const toggleDate = (type: string) => {
     const today = new Date();

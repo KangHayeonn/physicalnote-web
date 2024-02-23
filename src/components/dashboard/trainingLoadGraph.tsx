@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useRecoilValue } from "recoil";
 import AxisWithComposition from "@/components/common/axisWithComposition";
-import { trainingLoadGraphState } from "@/recoil/dashboard/dashboardState";
+import { trainingLoadGraphSelector } from "@/recoil/dashboard/dashboardState";
 import { TrainingLoadGraphInfoType } from "@/types/dashboard";
 import { SeriesDataType } from "@/types/chart";
 
 const TrainingLoadGraph = () => {
-  const trainingLoadGraphInfo = useRecoilValue(trainingLoadGraphState);
+  const trainingLoadGraphInfo = useRecoilValue(trainingLoadGraphSelector);
   const [trainingLoad, setTrainingLoad] = useState<TrainingLoadGraphInfoType[]>(
     []
   );

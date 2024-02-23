@@ -1,11 +1,11 @@
-import { todayTrainingPlanState } from "@/recoil/dashboard/dashboardState";
-import { TodayTrainingPlanInfoType } from "@/types/dashboard";
 import React, { useState, useEffect } from "react";
 import { useRecoilValue } from "recoil";
 import { getTimeFormat } from "@/utils/strFormat";
+import { todayTrainingPlanSelector } from "@/recoil/dashboard/dashboardState";
+import { TodayTrainingPlanInfoType } from "@/types/dashboard";
 
 const TodayTrainingPlan = () => {
-  const todayTrainingPlan = useRecoilValue(todayTrainingPlanState);
+  const todayTrainingPlan = useRecoilValue(todayTrainingPlanSelector);
   const [trainingPlan, setTrainingPlan] = useState<TodayTrainingPlanInfoType[]>(
     []
   );

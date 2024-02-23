@@ -3,7 +3,7 @@ import Image from "next/image";
 import { Box, Slider, styled } from "@mui/material";
 import { useRecoilValue } from "recoil";
 import { TeamConditionInfoType } from "@/types/dashboard";
-import { teamConditionState } from "@/recoil/dashboard/dashboardState";
+import { teamConditionSelector } from "@/recoil/dashboard/dashboardState";
 import { marks, marks2 } from "@/constants/mock/dashboard";
 
 const TeamCondition = () => {
@@ -16,7 +16,7 @@ const TeamCondition = () => {
     unRegisteredPlayerIds: [],
     unRegisteredPlayerCnt: 0,
   });
-  const teamCondition = useRecoilValue(teamConditionState);
+  const teamCondition = useRecoilValue(teamConditionSelector);
 
   const PrettoSlider = styled(Slider)({
     color: "#4D73BA",

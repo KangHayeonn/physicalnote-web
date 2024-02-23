@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useRecoilValue } from "recoil";
-import { trainingBalanceState } from "@/recoil/dashboard/dashboardState";
+import { trainingBalanceSelector } from "@/recoil/dashboard/dashboardState";
 import { TrainingBalanceInfoType } from "@/types/dashboard";
 
 const TrainingBalance = () => {
-  const trainingBalanceInfo = useRecoilValue(trainingBalanceState);
+  const trainingBalanceInfo = useRecoilValue(trainingBalanceSelector);
   const [trainingBalance, setTrainingBalance] =
     useState<TrainingBalanceInfoType>(trainingBalanceInfo);
 

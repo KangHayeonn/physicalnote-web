@@ -3,7 +3,7 @@ import usePagination from "@/utils/hooks/usePagination";
 import Item from "@/components/common/item";
 import { useRecoilValue } from "recoil";
 import Pagination2 from "@/components/common/pagination02";
-import { teamInjuryState } from "@/recoil/dashboard/dashboardState";
+import { teamInjurySelector } from "@/recoil/dashboard/dashboardState";
 import {
   TeamInjuryInfoType,
   LevelCircleType,
@@ -11,7 +11,7 @@ import {
 } from "@/types/dashboard";
 
 const TeamInjury = ({ initPage, getData }: PaginationProps) => {
-  const teamInjuryInfo = useRecoilValue(teamInjuryState);
+  const teamInjuryInfo = useRecoilValue(teamInjurySelector);
   const [teamInjury, setTeamInjury] = useState<TeamInjuryInfoType>({
     teamInjuryCnt: 0,
     injuryInfoList: [],
