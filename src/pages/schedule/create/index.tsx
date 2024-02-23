@@ -19,6 +19,8 @@ const CreateSchedule: NextPage = () => {
   const onSearchGraderChange = (grader: string) => {
     setSearchGrader(grader);
   };
+
+  const [title, setTitle] = useState<string>("");
   const [titleTextCnt, setTitleTextCnt] = useState<number>(0);
   const [data, setData] = useState<PlayerSimpleResponseType[]>([
     {
@@ -33,7 +35,11 @@ const CreateSchedule: NextPage = () => {
   const [totalLen, setTotalLen] = useState<number>(1);
 
   const getTitleTextCnt = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setTitleTextCnt(e.target.value.length);
+    const { value } = e.target;
+    if (value.length <= 15) {
+      setTitle(value);
+      setTitleTextCnt(value.length);
+    }
   };
 
   const columnData = [
@@ -112,13 +118,15 @@ const CreateSchedule: NextPage = () => {
               <span className="w-10 font-[700] text-[15px]">이름</span>
               <input
                 type="text"
+                value={title}
                 placeholder="일정 이름을 입력하세요."
                 className="w-[684px] h-[36px] border-none placeholder:text-[#CBCCCD] placeholder:text-[12px] rounded-[5px] shadow-[0_2px_10px_0px_rgba(0,0,0,0.25)] focus:border-transparent focus:ring-0"
                 onChange={getTitleTextCnt}
+                maxLength={15}
               />
               <div className="absolute right-4 bottom-2 text-[14px] text-[#B9B9C3] font-[400]">
                 <span>{titleTextCnt}</span>
-                <span>/10</span>
+                <span>/15</span>
               </div>
             </div>
             <div className="flex items-center justify-between space-x-6">
