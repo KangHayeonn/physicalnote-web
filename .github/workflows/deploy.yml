@@ -1,9 +1,8 @@
 name: physicalnote-web
 on:
   push:
-    branches: [ main ]
-  pull_request:
     branches: [ main, develop ]
+  pull_request:
 
 permissions: write-all
 
@@ -11,7 +10,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     timeout-minutes: 11
-    if: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push' || github.event_name == 'pull_request' && (github.head_ref == 'main' || github.head_ref == 'develop') }}
+    if: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push' || github.ref == 'refs/heads/develop' && github.event_name == 'push' }}
 
     steps:
       - name: Configure AWS Credentials
