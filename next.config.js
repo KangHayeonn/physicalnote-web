@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: 'export',
   reactStrictMode: false, // true
   transpilePackages: ["@mui/x-charts"],
   webpack: (config) => {
@@ -37,10 +38,10 @@ const nextConfig = {
     path: "/",
     // domains: [""],
   },
-  i18n: {
-    locales: ["ko", "en"],
-    defaultLocale: "ko",
-  },
+  // i18n: {
+  //   locales: ["ko", "en"],
+  //   defaultLocale: "ko",
+  // },
 };
 
 module.exports = nextConfig;
