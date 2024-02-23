@@ -1,7 +1,7 @@
 name: physicalnote-web
 on:
   push:
-    branches: [main, deploy]
+    branches: [main]
   pull_request:
     branches: [develop]
 
