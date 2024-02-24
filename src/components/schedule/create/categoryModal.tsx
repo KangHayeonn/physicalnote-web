@@ -1,9 +1,21 @@
-import React, { useState } from "react";
+import React, { useState, Dispatch, SetStateAction } from "react";
 import Image from "next/image";
 import ModalForm from "@/components/common/modal/modalForm";
 import Button from "@/components/common/button";
 
-const CategoryModal = () => {
+interface CategoryModalProps {
+  id?: number;
+  setIsOpen: Dispatch<SetStateAction<boolean>>;
+  handleSubmit: () => void;
+  deleteSubmit?: () => void | undefined;
+}
+
+const CategoryModal = ({
+  id,
+  setIsOpen,
+  handleSubmit,
+  deleteSubmit,
+}: CategoryModalProps) => {
   const [name, setName] = useState<string>("");
   const [textCnt, setTextCnt] = useState<number>(0);
 
@@ -15,8 +27,25 @@ const CategoryModal = () => {
     }
   };
 
+  const onClickEvent = () => {
+    handleSubmit();
+    document.body.style.overflow = "unset";
+    setIsOpen(false);
+  };
+
+  const onClickClose = () => {
+    document.body.style.overflow = "unset";
+    setIsOpen(false);
+  };
+
+  const onClickDelete = () => {
+    if (deleteSubmit) deleteSubmit();
+    document.body.style.overflow = "unset";
+    setIsOpen(false);
+  };
+
   return (
-    <ModalForm>
+    <ModalForm onClickEvent={onClickClose}>
       <div className="space-y-4">
         <div className="flex flex-col space-y-2">
           <div className="text-[15px]">목록 이름</div>
@@ -57,6 +86,7 @@ const CategoryModal = () => {
               text="삭제"
               type="button"
               classnames="text-[12px] h-[30px] px-4 text-[#FF0000] font-[700]"
+              onClick={onClickDelete}
             />
           </div>
           <div className="flex space-x-4">
@@ -64,11 +94,13 @@ const CategoryModal = () => {
               text="취소"
               type="button"
               classnames="text-[12px] h-[30px] px-4 text-[#8DBE3D] font-[700]"
+              onClick={onClickClose}
             />
             <Button
               text="저장"
               type="button"
               classnames="text-[12px] h-[30px] px-4 text-[#8DBE3D] font-[700]"
+              onClick={onClickEvent}
             />
           </div>
         </div>

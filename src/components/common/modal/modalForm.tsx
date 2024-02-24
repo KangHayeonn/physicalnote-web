@@ -6,7 +6,7 @@ interface ModalFormProps {
   children: JSX.Element;
 }
 
-const ModalForm = ({ children }: ModalFormProps) => {
+const ModalForm = ({ onClickEvent, children }: ModalFormProps) => {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
@@ -17,6 +17,7 @@ const ModalForm = ({ children }: ModalFormProps) => {
             className="absolute top-[18px] right-[20px] cursor-pointer"
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
+            onClick={onClickEvent}
           >
             <Image
               src={isHovered ? "/icons/delete_hover.svg" : "/icons/delete.svg"}

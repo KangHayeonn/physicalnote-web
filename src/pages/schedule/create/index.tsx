@@ -14,6 +14,7 @@ import { PlayerSimpleResponseType } from "@/types/schedule";
 import DatePickerComponent from "@/components/common/datepicker";
 import TimePickerComponent from "@/components/common/timepicker";
 import CategoryModal from "@/components/schedule/create/categoryModal";
+import ConfirmModal from "@/components/common/modal/confirmModal";
 
 const CreateSchedule: NextPage = () => {
   const setSearchGrader = useSetRecoilState(searchPlayerGraderState);
@@ -34,7 +35,8 @@ const CreateSchedule: NextPage = () => {
   ]);
   const [page, setPage] = useState<number>(0);
   const [totalLen, setTotalLen] = useState<number>(1);
-  const [isOpenCategoryModal, setIsOpenCategoryModal] = useState<boolean>(true);
+  const [isOpenCategoryModal, setIsOpenCategoryModal] =
+    useState<boolean>(false);
 
   const getTitleTextCnt = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
@@ -82,6 +84,10 @@ const CreateSchedule: NextPage = () => {
     }
   };
 
+  const addCategory = () => {
+    // category add api
+  };
+
   return (
     <>
       <Layout>
@@ -115,6 +121,7 @@ const CreateSchedule: NextPage = () => {
                   text="추가"
                   type="button"
                   classnames="text-[12px] h-[25px] text-[#8DBE3D] font-[700]"
+                  onClick={() => setIsOpenCategoryModal(true)}
                 />
               </div>
               <div className="flex items-center justify-between space-x-6 relative">
@@ -211,7 +218,12 @@ const CreateSchedule: NextPage = () => {
           )}
         </div>
       </Layout>
-      {isOpenCategoryModal && <CategoryModal />}
+      {isOpenCategoryModal && (
+        <CategoryModal
+          setIsOpen={setIsOpenCategoryModal}
+          handleSubmit={addCategory}
+        />
+      )}
     </>
   );
 };
