@@ -43,6 +43,7 @@
   height: 13px !important;
   vertical-align: -0.125em em;
   width: 13px !important;
+  cursor: pointer;
 }
 
 .react-datepicker__input-container > input {

@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { NextPage } from "next";
 import Image from "next/image";
 import Layout from "@/components/layout";
@@ -8,22 +8,28 @@ import DropDown from "@/components/common/dropdown";
 import Table from "@/components/common/table";
 import Pagination from "@/components/common/pagination";
 import usePagination from "@/utils/hooks/usePagination";
-import { useSetRecoilState } from "recoil";
+import { useSetRecoilState, useRecoilState } from "recoil";
 import { searchPlayerGraderState } from "@/recoil/search/searchState";
-import { PlayerSimpleResponseType } from "@/types/schedule";
+import { CategoryListType, PlayerSimpleResponseType } from "@/types/schedule";
 import DatePickerComponent from "@/components/common/datepicker";
 import TimePickerComponent from "@/components/common/timepicker";
 import CategoryModal from "@/components/schedule/create/categoryModal";
 import ConfirmModal from "@/components/common/modal/confirmModal";
+import { categorySelector } from "@/recoil/schedule/scheduleState";
+import Api from "@/api/schedule";
 
 const CreateSchedule: NextPage = () => {
   const setSearchGrader = useSetRecoilState(searchPlayerGraderState);
-  const onSearchGraderChange = (grader: string) => {
-    setSearchGrader(grader);
-  };
+  const [category, setCategory] = useRecoilState(categorySelector);
 
   const [title, setTitle] = useState<string>("");
   const [titleTextCnt, setTitleTextCnt] = useState<number>(0);
+  const [page, setPage] = useState<number>(0);
+  const [totalLen, setTotalLen] = useState<number>(1);
+  const [isOpenCategoryModal, setIsOpenCategoryModal] =
+    useState<boolean>(false);
+  const [categoryList, setCategoryList] = useState<CategoryListType[]>([]);
+  const [isEditCategory, setIsEditCategory] = useState<boolean>(false);
   const [data, setData] = useState<PlayerSimpleResponseType[]>([
     {
       id: 26,
@@ -33,10 +39,11 @@ const CreateSchedule: NextPage = () => {
       playerGrade: "1군",
     },
   ]);
-  const [page, setPage] = useState<number>(0);
-  const [totalLen, setTotalLen] = useState<number>(1);
-  const [isOpenCategoryModal, setIsOpenCategoryModal] =
-    useState<boolean>(false);
+  const [categoryInfo, setCategoryInfo] = useState<CategoryListType>();
+
+  const onSearchGraderChange = (grader: string) => {
+    setSearchGrader(grader);
+  };
 
   const getTitleTextCnt = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
@@ -84,9 +91,33 @@ const CreateSchedule: NextPage = () => {
     }
   };
 
-  const addCategory = () => {
-    // category add api
+  const editCategory = (item: CategoryListType) => {
+    setCategory(item);
+    setIsOpenCategoryModal(true);
+    setIsEditCategory(true);
   };
+
+  const addCategory = () => {
+    setIsOpenCategoryModal(true);
+    setCategory({ id: 0, name: "", colorCode: "" });
+  };
+
+  const getCategoryList = async () => {
+    await Api.v1GetCategoryList().then((res) => {
+      setCategoryList(res.data);
+    });
+  };
+
+  useEffect(() => {
+    if (!isOpenCategoryModal) {
+      setIsEditCategory(false);
+    }
+    getCategoryList();
+  }, [isOpenCategoryModal]);
+
+  useEffect(() => {
+    setCategoryInfo(category);
+  }, [category]);
 
   return (
     <>
@@ -114,14 +145,29 @@ const CreateSchedule: NextPage = () => {
             </div>
             <div className="flex flex-col space-y-2">
               <div className="flex items-center space-x-4 mt-2 mb-6">
-                <div className="text-[#B9B9C3] text-[12px]">
-                  카테고리를 등록하세요.
-                </div>
+                {categoryList.length !== 0 ? (
+                  <div className="flex space-x-2 text-[12px]">
+                    {categoryList.map((el, idx) => (
+                      <div
+                        key={`category${idx}`}
+                        className="flex justify-center items-center min-w-[60px] h-[30px] px-3 py-1 font-[700] rounded-[10px] shadow-[0_2px_10px_0px_rgba(0,0,0,0.25)] cursor-pointer"
+                        style={{ backgroundColor: `${el.colorCode}` }}
+                        onClick={() => editCategory(el)}
+                      >
+                        {el.name}
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-[#B9B9C3] text-[12px]">
+                    카테고리를 등록하세요.
+                  </div>
+                )}
                 <Button
                   text="추가"
                   type="button"
                   classnames="text-[12px] h-[25px] text-[#8DBE3D] font-[700]"
-                  onClick={() => setIsOpenCategoryModal(true)}
+                  onClick={addCategory}
                 />
               </div>
               <div className="flex items-center justify-between space-x-6 relative">
@@ -221,7 +267,8 @@ const CreateSchedule: NextPage = () => {
       {isOpenCategoryModal && (
         <CategoryModal
           setIsOpen={setIsOpenCategoryModal}
-          handleSubmit={addCategory}
+          isEdit={isEditCategory}
+          handleEvent={getCategoryList}
         />
       )}
     </>

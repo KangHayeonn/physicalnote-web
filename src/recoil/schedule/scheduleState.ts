@@ -1,3 +1,4 @@
+import { CategoryListType, CategoryType } from "@/types/schedule";
 import { atom, selector, RecoilEnv } from "recoil";
 
 RecoilEnv.RECOIL_DUPLICATE_ATOM_KEY_CHECKING_ENABLED = false;
@@ -34,9 +35,31 @@ const dailyDateSelector = selector<Date>({
   },
 });
 
+const categoryState = atom<CategoryListType>({
+  key: "categoryState",
+  default: {
+    id: 0,
+    name: "",
+    colorCode: "",
+  },
+});
+
+const categorySelector = selector<CategoryListType>({
+  key: "categorySelector",
+  get: ({ get }) => {
+    const category = get(categoryState);
+    return category;
+  },
+  set: ({ set }, newValue) => {
+    set(categoryState, newValue);
+  },
+});
+
 export {
   recordDateState,
   recordDateSelector,
   dailyDateState,
   dailyDateSelector,
+  categoryState,
+  categorySelector,
 };

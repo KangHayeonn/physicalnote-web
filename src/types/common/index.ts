@@ -1,3 +1,4 @@
+import React, { Dispatch, SetStateAction } from "react";
 import { Column } from "react-table";
 import { PrivateDataType } from "@/types/privateData";
 import { DailyReportDataType, WeeklyReportDataType } from "@/types/report";
@@ -59,4 +60,15 @@ export interface EventType {
 
 export interface FullCalendarComponentType {
   events: EventType[];
+}
+
+export interface ConfirmModalProps {
+  setIsOpen: Dispatch<SetStateAction<boolean>>;
+  handleSubmit: () => void;
+  text: string;
+}
+
+export interface ModalFormProps {
+  onClickEvent?: () => void;
+  children: JSX.Element;
 }

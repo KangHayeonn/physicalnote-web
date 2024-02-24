@@ -1,3 +1,5 @@
+import React, { Dispatch, SetStateAction } from "react";
+
 export interface CategoryType {
   colorCode: string;
   name: string;
@@ -94,4 +96,16 @@ export interface DailyScheduleProps {
   player: string;
   content: string;
   images: Array<string>;
+}
+
+export interface CategoryListType {
+  id: number;
+  name: string;
+  colorCode: string;
+}
+
+export interface CategoryModalProps {
+  setIsOpen: Dispatch<SetStateAction<boolean>>;
+  isEdit: boolean;
+  handleEvent: () => Promise<void>;
 }

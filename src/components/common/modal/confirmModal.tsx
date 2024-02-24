@@ -1,12 +1,7 @@
-import React, { Dispatch, SetStateAction } from "react";
+import React from "react";
 import ModalForm from "./modalForm";
 import Button from "@/components/common/button";
-
-interface ConfirmModalProps {
-  setIsOpen: Dispatch<SetStateAction<boolean>>;
-  handleSubmit: () => void;
-  text: string;
-}
+import { ConfirmModalProps } from "@/types/common";
 
 const ConfirmModal = ({ setIsOpen, handleSubmit, text }: ConfirmModalProps) => {
   const onClickEvent = () => {

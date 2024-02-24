@@ -1,10 +1,6 @@
 import React, { useState } from "react";
 import Image from "next/image";
-
-interface ModalFormProps {
-  onClickEvent?: () => void;
-  children: JSX.Element;
-}
+import { ModalFormProps } from "@/types/common";
 
 const ModalForm = ({ onClickEvent, children }: ModalFormProps) => {
   const [isHovered, setIsHovered] = useState(false);
