@@ -12,7 +12,10 @@ import {
   EventSourceInput,
 } from "@fullcalendar/core/index.js";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { recordDateSelector } from "@/recoil/schedule/scheduleState";
+import {
+  dailyDateSelector,
+  recordDateSelector,
+} from "@/recoil/schedule/scheduleState";
 import Api from "@/api/schedule";
 import { getDateToString } from "@/utils/dateFormat";
 import { searchPlayerGraderSelector } from "@/recoil/search/searchState";
@@ -22,6 +25,7 @@ const FullCalendarComponent = () => {
   const router = useRouter();
   const [recordDate, setRecordDate] = useRecoilState<Date>(recordDateSelector);
   const searchGrader = useRecoilValue<string>(searchPlayerGraderSelector);
+  const setDailyDate = useSetRecoilState<Date>(dailyDateSelector);
   const [events, setEvents] = useState<EventSourceInput>([]);
 
   function handleEventClick(clickInfo: EventClickArg) {
@@ -30,7 +34,7 @@ const FullCalendarComponent = () => {
   }
 
   const handleDateClick = (clickInfo: DateClickArg) => {
-    console.log(clickInfo);
+    setDailyDate(new Date(clickInfo.date));
   };
 
   const onChangeMonth = ({ startStr }: DatesSetArg) => {
@@ -66,7 +70,7 @@ const FullCalendarComponent = () => {
 
   useEffect(() => {
     getSchedule();
-  }, [recordDate]);
+  }, [recordDate, searchGrader]);
 
   return (
     <div>
@@ -83,7 +87,7 @@ const FullCalendarComponent = () => {
           right: "prev,next",
         }}
         eventClick={handleEventClick}
-        dayMaxEvents={true}
+        dayMaxEvents={2}
         dateClick={handleDateClick}
         datesSet={onChangeMonth}
       />

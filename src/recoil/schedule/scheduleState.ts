@@ -18,4 +18,25 @@ const recordDateSelector = selector<Date>({
   },
 });
 
-export { recordDateState, recordDateSelector };
+const dailyDateState = atom<Date>({
+  key: "dailyDateState",
+  default: new Date(),
+});
+
+const dailyDateSelector = selector<Date>({
+  key: "dailyDateSelector",
+  get: ({ get }) => {
+    const note = get(dailyDateState);
+    return note;
+  },
+  set: ({ set }, newValue) => {
+    set(recordDateState, newValue);
+  },
+});
+
+export {
+  recordDateState,
+  recordDateSelector,
+  dailyDateState,
+  dailyDateSelector,
+};

@@ -74,3 +74,11 @@ export interface PlayerSimpleResponseType {
   positions: Array<string>;
   playerGrade: string;
 }
+
+export interface ImportantScheduleProps {
+  id: number;
+  name: string;
+  address: string;
+  recordDate: string;
+  workoutTime: string;
+}

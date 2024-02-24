@@ -108,6 +108,19 @@
   box-shadow: none !important;
 }
 
+.fc .fc-daygrid-day {
+  height: 134px;
+}
+
+.fc .fc-day-today {
+  background-color: #e5f6c9 !important;
+}
+
+.fc .fc-daygrid-day:hover {
+  cursor: pointer;
+  background-color: #f3f0f0 !important;
+}
+
 /*
 .fc-day-sun {
   color: red;
