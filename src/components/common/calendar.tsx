@@ -34,7 +34,8 @@ const FullCalendarComponent = () => {
   }
 
   const handleDateClick = (clickInfo: DateClickArg) => {
-    setDailyDate(new Date(clickInfo.date));
+    const date = new Date(clickInfo.date);
+    setDailyDate(date);
   };
 
   const onChangeMonth = ({ startStr }: DatesSetArg) => {

@@ -30,7 +30,7 @@ const dailyDateSelector = selector<Date>({
     return note;
   },
   set: ({ set }, newValue) => {
-    set(recordDateState, newValue);
+    set(dailyDateState, newValue);
   },
 });
 

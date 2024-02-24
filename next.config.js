@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'export',
+  output: "export",
   reactStrictMode: false, // true
   transpilePackages: ["@mui/x-charts"],
   webpack: (config) => {
@@ -21,7 +21,6 @@ const nextConfig = {
     // !! WARN !!
     ignoreBuildErrors: true,
   },
-
   async redirects() {
     return [
       {

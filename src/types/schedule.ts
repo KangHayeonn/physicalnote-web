@@ -40,6 +40,7 @@ export interface CategoryColorResponseType {
 
 export interface DailyScheduleResponseType {
   id: number;
+  name: string;
   userSimpleInfo: UserSimpleInfoType[];
   categoryName: string;
   categoryColorCode: string;
@@ -81,4 +82,16 @@ export interface ImportantScheduleProps {
   address: string;
   recordDate: string;
   workoutTime: string;
+}
+
+export interface DailyScheduleProps {
+  id: number;
+  name: string;
+  categoryName: string;
+  categoryColorCode: string;
+  address: string;
+  workoutTime: string;
+  player: string;
+  content: string;
+  images: Array<string>;
 }

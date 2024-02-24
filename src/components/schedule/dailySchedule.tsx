@@ -1,21 +1,24 @@
 import React, { useState, useEffect } from "react";
-import Link from "next/link";
 import Image from "next/image";
+import Link from "next/link";
 import { useRecoilValue } from "recoil";
-import { recordDateSelector } from "@/recoil/schedule/scheduleState";
-import { searchPlayerGraderSelector } from "@/recoil/search/searchState";
-import Api from "@/api/schedule";
-import { ImportantScheduleResponseType } from "@/types/schedule";
-import { getDateToString } from "@/utils/dateFormat";
-import ImportantScheduleItem from "./importantScheduleItem";
-import Pagination from "@/components/common/pagination";
-import usePagination from "@/utils/hooks/usePagination";
 import Button from "@/components/common/button";
+import Pagination from "@/components/common/pagination";
+import DailyScheduleItem from "@/components/schedule/dailyScheduleItem";
+import usePagination from "@/utils/hooks/usePagination";
+import Api from "@/api/schedule";
+import { getFullDateToString } from "@/utils/dateFormat";
+import { searchPlayerGraderSelector } from "@/recoil/search/searchState";
+import {
+  DailyScheduleResponseType,
+  UserSimpleInfoType,
+} from "@/types/schedule";
+import { dailyDateSelector } from "@/recoil/schedule/scheduleState";
 
-const ImportantSchedule = () => {
-  const recordDate = useRecoilValue<Date>(recordDateSelector);
+const DailySchedule = () => {
+  const dailyDate = useRecoilValue<Date>(dailyDateSelector);
   const searchGrader = useRecoilValue<string>(searchPlayerGraderSelector);
-  const [events, setEvents] = useState<ImportantScheduleResponseType[]>([]);
+  const [events, setEvents] = useState<DailyScheduleResponseType[]>([]);
   const [totalLength, setTotalLength] = useState<number>(0);
   const [page, setPage] = useState<number>(0);
 
@@ -37,14 +40,19 @@ const ImportantSchedule = () => {
     }
   };
 
-  const getImportantSchedule = async () => {
+  const getPlayer = (playerInfo: UserSimpleInfoType[]) => {
+    const playerList = playerInfo.map((item: UserSimpleInfoType) => item.name);
+    return playerList.join(", ");
+  };
+
+  const getDailySchedule = async () => {
     const getGrader = () => {
       return searchGrader !== "ALL" ? searchGrader : "";
     };
 
-    await Api.v1GetImportantSchedule(
+    await Api.v1GetScheduleDaily(
       getGrader(),
-      getDateToString(recordDate),
+      getFullDateToString(dailyDate),
       currentPage,
       itemPerPage
     ).then((res) => {
@@ -55,41 +63,60 @@ const ImportantSchedule = () => {
   };
 
   useEffect(() => {
-    getImportantSchedule();
+    getDailySchedule();
   }, [page]);
 
   useEffect(() => {
     if (currentPage !== 0) {
       handlePageChange(0);
     } else {
-      getImportantSchedule();
+      getDailySchedule();
     }
-  }, [recordDate, searchGrader]);
+  }, [dailyDate, searchGrader]);
 
   return (
-    <div className="flex flex-col h-[365px]">
-      <div className="flex items-center space-x-2">
-        <span>
-          <Image
-            src="/icons/rectangle_small.svg"
-            width={8}
-            height={8}
-            alt="title icon"
-          />
-        </span>
-        <span>월간 주요 일정</span>
+    <div className="min-w-[482px] h-[700px]">
+      <div className="flex items-center space-x-4">
+        <div className="flex items-center space-x-2">
+          <span>
+            <Image
+              src="/icons/rectangle_small.svg"
+              width={8}
+              height={8}
+              alt="title icon"
+            />
+          </span>
+          <span>오늘 일정</span>
+        </div>
+        <button className="bg-white shadow-[0_2px_10px_0px_rgba(0,0,0,0.25)] rounded-[5px] w-[133px] h-[25px] flex justify-center items-center space-x-2">
+          <span className="text-[12px] text-[#8DBE3D] font-[400]">
+            일정 알림 보내기
+          </span>
+          <span>
+            <Image
+              src="/images/alert.svg"
+              width={17}
+              height={17}
+              alt="alert icon"
+            />
+          </span>
+        </button>
       </div>
-      <div className="min-w-[482px] h-full space-y-4">
+      <div className="h-full space-y-4">
         {events.length !== 0 ? (
           <div className="h-full flex flex-col justify-start items-center space-y-2.5 mt-3">
             {events.map((event, idx) => (
-              <ImportantScheduleItem
-                key={`scheduleItem${idx}`}
+              <DailyScheduleItem
+                key={`dailyItem${idx}`}
                 id={event.id}
                 name={event.name}
+                categoryName={event.categoryName}
+                categoryColorCode={event.categoryColorCode}
                 address={event.address}
-                recordDate={event.recordDate}
                 workoutTime={event.workoutTime}
+                player={getPlayer(event.userSimpleInfo)}
+                content={event.content}
+                images={event.images}
               />
             ))}
             <Pagination
@@ -100,7 +127,7 @@ const ImportantSchedule = () => {
               next={next}
               prev={prev}
             />
-            <Link href={`/schedule/create`}>
+            <Link href="/schedule/create">
               <Button
                 text="기록하기"
                 type="button"
@@ -110,7 +137,7 @@ const ImportantSchedule = () => {
           </div>
         ) : (
           <div className="h-full flex flex-col justify-center items-center space-y-4">
-            <p className="text-[15px]">월간 주요 일정이 없습니다.</p>
+            <p className="text-[15px]">오늘 일정이 없습니다.</p>
             <Link href="/schedule/create">
               <Button
                 text="기록하기"
@@ -125,4 +152,4 @@ const ImportantSchedule = () => {
   );
 };
 
-export default ImportantSchedule;
+export default DailySchedule;

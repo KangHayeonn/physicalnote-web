@@ -34,14 +34,14 @@ const Schedule = {
   },
   async v1GetScheduleDaily(
     playerGrade: string,
-    recordMonth: string,
+    recordDate: string,
     page: number,
     size: number
   ) {
     try {
       const url = `${prefix}/calendar/daily`;
       const result = await instanceWithToken.get(url, {
-        params: { playerGrade, recordMonth, page, size },
+        params: { playerGrade, recordDate, page, size },
       });
       return result;
     } catch (err) {

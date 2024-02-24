@@ -1,12 +1,41 @@
 import React from "react";
 import Image from "next/image";
+import { useRouter } from "next/router";
+import { DailyScheduleProps } from "@/types/schedule";
 
-const DailyScheduleItem = () => {
+const DailyScheduleItem = ({
+  id,
+  name,
+  categoryName,
+  categoryColorCode,
+  address,
+  workoutTime,
+  player,
+  content,
+  images,
+}: DailyScheduleProps) => {
+  const router = useRouter();
+
+  const imageLoader = ({ src, width, quality }: any) => {
+    return `${src}?w=${width}&q=${quality || 75}`;
+  };
+
+  const goEdit = () => {
+    if (id) {
+      router.push(`/schedule/create/${id.toString()}`);
+    }
+  };
+
   return (
     <div className="cursor-pointer shadow-[0_2px_10px_0px_rgba(0,0,0,0.25)] rounded-[20px] w-full h-[300px] flex flex-col space-y-2 py-3 px-5">
       <div className="w-full flex justify-around items-center">
         <div className="w-full flex justify-start items-center space-x-1">
-          <div className="text-[15px] font-[700] px-3 bg-[#EDFBD5]">필드</div>
+          <div
+            className="text-[15px] font-[700] px-3"
+            style={{ backgroundColor: `${categoryColorCode}` }}
+          >
+            {categoryName}
+          </div>
         </div>
         <div>
           <Image
@@ -22,15 +51,13 @@ const DailyScheduleItem = () => {
         <div className="flex space-x-1">
           <span className="min-w-[43px]">이름 - </span>
           <div className="w-full overflow-hidden overflow-ellipsis">
-            <div className="w-full line-clamp-1">
-              안녕하세요안녕하세요안녕하세요
-            </div>
+            <div className="w-full line-clamp-1">{name}</div>
           </div>
         </div>
         <div className="flex space-x-1">
           <span className="min-w-[43px]">장소 - </span>
           <div className="w-full overflow-hidden overflow-ellipsis">
-            강릉종합운동장
+            {address}
           </div>
         </div>
         <div className="flex space-x-1">
@@ -41,19 +68,23 @@ const DailyScheduleItem = () => {
         </div>
         <div className="flex space-x-1">
           <span className="min-w-[43px]">선수 - </span>
-          <div className="w-full max-w-[400px] break-words">
-            가선수, 나선수, 다선수가선수, 나선수, 다선수가선수, 나선수,
-            다선수가선수, 나선수, 다선수가선수, 나선수, 다선수
-          </div>
+          <div className="w-full max-w-[400px] break-words">{player}</div>
         </div>
         <div className="flex space-x-1">
           <span className="min-w-[73px]">훈련내용 - </span>
-          <div className="w-full max-w-[400px] break-words">
-            전술훈련전술훈련전술훈련전술훈련전술훈련전술훈련
-          </div>
+          <div className="w-full max-w-[400px] break-words">{content}</div>
         </div>
       </div>
-      <div className="w-[149px] h-[107px] bg-[#CBCCCD]">image</div>
+      <div className="w-full h-[107px] flex justify-center">
+        <Image
+          loader={imageLoader}
+          src={`${(images[0] && images[0] !== "string") || "/images/schedule_image1.svg"}`}
+          width={0}
+          height={0}
+          alt="Schedule Image"
+          style={{ width: "149px", height: "107px" }}
+        />
+      </div>
     </div>
   );
 };
