@@ -35,7 +35,7 @@ const nextConfig = {
   images: {
     loader: "akamai",
     path: "/",
-    // domains: [""],
+    domains: ["https://dfg817v7j6xks.cloudfront.netprofile"],
   },
   // i18n: {
   //   locales: ["ko", "en"],

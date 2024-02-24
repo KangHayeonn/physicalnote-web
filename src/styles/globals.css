@@ -130,3 +130,11 @@
   color: blue;
 }
 */
+
+.MuiButtonBase-root svg {
+  width: 10px;
+}
+
+.slide > div:nth-child(1) > div:nth-child(4) {
+  margin-top: 0px;
+}

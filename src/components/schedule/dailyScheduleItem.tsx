@@ -2,6 +2,7 @@ import React from "react";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { DailyScheduleProps } from "@/types/schedule";
+import MuiCarousel from "react-material-ui-carousel";
 
 const DailyScheduleItem = ({
   id,
@@ -15,6 +16,10 @@ const DailyScheduleItem = ({
   images,
 }: DailyScheduleProps) => {
   const router = useRouter();
+  const tempImages = [
+    "/images/schedule_image1.svg",
+    "/images/schedule_image2.svg",
+  ];
 
   const imageLoader = ({ src, width, quality }: any) => {
     return `${src}?w=${width}&q=${quality || 75}`;
@@ -37,7 +42,7 @@ const DailyScheduleItem = ({
             {categoryName}
           </div>
         </div>
-        <div>
+        <div onClick={goEdit}>
           <Image
             src="/icons/edit_gray.svg"
             width={0}
@@ -75,15 +80,43 @@ const DailyScheduleItem = ({
           <div className="w-full max-w-[400px] break-words">{content}</div>
         </div>
       </div>
-      <div className="w-full h-[107px] flex justify-center">
-        <Image
-          loader={imageLoader}
-          src={`${(images[0] && images[0] !== "string") || "/images/schedule_image1.svg"}`}
-          width={0}
-          height={0}
-          alt="Schedule Image"
-          style={{ width: "149px", height: "107px" }}
-        />
+      <div className="w-full h-[107px] flex justify-center slide">
+        <MuiCarousel
+          interval={4000}
+          animation={"fade"}
+          autoPlay={true}
+          sx={{
+            width: "25vw",
+            height: "fit-content",
+          }}
+        >
+          {images.length !== 0 ? (
+            images.map((el, idx) => (
+              <div
+                key={`slide-image${idx}`}
+                className="flex justify-center m-0 space-x-1"
+              >
+                <Image
+                  loader={imageLoader}
+                  src={`${el && el !== "string" ? el : "/images/schedule_image1.svg"}`}
+                  width={0}
+                  height={0}
+                  alt="Schedule Image"
+                  style={{ width: "149px", height: "107px" }}
+                />
+              </div>
+            ))
+          ) : (
+            <Image
+              loader={imageLoader}
+              src={"/images/schedule_image1.svg"}
+              width={0}
+              height={0}
+              alt="Schedule Image"
+              style={{ width: "149px", height: "107px" }}
+            />
+          )}
+        </MuiCarousel>
       </div>
     </div>
   );
