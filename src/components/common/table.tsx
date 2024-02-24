@@ -7,10 +7,17 @@ const TableRow = ({ column, data, onClick }: TableRowType) => {
   const accessor = column?.accessor;
   if (!accessor) return null;
 
+  const formatData = (item: any) => {
+    if (typeof item === "number") {
+      const roundedNum = parseFloat(item.toFixed(2));
+      return roundedNum;
+    }
+  };
+
   return (
     <td className="py-[20px] text-[14px] whitespace-normal" onClick={onClick}>
       <div>
-        <span>{data[accessor.toString()] || "-"}</span>
+        <span>{formatData(data[accessor.toString()]) || "-"}</span>
       </div>
     </td>
   );
@@ -20,6 +27,7 @@ const Table = ({
   columns,
   data,
   onClickRow,
+  isCheckboxUse,
   isSelectedCheckbox,
   onSelect,
 }: TableType) => {
@@ -33,6 +41,17 @@ const Table = ({
         <table className="w-full">
           <thead>
             <tr>
+              {isCheckboxUse ? (
+                <th className="w-full h-full py-[20px] flex justify-center items-center">
+                  <Image
+                    src="/icons/checkbox_off.svg"
+                    width={0}
+                    height={0}
+                    alt="like button"
+                    style={{ width: "30px", height: "auto" }}
+                  />
+                </th>
+              ) : null}
               {isSelectedCheckbox ? <th></th> : null}
               {columns.map((column, idx) => (
                 <th
@@ -54,6 +73,17 @@ const Table = ({
                   key={`data${idx}`}
                   className="cursor-pointer hover:bg-[#eefdd3] transition-colors"
                 >
+                  {isCheckboxUse ? (
+                    <td className="w-full h-full py-[20px] flex justify-center items-center">
+                      <Image
+                        src="/icons/checkbox_off.svg"
+                        width={0}
+                        height={0}
+                        alt="like button"
+                        style={{ width: "30px", height: "auto" }}
+                      />
+                    </td>
+                  ) : null}
                   {isSelectedCheckbox && (
                     <td
                       className="py-[20px] text-[14px] whitespace-normal"

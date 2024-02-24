@@ -38,6 +38,7 @@ export interface TableType {
     | WeeklyReportDataType[]
     | PlayerSimpleResponseType[];
   onClickRow?: (id: number) => (e: React.MouseEvent<HTMLDivElement>) => void;
+  isCheckboxUse?: boolean;
   isSelectedCheckbox?: boolean;
   onSelect?: (id: number, e: React.MouseEvent<HTMLDivElement>) => void;
 }

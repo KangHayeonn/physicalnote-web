@@ -1,8 +1,9 @@
-import React, { useState, useMemo } from "react";
+import React, { useState } from "react";
 import { PlayerSimpleResponseType } from "@/types/schedule";
 import usePagination from "@/utils/hooks/usePagination";
 import Pagination from "@/components/common/pagination";
 import Table from "@/components/common/table";
+import { columnData } from "@/constants/mock/schedule";
 
 const PlayerForm = () => {
   const [page, setPage] = useState<number>(0);
@@ -34,32 +35,11 @@ const PlayerForm = () => {
     }
   };
 
-  const columnData = [
-    {
-      Header: "선수이름",
-      accessor: "name",
-    },
-    {
-      Header: "전화번호",
-      accessor: "phone",
-    },
-    {
-      Header: "포지션",
-      accessor: "position",
-    },
-    {
-      Header: "소속",
-      accessor: "playerGrade",
-    },
-  ];
-
-  const columns = useMemo(() => columnData, []);
-
   return (
     <>
       {data.length !== 0 ? (
         <div className="w-full mt-20 bg-white py-4 my-4 px-4 rounded-[4px]">
-          <Table columns={columns} data={data || []} />
+          <Table columns={columnData} data={data || []} isCheckboxUse={true} />
           <Pagination
             currentPage={currentPage}
             totalPage={totalPages}

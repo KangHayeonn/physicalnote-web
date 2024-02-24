@@ -64,7 +64,7 @@ const CreateSchedule: NextPage = () => {
   }, [searchDate, startTime, endTime]);
 
   return (
-    <>
+    <div className="min-w-[1900px]">
       <Layout>
         <div className="flex items-center space-x-[30px]">
           <h1 className="text-[28px] font-[700]">일정관리</h1>
@@ -166,7 +166,7 @@ const CreateSchedule: NextPage = () => {
           <PlayerForm />
         </div>
       </Layout>
-    </>
+    </div>
   );
 };
 

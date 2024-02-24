@@ -19,6 +19,7 @@ import {
   PlayersResponseType,
 } from "@/types/privateData";
 import { showToast } from "@/utils";
+import { SearchFilterType } from "@/types/report";
 
 const PrivateData: NextPage = () => {
   const router = useRouter();
@@ -29,6 +30,11 @@ const PrivateData: NextPage = () => {
   const searchGrader = useRecoilValue(searchPlayerGraderState);
   const searchCategory = useRecoilValue(searchCategoryState);
   const searchKeyword = useRecoilValue(searchKeywordState);
+  const [searchFilter, setSearchFilter] = useState<SearchFilterType>({
+    playerGrader: "ALL",
+    category: "",
+    keyword: "",
+  });
 
   const columnData = [
     {
@@ -118,13 +124,15 @@ const PrivateData: NextPage = () => {
 
   const getPrivateList = async () => {
     const queryParams: PlayersRequestType =
-      searchGrader === "ALL" ? {} : { playerGrade: searchGrader };
+      searchFilter.playerGrader === "ALL"
+        ? {}
+        : { playerGrade: searchFilter.playerGrader };
 
-    if (searchCategory === "name") {
-      queryParams.name = searchKeyword;
+    if (searchFilter.category === "name") {
+      queryParams.name = searchFilter.keyword;
     }
-    if (searchCategory === "position") {
-      queryParams.position = searchKeyword;
+    if (searchFilter.category === "position") {
+      queryParams.position = searchFilter.keyword;
     }
 
     await Api.v1GetPlayers(queryParams, currentPage, itemPerPage).then(
@@ -159,6 +167,14 @@ const PrivateData: NextPage = () => {
   useEffect(() => {
     getPrivateList();
   }, [page]);
+
+  useEffect(() => {
+    setSearchFilter({
+      playerGrader: searchGrader,
+      category: searchCategory,
+      keyword: searchKeyword,
+    });
+  }, [searchGrader, searchCategory, searchKeyword]);
 
   return (
     <Layout>
