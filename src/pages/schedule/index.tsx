@@ -176,7 +176,7 @@ const ManageSchedule: NextPage = () => {
             </div>
           </div>
           <div className="w-3/4">
-            <CalendarComponents events={events} />
+            <CalendarComponents />
           </div>
         </div>
       </Layout>

@@ -50,9 +50,11 @@ export interface TableRowType {
 }
 
 export interface EventType {
+  id: number;
   title: string;
   start: Date;
-  type: string;
+  type: boolean;
+  color: string;
 }
 
 export interface FullCalendarComponentType {
