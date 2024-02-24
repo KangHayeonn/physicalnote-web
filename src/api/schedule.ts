@@ -129,6 +129,17 @@ const Schedule = {
       return Promise.reject(err);
     }
   },
+  async v1SearchAddress(query: string) {
+    try {
+      const url = `${prefix}/search/local`;
+      const result = await instanceWithToken.get(url, {
+        params: { query },
+      });
+      return result;
+    } catch (err) {
+      return Promise.reject(err);
+    }
+  },
 };
 
 export default Schedule;

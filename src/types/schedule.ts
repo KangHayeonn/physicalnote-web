@@ -109,3 +109,9 @@ export interface CategoryModalProps {
   isEdit: boolean;
   handleEvent: () => Promise<void>;
 }
+
+export interface AddressResponseType {
+  title: string;
+  roadAddress: string;
+  address: string;
+}

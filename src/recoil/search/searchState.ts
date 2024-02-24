@@ -1,3 +1,4 @@
+import { AddressResponseType } from "@/types/schedule";
 import { atom, selector } from "recoil";
 
 const searchPlayerGraderState = atom<string>({
@@ -48,6 +49,42 @@ const searchKeywordSelector = selector<string>({
   },
 });
 
+const searchAddressState = atom<AddressResponseType>({
+  key: "searchAddressState",
+  default: {
+    title: "",
+    roadAddress: "",
+    address: "",
+  },
+});
+
+const searchAddressSelector = selector<AddressResponseType>({
+  key: "searchAddressSelector",
+  get: ({ get }) => {
+    const address = get(searchAddressState);
+    return address;
+  },
+  set: ({ set }, newValue) => {
+    set(searchAddressState, newValue);
+  },
+});
+
+const addressKeywordState = atom<string>({
+  key: "addressKeywordState",
+  default: "",
+});
+
+const addressKeywordSelector = selector<string>({
+  key: "addressKeywordSelector",
+  get: ({ get }) => {
+    const keyword = get(addressKeywordState);
+    return keyword;
+  },
+  set: ({ set }, newValue) => {
+    set(addressKeywordState, newValue);
+  },
+});
+
 export {
   searchPlayerGraderState,
   searchPlayerGraderSelector,
@@ -55,4 +92,8 @@ export {
   searchCategorySelector,
   searchKeywordState,
   searchKeywordSelector,
+  searchAddressState,
+  searchAddressSelector,
+  addressKeywordState,
+  addressKeywordSelector,
 };

@@ -9,18 +9,29 @@ import Table from "@/components/common/table";
 import Pagination from "@/components/common/pagination";
 import usePagination from "@/utils/hooks/usePagination";
 import { useSetRecoilState, useRecoilState } from "recoil";
-import { searchPlayerGraderState } from "@/recoil/search/searchState";
-import { CategoryListType, PlayerSimpleResponseType } from "@/types/schedule";
+import {
+  addressKeywordSelector,
+  searchPlayerGraderState,
+} from "@/recoil/search/searchState";
+import {
+  AddressResponseType,
+  CategoryListType,
+  PlayerSimpleResponseType,
+} from "@/types/schedule";
 import DatePickerComponent from "@/components/common/datepicker";
 import TimePickerComponent from "@/components/common/timepicker";
 import CategoryModal from "@/components/schedule/create/categoryModal";
 import ConfirmModal from "@/components/common/modal/confirmModal";
 import { categorySelector } from "@/recoil/schedule/scheduleState";
 import Api from "@/api/schedule";
+import SearchForm from "@/components/common/searchForm";
 
 const CreateSchedule: NextPage = () => {
   const setSearchGrader = useSetRecoilState(searchPlayerGraderState);
   const [category, setCategory] = useRecoilState(categorySelector);
+  const [searchKeyword, setSearchKeyword] = useRecoilState(
+    addressKeywordSelector
+  );
 
   const [title, setTitle] = useState<string>("");
   const [titleTextCnt, setTitleTextCnt] = useState<number>(0);
@@ -39,7 +50,33 @@ const CreateSchedule: NextPage = () => {
       playerGrade: "1군",
     },
   ]);
-  const [categoryInfo, setCategoryInfo] = useState<CategoryListType>();
+  const [previewList, setPreviewList] = useState<Array<AddressResponseType>>([
+    {
+      title: "<b>강릉종합운동장</b>", // 제목
+      roadAddress: "강원특별자치도 강릉시 종합운동장길 69 강릉종합운동장", // 도로 주소
+      address: "강원특별자치도 강릉시 교동 408-3", // 번지 주소
+    },
+    {
+      title: "디저트39 <b>강릉종합운동장</b>점",
+      roadAddress: "강원특별자치도 강릉시 춘갑봉길 12",
+      address: "강원특별자치도 강릉시 포남동 603-1",
+    },
+    {
+      title: "<b>강릉종합운동장</b>풋살경기장",
+      roadAddress: "강원특별자치도 강릉시 종합운동장길 72-21",
+      address: "강원특별자치도 강릉시 교동 2-21",
+    },
+    {
+      title: "<b>강릉종합운동장</b>실내게이트볼장",
+      roadAddress: "강원특별자치도 강릉시 수리골길17번길 22",
+      address: "강원특별자치도 강릉시 교동 387-3",
+    },
+    {
+      title: "<b>강릉</b>컬링센터",
+      roadAddress: "강원특별자치도 강릉시 종합운동장길 32",
+      address: "강원특별자치도 강릉시 교동 632",
+    },
+  ]);
 
   const onSearchGraderChange = (grader: string) => {
     setSearchGrader(grader);
@@ -108,16 +145,23 @@ const CreateSchedule: NextPage = () => {
     });
   };
 
+  const getSearchAddress = async () => {
+    await Api.v1SearchAddress(searchKeyword).then((res) => {
+      const { items } = res.data;
+      setPreviewList([...items]);
+    });
+  };
+
+  useEffect(() => {
+    if (searchKeyword) getSearchAddress();
+  }, [searchKeyword]);
+
   useEffect(() => {
     if (!isOpenCategoryModal) {
       setIsEditCategory(false);
     }
     getCategoryList();
   }, [isOpenCategoryModal]);
-
-  useEffect(() => {
-    setCategoryInfo(category);
-  }, [category]);
 
   return (
     <>
@@ -135,7 +179,7 @@ const CreateSchedule: NextPage = () => {
               <h2 className="text-[20px] font-[700]">일정 기록하기</h2>
               <div className="cursor-pointer">
                 <Image
-                  src="/images/star_checked.svg"
+                  src="/images/star_unchecked.svg"
                   width={0}
                   height={0}
                   alt="like button"
@@ -187,10 +231,9 @@ const CreateSchedule: NextPage = () => {
               </div>
               <div className="flex items-center justify-between space-x-6">
                 <span className="w-10 font-[700] text-[15px]">위치</span>
-                <input
-                  type="text"
-                  placeholder="일정 위치를 입력하세요."
-                  className="w-[684px] h-[36px] border-none placeholder:text-[#CBCCCD] placeholder:text-[12px] rounded-[5px] shadow-[0_2px_10px_0px_rgba(0,0,0,0.25)] focus:border-transparent focus:ring-0"
+                <SearchForm
+                  search={searchKeyword}
+                  searchPreviewList={previewList}
                 />
               </div>
               <div className="flex items-center justify-between space-x-6">
