@@ -2,19 +2,24 @@ import React from "react";
 import dayjs from "dayjs";
 import { TimePicker } from "antd";
 
-const TimePickerComponent = () => {
+interface TimePickerProps {
+  initTime?: string;
+  changeTime: React.Dispatch<React.SetStateAction<string>>;
+}
+
+const TimePickerComponent = ({ initTime, changeTime }: TimePickerProps) => {
   const format = "HH:mm";
 
   const onChangeTime = (date: dayjs.Dayjs, dateString: string | string[]) => {
-    console.log(date);
-    console.log(dateString);
+    const newTime = Array.isArray(dateString) ? dateString[0] : dateString;
+    changeTime(newTime);
   };
 
   return (
     <TimePicker
-      defaultValue={dayjs("12:08", format)}
+      defaultValue={dayjs(initTime, format)}
       format={format}
-      placeholder="안녕"
+      placeholder="시간을 입력해주세요"
       size="large"
       popupStyle={{
         fontSize: "16px",

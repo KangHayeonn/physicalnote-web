@@ -1,82 +1,40 @@
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { NextPage } from "next";
 import Image from "next/image";
 import Layout from "@/components/layout";
 import Button from "@/components/common/button";
 import { searchCategoryList } from "@/constants/mock/searchCategoryList";
 import DropDown from "@/components/common/dropdown";
-import Table from "@/components/common/table";
-import Pagination from "@/components/common/pagination";
-import usePagination from "@/utils/hooks/usePagination";
 import { useSetRecoilState, useRecoilState } from "recoil";
 import {
   addressKeywordSelector,
   searchPlayerGraderState,
 } from "@/recoil/search/searchState";
-import {
-  AddressResponseType,
-  CategoryListType,
-  PlayerSimpleResponseType,
-} from "@/types/schedule";
+import { AddressResponseType } from "@/types/schedule";
 import DatePickerComponent from "@/components/common/datepicker";
 import TimePickerComponent from "@/components/common/timepicker";
-import CategoryModal from "@/components/schedule/create/categoryModal";
 import ConfirmModal from "@/components/common/modal/confirmModal";
-import { categorySelector } from "@/recoil/schedule/scheduleState";
 import Api from "@/api/schedule";
 import SearchForm from "@/components/common/searchForm";
+import CategoryForm from "@/components/schedule/create/categoryForm";
+import PlayerForm from "@/components/schedule/create/playerForm";
+import ImageForm from "@/components/schedule/create/imageForm";
 
 const CreateSchedule: NextPage = () => {
   const setSearchGrader = useSetRecoilState(searchPlayerGraderState);
-  const [category, setCategory] = useRecoilState(categorySelector);
   const [searchKeyword, setSearchKeyword] = useRecoilState(
     addressKeywordSelector
   );
-
+  const [initDate, setInitDate] = useState<Date>(new Date());
+  const [searchDate, setSearchDate] = useState<Date>(new Date());
+  const [initTime, setInitTime] = useState<string>("09:00");
+  const [startTime, setStartTime] = useState<string>("09:00");
+  const [endTime, setEndTime] = useState<string>("09:00");
   const [title, setTitle] = useState<string>("");
   const [titleTextCnt, setTitleTextCnt] = useState<number>(0);
-  const [page, setPage] = useState<number>(0);
-  const [totalLen, setTotalLen] = useState<number>(1);
-  const [isOpenCategoryModal, setIsOpenCategoryModal] =
-    useState<boolean>(false);
-  const [categoryList, setCategoryList] = useState<CategoryListType[]>([]);
-  const [isEditCategory, setIsEditCategory] = useState<boolean>(false);
-  const [data, setData] = useState<PlayerSimpleResponseType[]>([
-    {
-      id: 26,
-      name: "김영건",
-      phone: null,
-      positions: ["공격수"],
-      playerGrade: "1군",
-    },
-  ]);
-  const [previewList, setPreviewList] = useState<Array<AddressResponseType>>([
-    {
-      title: "<b>강릉종합운동장</b>", // 제목
-      roadAddress: "강원특별자치도 강릉시 종합운동장길 69 강릉종합운동장", // 도로 주소
-      address: "강원특별자치도 강릉시 교동 408-3", // 번지 주소
-    },
-    {
-      title: "디저트39 <b>강릉종합운동장</b>점",
-      roadAddress: "강원특별자치도 강릉시 춘갑봉길 12",
-      address: "강원특별자치도 강릉시 포남동 603-1",
-    },
-    {
-      title: "<b>강릉종합운동장</b>풋살경기장",
-      roadAddress: "강원특별자치도 강릉시 종합운동장길 72-21",
-      address: "강원특별자치도 강릉시 교동 2-21",
-    },
-    {
-      title: "<b>강릉종합운동장</b>실내게이트볼장",
-      roadAddress: "강원특별자치도 강릉시 수리골길17번길 22",
-      address: "강원특별자치도 강릉시 교동 387-3",
-    },
-    {
-      title: "<b>강릉</b>컬링센터",
-      roadAddress: "강원특별자치도 강릉시 종합운동장길 32",
-      address: "강원특별자치도 강릉시 교동 632",
-    },
-  ]);
+  const [previewList, setPreviewList] = useState<Array<AddressResponseType>>(
+    []
+  );
 
   const onSearchGraderChange = (grader: string) => {
     setSearchGrader(grader);
@@ -88,61 +46,6 @@ const CreateSchedule: NextPage = () => {
       setTitle(value);
       setTitleTextCnt(value.length);
     }
-  };
-
-  const columnData = [
-    {
-      Header: "선수이름",
-      accessor: "name",
-    },
-    {
-      Header: "전화번호",
-      accessor: "phone",
-    },
-    {
-      Header: "포지션",
-      accessor: "position",
-    },
-    {
-      Header: "소속",
-      accessor: "playerGrade",
-    },
-  ];
-
-  const columns = useMemo(() => columnData, []);
-
-  const itemPerPage = 10;
-  const totalItems = totalLen;
-  const { currentPage, totalPages, currentItems, handlePageChange } =
-    usePagination((page) => setPage(page), itemPerPage, totalItems);
-
-  const next = () => {
-    if (currentPage + 1 < totalPages) {
-      handlePageChange(currentPage + 1);
-    }
-  };
-
-  const prev = () => {
-    if (currentPage > 0) {
-      handlePageChange(currentPage - 1);
-    }
-  };
-
-  const editCategory = (item: CategoryListType) => {
-    setCategory(item);
-    setIsOpenCategoryModal(true);
-    setIsEditCategory(true);
-  };
-
-  const addCategory = () => {
-    setIsOpenCategoryModal(true);
-    setCategory({ id: 0, name: "", colorCode: "" });
-  };
-
-  const getCategoryList = async () => {
-    await Api.v1GetCategoryList().then((res) => {
-      setCategoryList(res.data);
-    });
   };
 
   const getSearchAddress = async () => {
@@ -157,11 +60,8 @@ const CreateSchedule: NextPage = () => {
   }, [searchKeyword]);
 
   useEffect(() => {
-    if (!isOpenCategoryModal) {
-      setIsEditCategory(false);
-    }
-    getCategoryList();
-  }, [isOpenCategoryModal]);
+    // date/time 저장
+  }, [searchDate, startTime, endTime]);
 
   return (
     <>
@@ -187,33 +87,8 @@ const CreateSchedule: NextPage = () => {
                 />
               </div>
             </div>
+            <CategoryForm />
             <div className="flex flex-col space-y-2">
-              <div className="flex items-center space-x-4 mt-2 mb-6">
-                {categoryList.length !== 0 ? (
-                  <div className="flex space-x-2 text-[12px]">
-                    {categoryList.map((el, idx) => (
-                      <div
-                        key={`category${idx}`}
-                        className="flex justify-center items-center min-w-[60px] h-[30px] px-3 py-1 font-[700] rounded-[10px] shadow-[0_2px_10px_0px_rgba(0,0,0,0.25)] cursor-pointer"
-                        style={{ backgroundColor: `${el.colorCode}` }}
-                        onClick={() => editCategory(el)}
-                      >
-                        {el.name}
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="text-[#B9B9C3] text-[12px]">
-                    카테고리를 등록하세요.
-                  </div>
-                )}
-                <Button
-                  text="추가"
-                  type="button"
-                  classnames="text-[12px] h-[25px] text-[#8DBE3D] font-[700]"
-                  onClick={addCategory}
-                />
-              </div>
               <div className="flex items-center justify-between space-x-6 relative">
                 <span className="w-10 font-[700] text-[15px]">이름</span>
                 <input
@@ -239,11 +114,21 @@ const CreateSchedule: NextPage = () => {
               <div className="flex items-center justify-between space-x-6">
                 <span className="w-10 font-[700] text-[15px]">시간</span>
                 <div className="flex items-center space-x-2">
-                  <DatePickerComponent calendarType="date" />
+                  <DatePickerComponent
+                    calendarType="free"
+                    initDate={initDate}
+                    changeDate={setSearchDate}
+                  />
                   <div className="flex items-center space-x-1">
-                    <TimePickerComponent />
+                    <TimePickerComponent
+                      initTime={initTime}
+                      changeTime={setStartTime}
+                    />
                     <span>~</span>
-                    <TimePickerComponent />
+                    <TimePickerComponent
+                      initTime={initTime}
+                      changeTime={setEndTime}
+                    />
                   </div>
                 </div>
               </div>
@@ -255,17 +140,7 @@ const CreateSchedule: NextPage = () => {
                   className="w-[684px] h-[36px] border-none placeholder:text-[#CBCCCD] placeholder:text-[12px] rounded-[5px] shadow-[0_2px_10px_0px_rgba(0,0,0,0.25)] focus:border-transparent focus:ring-0"
                 />
               </div>
-              <div className="flex items-center space-x-4 py-4">
-                <span className="font-[700] text-[15px]">이미지첨부</span>
-                <div className="flex items-center space-x-5">
-                  <div className="text-[12px]">0/3</div>
-                  <Button
-                    text="추가"
-                    type="button"
-                    classnames="text-[12px] h-[25px] text-[#8DBE3D] font-[700]"
-                  />
-                </div>
-              </div>
+              <ImageForm />
               <div className="flex flex-col space-y-4">
                 <span className="font-[700] text-[15px]">훈련내용</span>
                 <textarea
@@ -288,32 +163,9 @@ const CreateSchedule: NextPage = () => {
               </div>
             </div>
           </div>
-          {data.length !== 0 ? (
-            <div className="w-full mt-20 bg-white py-4 my-4 px-4 rounded-[4px]">
-              <Table columns={columns} data={data || []} />
-              <Pagination
-                currentPage={currentPage}
-                totalPage={totalPages}
-                onPageChange={handlePageChange}
-                setPage={setPage}
-                next={next}
-                prev={prev}
-              />
-            </div>
-          ) : (
-            <div className="flex items-center justify-center w-full py-10 font-bold">
-              선수 데이터가 없습니다.
-            </div>
-          )}
+          <PlayerForm />
         </div>
       </Layout>
-      {isOpenCategoryModal && (
-        <CategoryModal
-          setIsOpen={setIsOpenCategoryModal}
-          isEdit={isEditCategory}
-          handleEvent={getCategoryList}
-        />
-      )}
     </>
   );
 };

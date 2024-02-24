@@ -99,6 +99,32 @@ const DatePickerComponent = ({
     );
   }
 
+  if (calendarType === "free") {
+    return (
+      <div className="calendar-wrapper">
+        <DatePicker
+          showIcon
+          toggleCalendarOnIconClick
+          icon={
+            <Image
+              src="/images/arrow_down.svg"
+              width={10}
+              height={10}
+              alt="Clock Icon"
+              className="calendar-icon"
+            />
+          }
+          locale={ko}
+          selected={startDate}
+          dateFormat="yy년 MM월 dd일"
+          onChange={(date) => {
+            if (date) setStartDate(date);
+          }}
+        />
+      </div>
+    );
+  }
+
   return (
     <div className="calendar-wrapper">
       <DatePicker
