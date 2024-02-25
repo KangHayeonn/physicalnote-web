@@ -1,6 +1,8 @@
+import React, { Dispatch, SetStateAction } from "react";
 import { Column } from "react-table";
 import { PrivateDataType } from "@/types/privateData";
-import { DailyReportDataType, WeeklyReportDataType } from "../report";
+import { DailyReportDataType, WeeklyReportDataType } from "@/types/report";
+import { PlayerSimpleDataType } from "@/types/schedule";
 
 export interface SearchProps {
   title?: string;
@@ -30,8 +32,13 @@ export interface DropDownProps {
 
 export interface TableType {
   columns: Column[];
-  data: PrivateDataType[] | DailyReportDataType[] | WeeklyReportDataType[];
+  data:
+    | PrivateDataType[]
+    | DailyReportDataType[]
+    | WeeklyReportDataType[]
+    | PlayerSimpleDataType[];
   onClickRow?: (id: number) => (e: React.MouseEvent<HTMLDivElement>) => void;
+  isCheckboxUse?: boolean;
   isSelectedCheckbox?: boolean;
   onSelect?: (id: number, e: React.MouseEvent<HTMLDivElement>) => void;
 }
@@ -42,4 +49,27 @@ export interface TableRowType {
   onClick:
     | ((e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void)
     | undefined;
+}
+
+export interface EventType {
+  id: number;
+  title: string;
+  start: Date;
+  type: boolean;
+  color: string;
+}
+
+export interface FullCalendarComponentType {
+  events: EventType[];
+}
+
+export interface ConfirmModalProps {
+  setIsOpen: Dispatch<SetStateAction<boolean>>;
+  handleSubmit: () => void;
+  text: string;
+}
+
+export interface ModalFormProps {
+  onClickEvent?: () => void;
+  children: JSX.Element;
 }

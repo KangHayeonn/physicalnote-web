@@ -29,6 +29,7 @@ import { showToast } from "@/utils";
 
 const CreateSchedule: NextPage = () => {
   const router = useRouter();
+  const { id } = router.query;
   const [searchGrader, setSearchGrader] = useRecoilState(
     searchPlayerGraderState
   );
@@ -158,7 +159,7 @@ const CreateSchedule: NextPage = () => {
         }
       });
     } catch {
-      showToast("일정 입력값을 확인해주세요.");
+      showToast("");
     }
   };
 
@@ -276,6 +277,11 @@ const CreateSchedule: NextPage = () => {
                 ></textarea>
               </div>
               <div className="flex items-center space-x-2 justify-end py-4">
+                <Button
+                  type="button"
+                  text="삭제"
+                  classnames="text-[#8DBE3D] text-[12px] font-[700]"
+                />
                 <Button
                   type="submit"
                   text="등록"

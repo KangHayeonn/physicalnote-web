@@ -11,6 +11,10 @@ const MyInfo: NextPage = () => {
   const { data, error } = useSWR("/admin/coach", { dedupingInterval: 100000 });
   const { register, handleSubmit } = useForm();
 
+  const imageLoader = ({ src, width, quality }: any) => {
+    return `${src}?w=${width}&q=${quality || 75}`;
+  };
+
   const goChangePassword = () => {
     router.push("/changePassword");
   };
@@ -37,11 +41,13 @@ const MyInfo: NextPage = () => {
         <div className="flex items-center justify-start space-x-10 py-10 min-w-[292px]">
           <div className="w-[92px] h-[92px] rounded-[46px] bg-[#D9D9D9] flex justify-center items-center cursor-pointer">
             <Image
-              src="/images/profile_default.svg"
-              width={116}
-              height={116}
+              loader={imageLoader}
+              src={data.profile || "/images/profile_default.svg"}
+              width={0}
+              height={0}
               priority
               alt="프로필 이미지"
+              style={{ width: "92px", height: "auto", borderRadius: "46px" }}
             />
           </div>
           <div className="flex flex-col space-y-2">

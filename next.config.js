@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'export',
+  output: "export",
   reactStrictMode: false, // true
   transpilePackages: ["@mui/x-charts"],
   webpack: (config) => {
@@ -21,7 +21,6 @@ const nextConfig = {
     // !! WARN !!
     ignoreBuildErrors: true,
   },
-
   async redirects() {
     return [
       {
@@ -36,7 +35,7 @@ const nextConfig = {
   images: {
     loader: "akamai",
     path: "/",
-    // domains: [""],
+    domains: ["https://dfg817v7j6xks.cloudfront.netprofile"],
   },
   // i18n: {
   //   locales: ["ko", "en"],

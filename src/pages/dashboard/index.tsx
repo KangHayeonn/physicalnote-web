@@ -42,14 +42,14 @@ const Dashboard: NextPage = () => {
   const toggleDate = (type: string) => {
     const today = new Date();
 
+    if (type === "lastWeek2") {
+      const lastWeek2 = today.setDate(today.getDate() - 14);
+      setInitDate(new Date(lastWeek2));
+    }
+
     if (type === "lastWeek") {
       const lastWeek = today.setDate(today.getDate() - 7);
       setInitDate(new Date(lastWeek));
-    }
-
-    if (type === "yesterday") {
-      const yesterday = today.setDate(today.getDate() - 1);
-      setInitDate(new Date(yesterday));
     }
 
     if (type === "today") {
@@ -112,30 +112,30 @@ const Dashboard: NextPage = () => {
           <Button
             type="button"
             text="2주전"
-            classnames="text-[#8DBE3D] text-[13px] font-[700]"
-            onClick={() => toggleDate("lastWeek")}
+            classnames="h-[36px] px-4 text-[#8DBE3D] text-[13px] font-[700]"
+            onClick={() => toggleDate("lastWeek2")}
           />
           <Button
             type="button"
             text="지난주"
-            classnames="text-[#8DBE3D] text-[13px] font-[700]"
+            classnames="h-[36px] px-4 text-[#8DBE3D] text-[13px] font-[700]"
             onClick={() => toggleDate("lastWeek")}
           />
           <Button
             type="button"
             text="오늘"
-            classnames="text-[#8DBE3D] text-[13px] font-[700]"
+            classnames="h-[36px] px-4 text-[#8DBE3D] text-[13px] font-[700]"
             onClick={() => toggleDate("today")}
           />
           <DatePickerComponent
-            calendarType="date"
+            calendarType="free"
             initDate={initDate}
             changeDate={setSearchDate}
           />
           <Button
             type="button"
             text="초기화"
-            classnames="text-[#000] text-[13px] font-[700]"
+            classnames="h-[36px] px-4 text-[#000] text-[13px] font-[700]"
             onClick={init}
           />
         </div>

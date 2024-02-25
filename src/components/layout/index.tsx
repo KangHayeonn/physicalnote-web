@@ -529,7 +529,7 @@ const Layout = ({ children }: LayoutProps) => {
           </div>
         </div>
       </div>
-      <div className="ml-[220px] w-full h-screen overflow-y-auto bg-white rounded-tl-[40px] rounded-bl-[40px] px-[78px] py-[46px] relative z-100">
+      <div className="ml-[220px] w-full h-screen overflow-y-auto bg-white rounded-tl-[40px] rounded-bl-[40px] px-[78px] py-[46px] relative z-30">
         {children}
       </div>
     </div>

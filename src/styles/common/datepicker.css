@@ -1,11 +1,11 @@
 .calendar-wrapper {
-  width: 150px;
+  width: 180px;
   position: relative;
-  margin-right: 50px;
 }
 
 .calendar-icon {
   position: absolute;
+  top: 3px;
   right: 5px;
   width: 5px;
   height: 5px;
@@ -40,15 +40,16 @@
 }
 
 .react-datepicker__calendar-icon {
-  height: 11px !important;
+  height: 13px !important;
   vertical-align: -0.125em em;
-  width: 12px !important;
+  width: 13px !important;
+  cursor: pointer;
 }
 
 .react-datepicker__input-container > input {
-  width: 150px;
-  height: 28px;
-  font-size: 13px;
+  width: 180px;
+  height: 36px;
+  font-size: 15px;
   font-weight: 700;
   color: #000;
   padding: 1px 38px 1px 18px;
@@ -144,65 +145,6 @@
   color: #fff;
   background-color: #8dbe3d;
   border-radius: 50%;
-}
-
-/* 시간 */
-
-.react-datepicker__time-container .react-datepicker__time {
-  border-radius: 1.25rem;
-}
-
-.react-datepicker__time-container {
-  width: 11.5rem;
-}
-
-.react-datepicker-time__header {
-  color: #fff;
-}
-
-.react-datepicker__time-container
-  .react-datepicker__time
-  .react-datepicker__time-box {
-  display: flex;
-  width: 11.5rem;
-}
-
-.react-datepicker__time-list {
-  overflow-y: auto;
-}
-
-.react-datepicker_time-list::-webkit-scrollbar {
-  width: 7px;
-  border-radius: 10px;
-}
-
-.react-datepicker_time-list::-webkit-scrollbar-thumb {
-  background-color: rgba(0, 0, 0, 0.2);
-  border-radius: 10px;
-}
-
-.react-datepicker_time-list::-webkit-scrollbar-track {
-  margin: 8px;
-}
-
-.react-datepicker__time-list-item {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.react-datepicker__time-list-item--disabled {
-  display: none;
-}
-
-.react-datepicker__time-container
-  .react-datepicker__time
-  .react-datepicker__time-box
-  ul.react-datepicker__time-list
-  li.react-datepicker__time-list-item--selected {
-  background-color: #778da9;
-  color: #fff;
-  font-weight: bold;
 }
 
 /* 연도 */

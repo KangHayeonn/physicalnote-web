@@ -35,3 +35,106 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #c6e19b; /* 마우스 오버시 색상 */
 }
+
+/* antd time-picker custom */
+.ant-picker:hover {
+  outline: none;
+  border: none;
+  cursor: pointer;
+}
+
+.ant-picker {
+  outline: none;
+  border: none;
+  font-weight: 700;
+}
+
+.ant-picker-input input {
+  cursor: pointer;
+}
+
+.ant-picker-time-panel-column {
+  width: 90px !important;
+}
+
+.ant-picker-ok button {
+  background: #fff;
+  color: #8dbe3d;
+  box-shadow: 0 2px 10px 0px rgba(0, 0, 0, 0.25);
+}
+
+.ant-picker-ok button:hover {
+  background: #c6e19b !important;
+  color: #fff;
+  box-shadow: 0 2px 10px 0px rgba(0, 0, 0, 0.25);
+}
+
+.ant-picker-now a:hover {
+  color: #c6e19b;
+}
+
+.ant-picker-time-panel-cell-selected .ant-picker-time-panel-cell-inner {
+  background-color: #eff7e1 !important;
+}
+
+/* Full Calendar Custom */
+
+.fc button {
+  background-color: #fff;
+  border: none;
+}
+
+.fc .fc-button-primary {
+  background-color: #fff;
+  color: #6c757d;
+  border: none;
+}
+
+.fc .fc-button-primary:hover {
+  background-color: #fff;
+  color: #000;
+  border: none;
+}
+
+.fc .fc-button {
+  background-color: #fff !important;
+}
+
+.fc .fc-button-primary:focus,
+.fc .fc-button-primary:active {
+  background-color: #fff;
+  border: none;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.fc .fc-daygrid-day {
+  height: 134px;
+}
+
+.fc .fc-day-today {
+  background-color: #e5f6c9 !important;
+}
+
+.fc .fc-daygrid-day:hover {
+  cursor: pointer;
+  background-color: #f3f0f0 !important;
+}
+
+/*
+.fc-day-sun {
+  color: red;
+}
+
+.fc-day-sat {
+  color: blue;
+}
+*/
+
+.MuiButtonBase-root svg {
+  width: 10px;
+}
+
+.slide > div:nth-child(1) > div:nth-child(4) {
+  margin-top: 0px;
+}
