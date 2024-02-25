@@ -128,7 +128,7 @@ const Dashboard: NextPage = () => {
             onClick={() => toggleDate("today")}
           />
           <DatePickerComponent
-            calendarType="date"
+            calendarType="free"
             initDate={initDate}
             changeDate={setSearchDate}
           />

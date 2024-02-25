@@ -61,15 +61,20 @@ const TodayTrainingPlan = () => {
                   <div className="flex flex-col space-y-4">
                     <div className="flex flex-col justify-between space-y-10 h-full">
                       <div className="w-[255px] h-[42px] text-[15px] font-[400] flex justify-center items-center rounded-[20px] shadow-[0_2px_10px_0px_rgba(0,0,0,0.25)]">
-                        {el.categoryName} - {getTimeFormat(el.startTime)}~
+                        <div className="w-[90px] overflow-hidden overflow-ellipsis">
+                          <div className="w-full line-clamp-1">
+                            {el.categoryName}
+                          </div>
+                        </div>{" "}
+                        - {getTimeFormat(el.startTime)}~
                         {getTimeFormat(el.endTime)}
                       </div>
                     </div>
                   </div>
                   <div className="flex flex-col space-y-4">
                     <div className="flex flex-col justify-between space-y-10 h-full">
-                      <div className="w-[195px] h-[42px] text-[15px] font-[400] flex justify-center items-center rounded-[20px] shadow-[0_2px_10px_0px_rgba(0,0,0,0.25)]">
-                        {el.address}
+                      <div className="w-[195px] h-[42px] px-[20px] text-[15px] font-[400] flex justify-center items-center rounded-[20px] shadow-[0_2px_10px_0px_rgba(0,0,0,0.25)] overflow-hidden overflow-ellipsis">
+                        <div className="w-full line-clamp-1">{el.address}</div>
                       </div>
                     </div>
                   </div>
