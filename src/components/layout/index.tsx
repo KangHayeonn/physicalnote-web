@@ -32,17 +32,15 @@ const Layout = ({ children }: LayoutProps) => {
           />
         </div>
         <div className="flex flex-col space-y-2 py-10 pl-12">
-          <div className="cursor-pointer">
-            <Image
-              loader={imageLoader}
-              src={data?.profile || "/images/profile_default.svg"}
-              width={0}
-              height={0}
-              priority
-              alt="프로필 이미지"
-              style={{ width: "81px", height: "auto", borderRadius: "46px" }}
-            />
-          </div>
+          <Image
+            loader={imageLoader}
+            src={data?.profile || "/images/profile_default.svg"}
+            width={0}
+            height={0}
+            priority
+            alt="프로필 이미지"
+            style={{ width: "81px", height: "auto", borderRadius: "46px" }}
+          />
           <div className="flex items-center pl-5 space-x-2">
             <span className="font-[700] text-[14px]">{data?.name}</span>
             <Link href="/myInfo">

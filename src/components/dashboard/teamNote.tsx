@@ -59,7 +59,7 @@ const TeamNote = ({ searchDate }: TeamNoteType) => {
 
   return (
     <div className="grid grid-rows-1 w-full">
-      <span className="text-[15px] font-[400]">■ 비고</span>
+      <span className="text-[15px] font-[700]">■ 비고</span>
       <div className="flex flex-col justify-between w-full p-5 h-[260px] rounded-[25px] shadow-[0_2px_10px_0px_rgba(0,0,0,0.25)] text-[15px] font-[400]">
         <div
           className="w-full h-[180px] overflow-y-scroll bg-transparent border-none resize-none outline-none p-0 focus:border-transparent focus:ring-0"

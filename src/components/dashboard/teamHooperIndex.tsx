@@ -106,7 +106,7 @@ const TeamHooperIndex = ({ initPage, getData }: PaginationProps) => {
     <div className="col-span-7 flex flex-col space-y-2">
       <div className="flex justify-between">
         <div className="space-x-2">
-          <span className="text-[15px] font-[400] ">■ 관찰대상</span>
+          <span className="text-[15px] font-[700] ">■ 관찰대상</span>
           <em className="text-[12px] text-[#FF0000] font-[400] not-italic">
             (컨디션조절이 필요해요!)
           </em>
