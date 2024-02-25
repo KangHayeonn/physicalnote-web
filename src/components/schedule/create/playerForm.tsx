@@ -1,26 +1,31 @@
 import React, { useState, useEffect } from "react";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import {
   PlayerSimpleResponseType,
   PlayerSimpleDataType,
+  CheckboxType,
 } from "@/types/schedule";
 import usePagination from "@/utils/hooks/usePagination";
 import Pagination from "@/components/common/pagination";
 import Table from "@/components/common/table";
 import { columnData } from "@/constants/mock/schedule";
 import { searchPlayerGraderSelector } from "@/recoil/search/searchState";
+import { playerCheckSelector } from "@/recoil/schedule/scheduleState";
 import Api from "@/api/schedule";
+import { PlayerFormProps } from "@/types/schedule";
 
 const PlayerForm = () => {
   const [searchGrader, setSearchGrader] = useRecoilState(
     searchPlayerGraderSelector
   );
+  const setCheckbox = useSetRecoilState(playerCheckSelector);
+
   const [page, setPage] = useState<number>(0);
   const [totalLen, setTotalLen] = useState<number>(1);
   const [data, setData] = useState<PlayerSimpleDataType[]>([]);
   const [playerGrader, setPlayerGrader] = useState<string>("");
 
-  const itemPerPage = 1;
+  const itemPerPage = 2;
   const totalItems = totalLen;
   const { currentPage, totalPages, currentItems, handlePageChange } =
     usePagination((page) => setPage(page), itemPerPage, totalItems);
@@ -47,6 +52,7 @@ const PlayerForm = () => {
         const { content, totalElements } = res.data;
 
         const tempContent: PlayerSimpleDataType[] = [];
+        const initCheckbox: CheckboxType[] = [];
         content.map((item: PlayerSimpleResponseType) => {
           const grade =
             item.playerGrade === "FIRST"
@@ -60,7 +66,15 @@ const PlayerForm = () => {
             belongto: grade,
             ...item,
           });
+
+          initCheckbox.push({
+            id: item.id,
+            name: item.name,
+            check: false,
+          });
         });
+
+        setCheckbox(initCheckbox);
 
         setData([...tempContent]);
         setTotalLen(totalElements);

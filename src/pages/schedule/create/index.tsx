@@ -5,7 +5,7 @@ import Layout from "@/components/layout";
 import Button from "@/components/common/button";
 import { searchCategoryList } from "@/constants/mock/searchCategoryList";
 import DropDown from "@/components/common/dropdown";
-import { useSetRecoilState, useRecoilState } from "recoil";
+import { useSetRecoilState, useRecoilState, useRecoilValue } from "recoil";
 import {
   addressKeywordSelector,
   searchPlayerGraderState,
@@ -19,12 +19,15 @@ import SearchForm from "@/components/common/searchForm";
 import CategoryForm from "@/components/schedule/create/categoryForm";
 import PlayerForm from "@/components/schedule/create/playerForm";
 import ImageForm from "@/components/schedule/create/imageForm";
+import { playerCheckSelector } from "@/recoil/schedule/scheduleState";
 
 const CreateSchedule: NextPage = () => {
   const setSearchGrader = useSetRecoilState(searchPlayerGraderState);
   const [searchKeyword, setSearchKeyword] = useRecoilState(
     addressKeywordSelector
   );
+  const checkbox = useRecoilValue(playerCheckSelector);
+
   const [initDate, setInitDate] = useState<Date>(new Date());
   const [searchDate, setSearchDate] = useState<Date>(new Date());
   const [initTime, setInitTime] = useState<string>("09:00");
@@ -35,6 +38,8 @@ const CreateSchedule: NextPage = () => {
   const [previewList, setPreviewList] = useState<Array<AddressResponseType>>(
     []
   );
+  const [playerList, setPlayerList] = useState<Array<string>>([]);
+  const [playerIdList, setPlayerIdList] = useState<Array<number>>([]);
 
   const onSearchGraderChange = (grader: string) => {
     setSearchGrader(grader);
@@ -62,6 +67,30 @@ const CreateSchedule: NextPage = () => {
       setPreviewList([...items]);
     });
   };
+
+  const checkPlayer = () => {
+    const checkedPlayers = checkbox
+      .filter((item) => item.check)
+      .map((item) => item.name);
+
+    const checkedPlayerIds = checkbox
+      .filter((item) => item.check)
+      .map((item) => item.id);
+
+    const newCheckedPlayerIds = [...playerIdList, ...checkedPlayerIds];
+    const newCheckedPlayers = [...playerList, ...checkedPlayers];
+
+    setPlayerIdList([...new Set(newCheckedPlayerIds)]);
+    setPlayerList([...new Set(newCheckedPlayers)]);
+  };
+
+  useEffect(() => {
+    // playerId 저장
+  }, [playerIdList]);
+
+  useEffect(() => {
+    checkPlayer();
+  }, [checkbox]);
 
   useEffect(() => {
     if (searchKeyword) getSearchAddress();
@@ -144,8 +173,10 @@ const CreateSchedule: NextPage = () => {
                 <span className="w-10 font-[700] text-[15px]">선수</span>
                 <input
                   type="text"
+                  value={playerList.join(", ")}
                   placeholder="선수를 선택하세요."
                   className="w-[684px] h-[36px] border-none placeholder:text-[#CBCCCD] placeholder:text-[12px] rounded-[5px] shadow-[0_2px_10px_0px_rgba(0,0,0,0.25)] focus:border-transparent focus:ring-0"
+                  readOnly
                 />
               </div>
               <ImageForm />

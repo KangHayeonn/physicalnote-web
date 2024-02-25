@@ -1,7 +1,10 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
+import { useRecoilState } from "recoil";
 import { cls } from "@/utils";
 import { TableType, TableRowType } from "@/types/common";
+import { playerCheckSelector } from "@/recoil/schedule/scheduleState";
+import { CheckboxType } from "@/types/schedule";
 
 const TableRow = ({ column, data, onClick }: TableRowType) => {
   const accessor = column?.accessor;
@@ -32,9 +35,62 @@ const Table = ({
   isSelectedCheckbox,
   onSelect,
 }: TableType) => {
+  const [initCheckList, setInitCheckList] = useRecoilState(playerCheckSelector);
+  const [checkList, setCheckList] = useState<CheckboxType[]>([]);
+  const [isCheckAll, setIsCheckAll] = useState<boolean>(false);
+
   const isCheckImport = (id: number, e: React.MouseEvent<HTMLDivElement>) => {
     if (onSelect) onSelect(id, e);
   };
+
+  const isChecked = (id: number) => {
+    return checkList.find((checkItem) => checkItem.id === id)?.check || false;
+  };
+
+  const toggleCheck = (id: number) => {
+    setCheckList((prevCheckList) => {
+      const updateCheckedList = prevCheckList.map((item) => {
+        if (item.id === id) {
+          return { ...item, check: !item.check };
+        }
+        return item;
+      });
+
+      setIsCheckAll(isAllChecked(updateCheckedList));
+
+      return updateCheckedList;
+    });
+  };
+
+  const setAllCheck = () => {
+    setIsCheckAll((prevCheck) => {
+      const newCheck = !prevCheck;
+
+      setCheckList((prevCheckList) => {
+        return prevCheckList.map((item) => {
+          return { ...item, check: newCheck };
+        });
+      });
+
+      return newCheck;
+    });
+  };
+
+  const isAllChecked = (list: CheckboxType[]) => {
+    return list.every((item) => item.check === true);
+  };
+
+  useEffect(() => {
+    setInitCheckList(checkList);
+  }, [checkList]);
+
+  useEffect(() => {
+    setCheckList(initCheckList);
+  }, [initCheckList]);
+
+  useEffect(() => {
+    setIsCheckAll(false);
+  }, [data]);
 
   return (
     <>
@@ -45,11 +101,16 @@ const Table = ({
               {isCheckboxUse ? (
                 <th className="w-full h-full py-[20px] flex justify-center items-center cursor-pointer">
                   <Image
-                    src="/icons/checkbox_off.svg"
+                    src={
+                      isCheckAll
+                        ? "/icons/checkbox_on.svg"
+                        : "/icons/checkbox_off.svg"
+                    }
                     width={0}
                     height={0}
                     alt="like button"
                     style={{ width: "30px", height: "auto" }}
+                    onClick={setAllCheck}
                   />
                 </th>
               ) : null}
@@ -77,11 +138,16 @@ const Table = ({
                   {isCheckboxUse ? (
                     <td className="w-full h-full py-[20px] flex justify-center items-center cursor-pointer">
                       <Image
-                        src="/icons/checkbox_off.svg"
+                        src={
+                          isChecked(item.id)
+                            ? "/icons/checkbox_on.svg"
+                            : "/icons/checkbox_off.svg"
+                        }
                         width={0}
                         height={0}
                         alt="like button"
                         style={{ width: "30px", height: "auto" }}
+                        onClick={() => toggleCheck(item.id)}
                       />
                     </td>
                   ) : null}

@@ -123,3 +123,13 @@ export interface PlayerSimpleDataType {
   position: string;
   belongto: string;
 }
+
+export interface CheckboxType {
+  id: number;
+  name: string;
+  check: boolean;
+}
+
+export interface PlayerFormProps {
+  setPlayers: React.Dispatch<React.SetStateAction<string[]>>;
+}

@@ -1,4 +1,4 @@
-import { CategoryListType, CategoryType } from "@/types/schedule";
+import { CategoryListType, CategoryType, CheckboxType } from "@/types/schedule";
 import { atom, selector, RecoilEnv } from "recoil";
 
 RecoilEnv.RECOIL_DUPLICATE_ATOM_KEY_CHECKING_ENABLED = false;
@@ -55,6 +55,28 @@ const categorySelector = selector<CategoryListType>({
   },
 });
 
+const playerCheckState = atom<CheckboxType[]>({
+  key: "playerCheckState",
+  default: [
+    {
+      id: 0,
+      name: "",
+      check: false,
+    },
+  ],
+});
+
+const playerCheckSelector = selector<CheckboxType[]>({
+  key: "playerCheckSelector",
+  get: ({ get }) => {
+    const check = get(playerCheckState);
+    return check;
+  },
+  set: ({ set }, newValue) => {
+    set(playerCheckState, newValue);
+  },
+});
+
 export {
   recordDateState,
   recordDateSelector,
@@ -62,4 +84,6 @@ export {
   dailyDateSelector,
   categoryState,
   categorySelector,
+  playerCheckState,
+  playerCheckSelector,
 };
