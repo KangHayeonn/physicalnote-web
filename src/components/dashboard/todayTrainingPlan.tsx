@@ -41,20 +41,20 @@ const TodayTrainingPlan = () => {
       </div>
       {trainingPlan.length !== 0 ? (
         <div>
-          <div className="grid grid-cols-2 space-x-10 px-3">
+          <div className="grid grid-cols-2 space-x-10">
             <div className="flex space-x-8">
               <div className="w-[255px]">
-                <span className="text-[15px] font-[400]">■ 시간</span>
+                <span className="text-[15px] font-[700]">■ 시간</span>
               </div>
               <div className="w-[175px]">
-                <span className="text-[15px] font-[400]">■ 장소</span>
+                <span className="text-[15px] font-[700]">■ 장소</span>
               </div>
             </div>
             <div>
-              <span className="text-[15px] font-[400]">■ 훈련상세계획</span>
+              <span className="text-[15px] font-[700]">■ 훈련상세계획</span>
             </div>
           </div>
-          <div className="h-[230px] overflow-y-scroll space-y-3 p-3">
+          <div className="h-[230px] overflow-y-scroll space-y-3 py-3 px-2">
             {trainingPlan.map((el, idx) => (
               <div key={`plan${idx}`} className="grid grid-cols-2 space-x-10">
                 <div className="flex space-x-8">

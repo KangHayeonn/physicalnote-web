@@ -21,6 +21,7 @@ import {
   trainingBalanceSelector,
   trainingLoadGraphSelector,
   teamNoteSelector,
+  trainingDurationGraphSelector,
 } from "@/recoil/dashboard/dashboardState";
 import Api from "@/api/dashboard";
 import { getFullDateToString } from "@/utils/dateFormat";
@@ -37,6 +38,9 @@ const Dashboard: NextPage = () => {
   const setWeeklyWorkload = useSetRecoilState(weeklyWorkloadSelector);
   const setTrainingBalance = useSetRecoilState(trainingBalanceSelector);
   const setTrainingLoadGraph = useSetRecoilState(trainingLoadGraphSelector);
+  const setTrainingDurationGraph = useSetRecoilState(
+    trainingDurationGraphSelector
+  );
   const setTeamNote = useSetRecoilState(teamNoteSelector);
 
   const toggleDate = (type: string) => {
@@ -67,6 +71,7 @@ const Dashboard: NextPage = () => {
       setTrainingBalance({ ...result.trainingBalanceInfo });
       setTeamNote({ ...result.teamNoteInfo });
       setTrainingLoadGraph([...result.trainingLoadGraphInfo]);
+      setTrainingDurationGraph([...result.trainingDurationGraphInfo]);
     });
   };
 

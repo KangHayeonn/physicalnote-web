@@ -31,3 +31,5 @@ export const marks2 = [
     label: "부족한",
   },
 ];
+
+export const yAxisIds = [{ id: "loadValue" }, { id: "totalCount" }];

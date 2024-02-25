@@ -31,7 +31,7 @@ const WeeklyWorkLoad = () => {
 
   return (
     <div className="flex flex-col col-span-5">
-      <div className="text-[15px] font-[400] space-x-2">
+      <div className="text-[15px] font-[700] space-x-2">
         <span>■ 주간 트레이닝 부하</span>
         <em className="text-[12px] text-[#CBCCCD] font-[400] not-italic">
           (RPE X 운동시간 값)

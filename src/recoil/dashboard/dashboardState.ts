@@ -195,6 +195,44 @@ const trainingLoadGraphSelector = selector<TrainingLoadGraphInfoType[]>({
   },
 });
 
+const trainingDurationGraphState = atom<TrainingLoadGraphInfoType[]>({
+  key: "trainingDurationGraphState",
+  default: [
+    {
+      monthOfString: "2023-12월",
+      weeklyGraphInfo: [
+        {
+          value: 780,
+          xvalue: "2주차",
+        },
+        {
+          value: 4179.5,
+          xvalue: "3주차",
+        },
+        {
+          value: 150,
+          xvalue: "4주차",
+        },
+        {
+          value: 2445,
+          xvalue: "5주차",
+        },
+      ],
+    },
+  ],
+});
+
+const trainingDurationGraphSelector = selector<TrainingLoadGraphInfoType[]>({
+  key: "trainingDurationGraphSelector",
+  get: ({ get }) => {
+    const note = get(trainingDurationGraphState);
+    return note;
+  },
+  set: ({ set }, newValue) => {
+    set(trainingDurationGraphState, newValue);
+  },
+});
+
 const teamNoteState = atom<TeamNoteInfoType>({
   key: "teamNoteState",
   default: {
@@ -230,6 +268,8 @@ export {
   trainingBalanceSelector,
   trainingLoadGraphState,
   trainingLoadGraphSelector,
+  trainingDurationGraphState,
+  trainingDurationGraphSelector,
   teamNoteState,
   teamNoteSelector,
 };

@@ -117,7 +117,7 @@ const TeamInjury = ({ initPage, getData }: PaginationProps) => {
       <div className="flex justify-between">
         <div>
           <div className="flex flex-col space-y-2">
-            <span className="text-[15px] font-[400]">
+            <span className="text-[15px] font-[700]">
               ■ 총 부상자 :{" "}
               {teamInjury.teamInjuryCnt < 10
                 ? `0${teamInjury.teamInjuryCnt}`
