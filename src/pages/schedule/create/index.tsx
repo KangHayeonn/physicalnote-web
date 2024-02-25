@@ -158,7 +158,7 @@ const CreateSchedule: NextPage = () => {
         }
       });
     } catch {
-      showToast("");
+      showToast("일정 입력값을 확인해주세요.");
     }
   };
 
