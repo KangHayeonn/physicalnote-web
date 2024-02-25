@@ -13,6 +13,6 @@ export const columnData = [
   },
   {
     Header: "소속",
-    accessor: "playerGrade",
+    accessor: "belongto",
   },
 ];

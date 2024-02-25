@@ -39,6 +39,13 @@ const CreateSchedule: NextPage = () => {
   const onSearchGraderChange = (grader: string) => {
     setSearchGrader(grader);
   };
+  const init = () => {
+    setSearchGrader("ALL");
+  };
+
+  useEffect(() => {
+    init();
+  }, []);
 
   const getTitleTextCnt = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;

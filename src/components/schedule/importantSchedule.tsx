@@ -18,6 +18,7 @@ const ImportantSchedule = () => {
   const [events, setEvents] = useState<ImportantScheduleResponseType[]>([]);
   const [totalLength, setTotalLength] = useState<number>(0);
   const [page, setPage] = useState<number>(0);
+  const [playerGrader, setPlayerGrader] = useState<string>("");
 
   // pagination
   const itemPerPage = 2;
@@ -39,7 +40,7 @@ const ImportantSchedule = () => {
 
   const getImportantSchedule = async () => {
     const getGrader = () => {
-      return searchGrader !== "ALL" ? searchGrader : "";
+      return playerGrader !== "ALL" ? playerGrader : "";
     };
 
     await Api.v1GetImportantSchedule(
@@ -64,7 +65,11 @@ const ImportantSchedule = () => {
     } else {
       getImportantSchedule();
     }
-  }, [recordDate, searchGrader]);
+  }, [recordDate, playerGrader]);
+
+  useEffect(() => {
+    setPlayerGrader(searchGrader);
+  }, [searchGrader]);
 
   return (
     <div className="flex flex-col h-[365px]">

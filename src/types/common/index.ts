@@ -2,7 +2,7 @@ import React, { Dispatch, SetStateAction } from "react";
 import { Column } from "react-table";
 import { PrivateDataType } from "@/types/privateData";
 import { DailyReportDataType, WeeklyReportDataType } from "@/types/report";
-import { PlayerSimpleResponseType } from "@/types/schedule";
+import { PlayerSimpleDataType } from "@/types/schedule";
 
 export interface SearchProps {
   title?: string;
@@ -36,7 +36,7 @@ export interface TableType {
     | PrivateDataType[]
     | DailyReportDataType[]
     | WeeklyReportDataType[]
-    | PlayerSimpleResponseType[];
+    | PlayerSimpleDataType[];
   onClickRow?: (id: number) => (e: React.MouseEvent<HTMLDivElement>) => void;
   isCheckboxUse?: boolean;
   isSelectedCheckbox?: boolean;

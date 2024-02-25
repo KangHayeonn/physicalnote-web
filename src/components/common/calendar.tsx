@@ -27,6 +27,7 @@ const FullCalendarComponent = () => {
   const searchGrader = useRecoilValue<string>(searchPlayerGraderSelector);
   const setDailyDate = useSetRecoilState<Date>(dailyDateSelector);
   const [events, setEvents] = useState<EventSourceInput>([]);
+  const [playerGrader, setPlayerGrader] = useState<string>("");
 
   function handleEventClick(clickInfo: EventClickArg) {
     const id = clickInfo.event._def.publicId;
@@ -46,7 +47,7 @@ const FullCalendarComponent = () => {
 
   const getSchedule = async () => {
     const getGrader = () => {
-      return searchGrader !== "ALL" ? searchGrader : "";
+      return playerGrader !== "ALL" ? playerGrader : "";
     };
 
     await Api.v1GetSchedule(getGrader(), getDateToString(recordDate)).then(
@@ -71,7 +72,11 @@ const FullCalendarComponent = () => {
 
   useEffect(() => {
     getSchedule();
-  }, [recordDate, searchGrader]);
+  }, [recordDate, playerGrader]);
+
+  useEffect(() => {
+    setPlayerGrader(searchGrader);
+  }, [searchGrader]);
 
   return (
     <div>

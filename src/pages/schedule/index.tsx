@@ -1,5 +1,5 @@
 import { NextPage } from "next";
-import React from "react";
+import React, { useEffect } from "react";
 import Layout from "@/components/layout";
 import CalendarComponents from "@/components/common/calendar";
 import DropDown from "@/components/common/dropdown";
@@ -14,6 +14,14 @@ const ManageSchedule: NextPage = () => {
   const onSearchGraderChange = (grader: string) => {
     setSearchGrader(grader);
   };
+
+  const init = () => {
+    setSearchGrader("ALL");
+  };
+
+  useEffect(() => {
+    init();
+  }, []);
 
   return (
     <div className="min-w-[1900px]">

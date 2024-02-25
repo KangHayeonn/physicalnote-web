@@ -12,6 +12,7 @@ const TableRow = ({ column, data, onClick }: TableRowType) => {
       const roundedNum = parseFloat(item.toFixed(2));
       return roundedNum;
     }
+    return item;
   };
 
   return (
@@ -42,7 +43,7 @@ const Table = ({
           <thead>
             <tr>
               {isCheckboxUse ? (
-                <th className="w-full h-full py-[20px] flex justify-center items-center">
+                <th className="w-full h-full py-[20px] flex justify-center items-center cursor-pointer">
                   <Image
                     src="/icons/checkbox_off.svg"
                     width={0}
@@ -74,7 +75,7 @@ const Table = ({
                   className="cursor-pointer hover:bg-[#eefdd3] transition-colors"
                 >
                   {isCheckboxUse ? (
-                    <td className="w-full h-full py-[20px] flex justify-center items-center">
+                    <td className="w-full h-full py-[20px] flex justify-center items-center cursor-pointer">
                       <Image
                         src="/icons/checkbox_off.svg"
                         width={0}

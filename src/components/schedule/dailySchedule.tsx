@@ -21,6 +21,7 @@ const DailySchedule = () => {
   const [events, setEvents] = useState<DailyScheduleResponseType[]>([]);
   const [totalLength, setTotalLength] = useState<number>(0);
   const [page, setPage] = useState<number>(0);
+  const [playerGrader, setPlayerGrader] = useState<string>("");
 
   // pagination
   const itemPerPage = 2;
@@ -47,7 +48,7 @@ const DailySchedule = () => {
 
   const getDailySchedule = async () => {
     const getGrader = () => {
-      return searchGrader !== "ALL" ? searchGrader : "";
+      return playerGrader !== "ALL" ? playerGrader : "";
     };
 
     await Api.v1GetScheduleDaily(
@@ -72,7 +73,11 @@ const DailySchedule = () => {
     } else {
       getDailySchedule();
     }
-  }, [dailyDate, searchGrader]);
+  }, [dailyDate, playerGrader]);
+
+  useEffect(() => {
+    setPlayerGrader(searchGrader);
+  }, [searchGrader]);
 
   return (
     <div className="min-w-[482px] h-[700px]">

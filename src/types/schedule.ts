@@ -115,3 +115,11 @@ export interface AddressResponseType {
   roadAddress: string;
   address: string;
 }
+
+export interface PlayerSimpleDataType {
+  id: number;
+  name: string;
+  phone: string | null;
+  position: string;
+  belongto: string;
+}
