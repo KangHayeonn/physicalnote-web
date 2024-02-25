@@ -70,10 +70,10 @@ const InjuryProgress: NextPage = () => {
                 seriesData={progressData}
                 yAxisIds={yAxisIds}
                 height={350}
-                margin={{ left: 80, right: 60 }}
+                margin={{ left: 140, right: 60 }}
               />
             </div>
-            <div className="divide-y-2">
+            <div className="divide-y-2 mr-[60px]">
               <div className="h-[82px] flex items-center space-x-1 border-t-2">
                 <div className="w-[130px] h-[42px] text-center flex flex-col bg-[#CAD5EB] space-y-1">
                   <span className="text-[14px] font-[700]">오버트레이닝</span>
