@@ -6,7 +6,7 @@ const ModalForm = ({ onClickEvent, children }: ModalFormProps) => {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
-    <div className="flex justify-center items-center z-999 fixed w-full h-full top-0 left-0 bg-[#000] bg-opacity-10">
+    <div className="flex justify-center items-center z-50 fixed w-full h-full top-0 left-0 bg-[#000] bg-opacity-10">
       <div className="min-w-[500px]">
         <div className="h-[45px] rounded-t-xl relative bg-[#fff] px-[20px] border-[1px solid #0d3471]">
           <div

@@ -16,7 +16,7 @@ export interface ScheduleRequestType {
   playerGrade: string;
   recordDate: string;
   startTime: string;
-  userIds: Array<string>;
+  userIds: Array<number>;
 }
 
 export interface ScheduleResponseType {

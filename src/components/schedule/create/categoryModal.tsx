@@ -7,7 +7,10 @@ import {
   CategoryModalProps,
   CategoryColorResponseType,
 } from "@/types/schedule";
-import { categorySelector } from "@/recoil/schedule/scheduleState";
+import {
+  categorySelector,
+  selectCategorySelector,
+} from "@/recoil/schedule/scheduleState";
 import Api from "@/api/schedule";
 import { showToast } from "@/utils";
 
@@ -17,6 +20,9 @@ const CategoryModal = ({
   handleEvent,
 }: CategoryModalProps) => {
   const [category, setCategory] = useRecoilState(categorySelector);
+  const [selectCategory, setSelectCategory] = useRecoilState(
+    selectCategorySelector
+  );
   const [name, setName] = useState<string>("");
   const [textCnt, setTextCnt] = useState<number>(0);
   const [categoryList, setCategoryList] = useState<CategoryColorResponseType[]>(
@@ -56,13 +62,23 @@ const CategoryModal = ({
       name: name,
       colorCode: category.colorCode,
     };
-    await Api.v1AddCategory(params).then((res) => {
-      const { status } = res;
-      if (status === 200) {
-        showToast("카테고리가 등록되었습니다.");
-        handleEvent();
-      }
-    });
+
+    if (name === "") {
+      showToast("목록 이름을 확인해주세요.");
+    }
+
+    try {
+      await Api.v1AddCategory(params).then((res) => {
+        const { status, data } = res;
+        if (status === 200) {
+          showToast("목록이 등록되었습니다.");
+          handleEvent();
+          setSelectCategory(data.id);
+        }
+      });
+    } catch {
+      showToast("목록 입력값을 확인해주세요.");
+    }
   };
 
   const deleteCategory = async () => {
@@ -70,6 +86,9 @@ const CategoryModal = ({
       const { status } = res;
       if (status === 200) {
         showToast("카테고리가 삭제되었습니다.");
+        if (selectCategory === category.id) {
+          setSelectCategory(-1);
+        }
         handleEvent();
       }
     });

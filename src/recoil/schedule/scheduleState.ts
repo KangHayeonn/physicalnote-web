@@ -77,6 +77,38 @@ const playerCheckSelector = selector<CheckboxType[]>({
   },
 });
 
+const selectCategoryState = atom<number>({
+  key: "selectCategoryState",
+  default: -1,
+});
+
+const selectCategorySelector = selector<number>({
+  key: "selectCategorySelector",
+  get: ({ get }) => {
+    const category = get(selectCategoryState);
+    return category;
+  },
+  set: ({ set }, newValue) => {
+    set(selectCategoryState, newValue);
+  },
+});
+
+const imageFiles = atom<File[]>({
+  key: "imageFileState",
+  default: [],
+});
+
+const imageFilesSelector = selector<File[]>({
+  key: "imageFileSelector",
+  get: ({ get }) => {
+    const images = get(imageFiles);
+    return images;
+  },
+  set: ({ set }, newValue) => {
+    set(imageFiles, newValue);
+  },
+});
+
 export {
   recordDateState,
   recordDateSelector,
@@ -86,4 +118,8 @@ export {
   categorySelector,
   playerCheckState,
   playerCheckSelector,
+  selectCategoryState,
+  selectCategorySelector,
+  imageFiles,
+  imageFilesSelector,
 };

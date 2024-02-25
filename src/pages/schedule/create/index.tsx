@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, ChangeEvent } from "react";
 import { NextPage } from "next";
 import Image from "next/image";
+import { useRouter } from "next/router";
 import Layout from "@/components/layout";
 import Button from "@/components/common/button";
 import { searchCategoryList } from "@/constants/mock/searchCategoryList";
 import DropDown from "@/components/common/dropdown";
-import { useSetRecoilState, useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import {
   addressKeywordSelector,
   searchPlayerGraderState,
@@ -13,20 +14,32 @@ import {
 import { AddressResponseType } from "@/types/schedule";
 import DatePickerComponent from "@/components/common/datepicker";
 import TimePickerComponent from "@/components/common/timepicker";
-import ConfirmModal from "@/components/common/modal/confirmModal";
 import Api from "@/api/schedule";
 import SearchForm from "@/components/common/searchForm";
 import CategoryForm from "@/components/schedule/create/categoryForm";
 import PlayerForm from "@/components/schedule/create/playerForm";
 import ImageForm from "@/components/schedule/create/imageForm";
-import { playerCheckSelector } from "@/recoil/schedule/scheduleState";
+import {
+  imageFilesSelector,
+  playerCheckSelector,
+  selectCategorySelector,
+} from "@/recoil/schedule/scheduleState";
+import { getFullDateToString } from "@/utils/dateFormat";
+import { showToast } from "@/utils";
 
 const CreateSchedule: NextPage = () => {
-  const setSearchGrader = useSetRecoilState(searchPlayerGraderState);
+  const router = useRouter();
+  const [searchGrader, setSearchGrader] = useRecoilState(
+    searchPlayerGraderState
+  );
   const [searchKeyword, setSearchKeyword] = useRecoilState(
     addressKeywordSelector
   );
   const checkbox = useRecoilValue(playerCheckSelector);
+  const [selectCategory, setSelectCategory] = useRecoilState(
+    selectCategorySelector
+  );
+  const [imageFiles, setImageFiles] = useRecoilState(imageFilesSelector);
 
   const [initDate, setInitDate] = useState<Date>(new Date());
   const [searchDate, setSearchDate] = useState<Date>(new Date());
@@ -40,18 +53,28 @@ const CreateSchedule: NextPage = () => {
   );
   const [playerList, setPlayerList] = useState<Array<string>>([]);
   const [playerIdList, setPlayerIdList] = useState<Array<number>>([]);
+  const [importantPlayer, setImportantPlayer] = useState<boolean>(false);
+  const [content, setContent] = useState<string>("");
+  const [players, setPlayers] = useState<string>("");
 
   const onSearchGraderChange = (grader: string) => {
     setSearchGrader(grader);
   };
 
-  const init = () => {
-    setSearchGrader("ALL");
+  const changeContent = (e: ChangeEvent<HTMLTextAreaElement>) => {
+    setContent(e.target.value);
   };
 
-  useEffect(() => {
-    init();
-  }, []);
+  const init = () => {
+    setSearchGrader("ALL");
+    setPlayerList([]);
+    setPlayerIdList([]);
+    setSelectCategory(-1);
+    setImageFiles([]);
+    setSearchKeyword("");
+    setImportantPlayer(false);
+    setPlayers("");
+  };
 
   const getTitleTextCnt = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
@@ -84,9 +107,68 @@ const CreateSchedule: NextPage = () => {
     setPlayerList([...new Set(newCheckedPlayers)]);
   };
 
+  const isValidationSchedule = (
+    title: string,
+    categoryId: number,
+    playerIds: Array<number>
+  ) => {
+    if (!title) {
+      showToast("일정 이름을 입력하세요.");
+      return false;
+    }
+
+    if (categoryId === -1) {
+      showToast("목록 선택은 필수입니다.");
+      return false;
+    }
+
+    if (playerIds.length === 0) {
+      showToast("선수를 선택해주세요.");
+      return false;
+    }
+
+    return true;
+  };
+
+  const addSchedule = async () => {
+    const newTitle = title.trim();
+    if (!isValidationSchedule(newTitle, selectCategory, playerIdList)) return;
+
+    const params = {
+      name: title,
+      address: searchKeyword,
+      calendarCategoryId: selectCategory,
+      content: content,
+      recordDate: getFullDateToString(searchDate),
+      startTime: `${startTime}:00`,
+      endTime: `${endTime}:00`,
+      images: [], // imageFiles (파일 형식)
+      importantYn: importantPlayer,
+      playerGrade: searchGrader !== "ALL" ? searchGrader : "",
+      userIds: playerIdList,
+    };
+
+    try {
+      await Api.v1AddSchedule(params).then((res) => {
+        const { status } = res.data;
+        if (status == 200) {
+          init();
+          router.push("/schedule");
+          showToast("일정이 정상 등록되었습니다.");
+        }
+      });
+    } catch {
+      showToast("");
+    }
+  };
+
   useEffect(() => {
-    // playerId 저장
-  }, [playerIdList]);
+    init();
+  }, []);
+
+  useEffect(() => {
+    setPlayers(playerList.join(", "));
+  }, [playerList]);
 
   useEffect(() => {
     checkPlayer();
@@ -95,10 +177,6 @@ const CreateSchedule: NextPage = () => {
   useEffect(() => {
     if (searchKeyword) getSearchAddress();
   }, [searchKeyword]);
-
-  useEffect(() => {
-    // date/time 저장
-  }, [searchDate, startTime, endTime]);
 
   return (
     <div className="min-w-[1900px]">
@@ -114,9 +192,16 @@ const CreateSchedule: NextPage = () => {
           <div className="flex flex-col space-y-6 w-[624px]">
             <div className="flex items-center space-x-3">
               <h2 className="text-[20px] font-[700]">일정 기록하기</h2>
-              <div className="cursor-pointer">
+              <div
+                className="cursor-pointer"
+                onClick={() => setImportantPlayer(!importantPlayer)}
+              >
                 <Image
-                  src="/images/star_unchecked.svg"
+                  src={
+                    importantPlayer
+                      ? "/images/star_checked.svg"
+                      : "/images/star_unchecked.svg"
+                  }
                   width={0}
                   height={0}
                   alt="like button"
@@ -173,7 +258,7 @@ const CreateSchedule: NextPage = () => {
                 <span className="w-10 font-[700] text-[15px]">선수</span>
                 <input
                   type="text"
-                  value={playerList.join(", ")}
+                  value={players}
                   placeholder="선수를 선택하세요."
                   className="w-[684px] h-[36px] border-none placeholder:text-[#CBCCCD] placeholder:text-[12px] rounded-[5px] shadow-[0_2px_10px_0px_rgba(0,0,0,0.25)] focus:border-transparent focus:ring-0"
                   readOnly
@@ -186,18 +271,16 @@ const CreateSchedule: NextPage = () => {
                   placeholder="훈련 내용을 입력하세요."
                   className="resize-none py-5 px-4 h-[324px] border-none shadow-[0_2px_10px_0px_rgba(0,0,0,0.25)] rounded-[5px] outline-none focus:border-transparent focus:ring-0 p-0 placeholder:text-[#CBCCCD]"
                   maxLength={1000}
+                  value={content}
+                  onChange={changeContent}
                 ></textarea>
               </div>
               <div className="flex items-center space-x-2 justify-end py-4">
                 <Button
-                  type="button"
-                  text="삭제"
-                  classnames="text-[#8DBE3D] text-[12px] font-[700]"
-                />
-                <Button
                   type="submit"
                   text="등록"
                   classnames="text-[#8DBE3D] text-[12px] font-[700]"
+                  onClick={addSchedule}
                 />
               </div>
             </div>

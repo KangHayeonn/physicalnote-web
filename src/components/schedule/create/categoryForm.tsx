@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { useRecoilState } from "recoil";
-import { categorySelector } from "@/recoil/schedule/scheduleState";
+import { useRecoilState, useRecoilValue } from "recoil";
+import {
+  categorySelector,
+  selectCategorySelector,
+} from "@/recoil/schedule/scheduleState";
 import Button from "@/components/common/button";
 import CategoryModal from "@/components/schedule/create/categoryModal";
 import { CategoryListType } from "@/types/schedule";
@@ -8,6 +11,7 @@ import Api from "@/api/schedule";
 
 const CategoryForm = () => {
   const [category, setCategory] = useRecoilState(categorySelector);
+  const selectCategory = useRecoilValue(selectCategorySelector);
   const [isOpenCategoryModal, setIsOpenCategoryModal] =
     useState<boolean>(false);
   const [categoryList, setCategoryList] = useState<CategoryListType[]>([]);
@@ -46,7 +50,10 @@ const CategoryForm = () => {
               <div
                 key={`category${idx}`}
                 className="flex justify-center items-center min-w-[60px] h-[30px] px-3 py-1 font-[700] rounded-[10px] shadow-[0_2px_10px_0px_rgba(0,0,0,0.25)] cursor-pointer"
-                style={{ backgroundColor: `${el.colorCode}` }}
+                style={{
+                  backgroundColor: `${el.colorCode}`,
+                  border: `${selectCategory === el.id && "2px solid #1c1c1c"}`,
+                }}
                 onClick={() => editCategory(el)}
               >
                 {el.name}

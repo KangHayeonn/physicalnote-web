@@ -1,12 +1,21 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
+import { showToast } from "@/utils";
+import { useSetRecoilState } from "recoil";
+import { imageFilesSelector } from "@/recoil/schedule/scheduleState";
 
 const ImageForm = () => {
-  const [file, setFile] = useState<File | undefined>(undefined);
+  const [files, setFiles] = useState<File[]>([]);
   const [previewURLs, setPreviewURLs] = useState<string[]>([]);
+  const setImageFiles = useSetRecoilState(imageFilesSelector);
 
   const addImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
+
+    if (previewURLs.length === 3) {
+      showToast("이미지 첨부는 3장까지 가능합니다.");
+      return;
+    }
 
     if (e.target.files) {
       const uploadFile = e.target.files[0];
@@ -15,7 +24,7 @@ const ImageForm = () => {
       if (!imageFileValid(uploadFile)) return;
 
       reader.onload = (e) => {
-        setFile(uploadFile);
+        setFiles([...files, uploadFile]);
         setPreviewURLs([...previewURLs, reader.result as string]);
       };
 
@@ -45,18 +54,22 @@ const ImageForm = () => {
     const imgSize = file.size;
     const ALLOW_MAX_SIZE = 2 * 1024 * 1024; // 2MB
     if (imgSize > ALLOW_MAX_SIZE) {
-      alert("이미지 용량은 2MB 이내로 등록 가능합니다.");
+      alert("이미지 용량은 5MB 이내로 등록 가능합니다.");
       return false;
     }
 
     return true;
   };
 
-  const deleteImage = (target: string) => {
+  const deleteImage = (target: string, idx: number) => {
     const tempImageURLs = previewURLs.filter((url) => url !== target);
-    setFile(undefined);
+    setFiles(files.splice(idx, 1));
     setPreviewURLs(tempImageURLs);
   };
+
+  useEffect(() => {
+    setImageFiles(files);
+  }, [files]);
 
   // form data 만들기
   /*
@@ -118,7 +131,7 @@ const ImageForm = () => {
                       right: "-7px",
                       cursor: "pointer",
                     }}
-                    onClick={() => deleteImage(previewURL)}
+                    onClick={() => deleteImage(previewURL, idx)}
                   />
                 </div>
               )}

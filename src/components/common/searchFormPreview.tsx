@@ -24,7 +24,7 @@ const SearchFormPreview = ({
   const setSearchAddress = useSetRecoilState(searchAddressSelector);
 
   const changeSearchItem = (item: AddressResponseType) => {
-    setSearchKeyword(item.title);
+    setSearchKeyword(item.roadAddress);
     setSearchAddress(item);
     if (isOpen) isOpen(false);
   };

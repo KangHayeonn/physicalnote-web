@@ -108,7 +108,7 @@ const renderEventContent = (eventInfo: EventContentArg) => {
     <>
       {!type ? (
         <div
-          className="w-full text-[#343333] text-[14px] font-[700] px-2 py-1 rounded-[5px] cursor-pointer"
+          className="w-full text-[#343333] text-[14px] font-[700] px-2 py-1 rounded-[5px] cursor-pointer overflow-hidden overflow-ellipsis"
           style={{ backgroundColor: `${eventInfo.event.backgroundColor}` }}
         >
           {eventInfo.event.title}
