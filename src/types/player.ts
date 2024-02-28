@@ -21,3 +21,8 @@ export interface PlayerListDataType {
   belongto: string;
   importantYn: boolean;
 }
+
+export interface PlayerChangeRequestType {
+  playerGrade: string;
+  userIds: Array<number>;
+}

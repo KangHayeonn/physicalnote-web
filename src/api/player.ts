@@ -1,4 +1,5 @@
 import { instanceWithToken } from "@/api";
+import { PlayerChangeRequestType } from "@/types/player";
 import { PlayersRequestType } from "@/types/privateData";
 const prefix = "/admin";
 
@@ -9,6 +10,28 @@ const Player = {
       const result = await instanceWithToken.get(url, {
         params: { ...data, page, size },
       });
+      return result;
+    } catch (err) {
+      return Promise.reject(err);
+    }
+  },
+  async v1DeletePlayers(userIds: Array<number>) {
+    try {
+      const url = `${prefix}/player/delete`;
+      const result = await instanceWithToken.delete(url, {
+        data: {
+          userIds,
+        },
+      });
+      return result;
+    } catch (err) {
+      return Promise.reject(err);
+    }
+  },
+  async v1ChangePlayerGrade(data: PlayerChangeRequestType) {
+    try {
+      const url = `${prefix}/player/change/play_grade`;
+      const result = await instanceWithToken.put(url, data);
       return result;
     } catch (err) {
       return Promise.reject(err);

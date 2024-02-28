@@ -148,7 +148,7 @@ const PrivateData: NextPage = () => {
                 ? "2군"
                 : "부상자";
           tempData.push({
-            position: item.positions.join(", "),
+            position: item.positions.join(" / "),
             belongto: grade,
             ...item,
           });

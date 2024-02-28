@@ -15,7 +15,7 @@ import PrivateApi from "@/api/privateData";
 import PlayerApi from "@/api/player";
 import { showToast } from "@/utils";
 import { SearchFilterType } from "@/types/report";
-import { useRecoilValue } from "recoil";
+import { useRecoilValue, useRecoilState } from "recoil";
 import {
   searchPlayerGraderSelector,
   searchCategorySelector,
@@ -23,6 +23,7 @@ import {
 } from "@/recoil/search/searchState";
 import { PlayersRequestType } from "@/types/privateData";
 import { CheckboxType } from "@/types/schedule";
+import { playerCheckSelector } from "@/recoil/schedule/scheduleState";
 
 const ManagePlayer: NextPage = () => {
   const router = useRouter();
@@ -38,14 +39,15 @@ const ManagePlayer: NextPage = () => {
   const searchGrader = useRecoilValue(searchPlayerGraderSelector);
   const searchCategory = useRecoilValue(searchCategorySelector);
   const searchKeyword = useRecoilValue(searchKeywordSelector);
+  const [checkbox, setCheckbox] = useRecoilState(playerCheckSelector);
 
   const onBelongtoChange = (belongto: string) => {
     setBelongto(belongto);
   };
 
   // pagination
-  const itemPerPage = 10;
-  const totalItems = data?.length;
+  const itemPerPage = 2;
+  const totalItems = totalLen;
   const { currentPage, totalPages, currentItems, handlePageChange } =
     usePagination((page) => setPage(page), itemPerPage, totalItems);
 
@@ -65,12 +67,34 @@ const ManagePlayer: NextPage = () => {
     router.push(`/player/${id}`);
   };
 
-  const handleDeleteClick = (id: number) => {
-    // todo : delete api
+  const handleDeleteClick = async (id: number) => {
+    const playerIds = [id];
+    await PlayerApi.v1DeletePlayers(playerIds).then((res) => {
+      const { status } = res;
+      if (status === 200) {
+        getPlayerList();
+        showToast("선수가 일괄 삭제되었습니다.");
+      }
+    });
   };
 
-  const handleAllDeleteClick = () => {
-    // todo : delete all api
+  const handleAllDeleteClick = async () => {
+    const checkedPlayerIds = checkbox
+      .filter((item) => item.check)
+      .map((item) => item.id);
+
+    if (checkedPlayerIds.length === 0) {
+      showToast("삭제할 선수를 선택해주세요.");
+      return;
+    }
+
+    await PlayerApi.v1DeletePlayers(checkedPlayerIds).then((res) => {
+      const { status } = res;
+      if (status === 200) {
+        getPlayerList();
+        showToast("선수가 일괄 삭제되었습니다.");
+      }
+    });
   };
 
   // 중요 선수 등록/삭제 (즐겨찾기)
@@ -97,6 +121,36 @@ const ManagePlayer: NextPage = () => {
         } else {
           showToast("즐겨찾기가 해제되었습니다.");
         }
+      }
+    });
+  };
+
+  // 선수 소속 변경
+  const onChangePlayerGrade = async () => {
+    if (belongto === "") {
+      showToast("변경할 소속을 선택해주세요.");
+      return;
+    }
+
+    const checkedPlayerIds = checkbox
+      .filter((item) => item.check)
+      .map((item) => item.id);
+
+    if (checkedPlayerIds.length === 0) {
+      showToast("소속을 변경할 선수를 선택해주세요.");
+      return;
+    }
+
+    const params = {
+      playerGrade: belongto,
+      userIds: checkedPlayerIds,
+    };
+
+    await PlayerApi.v1ChangePlayerGrade(params).then((res) => {
+      const { status } = res;
+      if (status === 200) {
+        getPlayerList();
+        showToast("소속이 정상 변경되었습니다.");
       }
     });
   };
@@ -129,7 +183,7 @@ const ManagePlayer: NextPage = () => {
                 ? "2군"
                 : "부상자";
           tempData.push({
-            position: item.positions.join(", "),
+            position: item.positions.join(" / "),
             belongto: grade,
             ...item,
           });
@@ -141,8 +195,7 @@ const ManagePlayer: NextPage = () => {
           });
         });
 
-        // setCheckbox(initCheckbox);
-
+        setCheckbox(initCheckbox);
         setData(tempData);
         setTotalLen(totalElements);
       }
@@ -179,6 +232,7 @@ const ManagePlayer: NextPage = () => {
           text="변경"
           type="button"
           classnames="bg-white border-[#ededed] text-[#8DBE3D] px-[16px] h-[36px] rounded-[5px] shadow-[0_2px_10px_0px_rgba(0,0,0,0.25)] hover:font-[700]"
+          onClick={onChangePlayerGrade}
         />
       </div>
       <div className="bg-white py-4 my-4 px-4 rounded-[4px]">

@@ -73,7 +73,7 @@ const Report: NextPage = () => {
         content.map((item: DailyReportResponseType) => {
           tempData.push({
             id: item.userId,
-            position: item.positions.join(", "),
+            position: item.positions.join(" / "),
             ...item,
           });
         });
@@ -112,7 +112,7 @@ const Report: NextPage = () => {
         content.map((item: WeeklyReportResponseType) => {
           tempData.push({
             id: item.userId,
-            position: item.positions.join(", "),
+            position: item.positions.join(" / "),
             ...item,
           });
         });

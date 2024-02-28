@@ -61,7 +61,7 @@ const PlayerForm = () => {
                 : "부상자";
 
           tempContent.push({
-            position: item.positions.join(", "),
+            position: item.positions.join(" / "),
             belongto: grade,
             ...item,
           });
