@@ -22,6 +22,10 @@ const TrainingLoadGraph = () => {
 
   const init = () => {
     setTrainingType("load");
+    setProgressData([]);
+    setProgressData2([]);
+    setXAxis([]);
+    setXAxis2([]);
   };
 
   useEffect(() => {

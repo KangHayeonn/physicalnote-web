@@ -68,7 +68,7 @@ const DropDown = ({
               <div
                 key={item.key}
                 onClick={() => changeItem(item)}
-                className="flex justify-center text-[15px] text-[#000] px-[5px] py-[7px] hover:bg-[#C6E19B] cursor-pointer"
+                className="flex justify-center text-[15px] text-[#000] px-[5px] py-[7px] hover:bg-[#D9D9D9] cursor-pointer"
               >
                 {item.value}
               </div>

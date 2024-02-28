@@ -3,6 +3,7 @@ import { Column } from "react-table";
 import { PrivateDataType } from "@/types/privateData";
 import { DailyReportDataType, WeeklyReportDataType } from "@/types/report";
 import { PlayerSimpleDataType } from "@/types/schedule";
+import { PlayerListDataType } from "@/types/player";
 
 export interface SearchProps {
   title?: string;
@@ -36,11 +37,17 @@ export interface TableType {
     | PrivateDataType[]
     | DailyReportDataType[]
     | WeeklyReportDataType[]
-    | PlayerSimpleDataType[];
+    | PlayerSimpleDataType[]
+    | PlayerListDataType[];
   onClickRow?: (id: number) => (e: React.MouseEvent<HTMLDivElement>) => void;
   isCheckboxUse?: boolean;
   isSelectedCheckbox?: boolean;
+  isDetail?: boolean;
+  isDelete?: boolean;
   onSelect?: (id: number, e: React.MouseEvent<HTMLDivElement>) => void;
+  onClickDetail?: (id: number) => void;
+  onClickDelete?: (id: number) => void;
+  onClickAllDelete?: () => void;
 }
 
 export interface TableRowType {

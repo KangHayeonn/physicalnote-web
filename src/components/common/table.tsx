@@ -5,6 +5,7 @@ import { cls } from "@/utils";
 import { TableType, TableRowType } from "@/types/common";
 import { playerCheckSelector } from "@/recoil/schedule/scheduleState";
 import { CheckboxType } from "@/types/schedule";
+import Button from "@/components/common/button";
 
 const TableRow = ({ column, data, onClick }: TableRowType) => {
   const accessor = column?.accessor;
@@ -33,7 +34,12 @@ const Table = ({
   onClickRow,
   isCheckboxUse,
   isSelectedCheckbox,
+  isDetail,
+  isDelete,
   onSelect,
+  onClickDetail,
+  onClickDelete,
+  onClickAllDelete,
 }: TableType) => {
   const [initCheckList, setInitCheckList] = useRecoilState(playerCheckSelector);
   const [checkList, setCheckList] = useState<CheckboxType[]>([]);
@@ -118,13 +124,24 @@ const Table = ({
               {columns.map((column, idx) => (
                 <th
                   key={`column${idx}`}
-                  className={cls("py-[20px] text-[14px]")}
+                  className={cls("min-w-[110px] py-[20px] text-[14px]")}
                 >
                   <div className="flex items-center justify-center">
                     <span>{column.Header?.toString()}</span>
                   </div>
                 </th>
               ))}
+              {isDetail ? <th></th> : null}
+              {isDelete ? (
+                <th>
+                  <Button
+                    text="일괄삭제"
+                    type="button"
+                    classnames="text-[12px] h-[25px] text-[#000] font-[700] hover:bg-[#000] hover:text-[#fff]"
+                    onClick={onClickAllDelete}
+                  />
+                </th>
+              ) : null}
             </tr>
           </thead>
           <tbody className="text-center divide-y-[1px]">
@@ -136,7 +153,7 @@ const Table = ({
                   className="cursor-pointer hover:bg-[#eefdd3] transition-colors"
                 >
                   {isCheckboxUse ? (
-                    <td className="w-full h-full py-[20px] flex justify-center items-center cursor-pointer">
+                    <td className="min-w-[40px] h-full py-[20px] flex justify-center items-center cursor-pointer">
                       <Image
                         src={
                           isChecked(item.id)
@@ -185,6 +202,34 @@ const Table = ({
                       />
                     );
                   })}
+                  {isDetail ? (
+                    <td
+                      className="w-[100px] py-[20px] cursor-pointer"
+                      onClick={() =>
+                        onClickDetail && onClickDetail(Number(item.id))
+                      }
+                    >
+                      <Button
+                        text="상세보기"
+                        type="button"
+                        classnames="text-[12px] h-[25px] text-[#8DBE3D] font-[700]"
+                      />
+                    </td>
+                  ) : null}
+                  {isDelete ? (
+                    <td
+                      className="py-[20px] cursor-pointer"
+                      onClick={() =>
+                        onClickDelete && onClickDelete(Number(item.id))
+                      }
+                    >
+                      <Button
+                        text="삭제"
+                        type="button"
+                        classnames="text-[12px] h-[25px] text-[#8DBE3D] font-[700]"
+                      />
+                    </td>
+                  ) : null}
                 </tr>
               );
             })}
