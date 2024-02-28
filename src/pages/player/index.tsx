@@ -188,6 +188,7 @@ const ManagePlayer: NextPage = () => {
           onClickDetail={handleDetailClick}
           onClickDelete={handleDeleteClick}
           onClickAllDelete={handleAllDeleteClick}
+          onSelect={handleImportantCheck}
           isSelectedCheckbox={true}
           isCheckboxUse={true}
           isDetail={true}
