@@ -124,7 +124,7 @@ const PrivateDataDetail: NextPage = () => {
           <h1 className="text-[28px] font-[700]">
             개인 데이터 _{" "}
             <span className="text-[20px]">
-              {userInfo.name}({userInfo.positions?.join(", ")})
+              {userInfo.name}({userInfo.positions?.join(" / ")})
             </span>
           </h1>
           {userInfo.importantYn ? (

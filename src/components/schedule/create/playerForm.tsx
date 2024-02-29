@@ -12,7 +12,6 @@ import { columnData } from "@/constants/mock/schedule";
 import { searchPlayerGraderSelector } from "@/recoil/search/searchState";
 import { playerCheckSelector } from "@/recoil/schedule/scheduleState";
 import Api from "@/api/schedule";
-import { PlayerFormProps } from "@/types/schedule";
 
 const PlayerForm = () => {
   const [searchGrader, setSearchGrader] = useRecoilState(
@@ -25,7 +24,7 @@ const PlayerForm = () => {
   const [data, setData] = useState<PlayerSimpleDataType[]>([]);
   const [playerGrader, setPlayerGrader] = useState<string>("");
 
-  const itemPerPage = 2;
+  const itemPerPage = 10;
   const totalItems = totalLen;
   const { currentPage, totalPages, currentItems, handlePageChange } =
     usePagination((page) => setPage(page), itemPerPage, totalItems);
@@ -62,7 +61,7 @@ const PlayerForm = () => {
                 : "부상자";
 
           tempContent.push({
-            position: item.positions.join(", "),
+            position: item.positions.join(" / "),
             belongto: grade,
             ...item,
           });

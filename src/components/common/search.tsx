@@ -13,6 +13,7 @@ import {
   searchCategoryState,
   searchKeywordState,
 } from "@/recoil/search/searchState";
+import Button from "@/components/common/button";
 
 const Search = ({ title, onClickSubmit, resetPage }: SearchProps) => {
   const router = useRouter();
@@ -76,7 +77,7 @@ const Search = ({ title, onClickSubmit, resetPage }: SearchProps) => {
           />
           <button
             type="button"
-            className="bg-white border-[#ededed] text-[#8DBE3D] px-[16px] h-[36px] rounded-[5px] shadow-[0_2px_10px_0px_rgba(0,0,0,0.25)] hover:font-[700]"
+            className="bg-white border-[#ededed] text-[#8DBE3D] px-[16px] h-[36px] rounded-[5px] shadow-[0_2px_10px_0px_rgba(0,0,0,0.25)] hover:bg-[#C6E19B] hover:text-[#fff]"
             onClick={handleSubmit}
           >
             검색

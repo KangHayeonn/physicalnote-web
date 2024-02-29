@@ -43,7 +43,7 @@ const DailySchedule = () => {
 
   const getPlayer = (playerInfo: UserSimpleInfoType[]) => {
     const playerList = playerInfo.map((item: UserSimpleInfoType) => item.name);
-    return playerList.join(", ");
+    return playerList.join(" / ");
   };
 
   const getDailySchedule = async () => {
