@@ -201,7 +201,7 @@ const PrivateData: NextPage = () => {
           </>
         ) : (
           <div className="flex items-center justify-center w-full py-10 font-bold">
-            데이터가 없습니다.
+            등록된 선수가 없습니다.
           </div>
         )}
       </div>

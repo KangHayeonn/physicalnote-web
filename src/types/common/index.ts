@@ -26,6 +26,7 @@ export interface SearchCategoryType {
 export interface DropDownProps {
   defaultText?: string | undefined;
   text?: string | undefined;
+  isSize?: string | undefined;
   width?: number | undefined;
   dropDownList?: Array<SearchCategoryType>;
   changeText?: (category: string) => void | undefined;
@@ -53,7 +54,7 @@ export interface TableType {
 export interface TableRowType {
   column: Column;
   data: PrivateDataType;
-  onClick:
+  onClick?:
     | ((e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void)
     | undefined;
 }

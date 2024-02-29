@@ -1,5 +1,8 @@
 import { instanceWithToken } from "@/api";
-import { PlayerChangeRequestType } from "@/types/player";
+import {
+  ApprovePlayerRequestType,
+  PlayerChangeRequestType,
+} from "@/types/player";
 import { PlayersRequestType } from "@/types/privateData";
 const prefix = "/admin";
 
@@ -32,6 +35,28 @@ const Player = {
     try {
       const url = `${prefix}/player/change/play_grade`;
       const result = await instanceWithToken.put(url, data);
+      return result;
+    } catch (err) {
+      return Promise.reject(err);
+    }
+  },
+  async v1GetPlayerRequests(page: number, size: number) {
+    try {
+      const url = `${prefix}/team/request`;
+      const result = await instanceWithToken.get(url, {
+        params: { page, size },
+      });
+      return result;
+    } catch (err) {
+      return Promise.reject(err);
+    }
+  },
+  async v1ApprovePlayerRequests(data: ApprovePlayerRequestType) {
+    try {
+      const url = `${prefix}/team/request`;
+      const result = await instanceWithToken.post(url, {
+        ...data,
+      });
       return result;
     } catch (err) {
       return Promise.reject(err);

@@ -2,10 +2,12 @@ import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { searchCategoryList } from "@/constants/mock/searchCategoryList";
 import { DropDownProps, SearchCategoryType } from "@/types/common";
+import { cls } from "@/utils";
 
 const DropDown = ({
   defaultText,
   text,
+  isSize,
   dropDownList,
   changeText,
   ...props
@@ -44,11 +46,19 @@ const DropDown = ({
   return (
     <div
       ref={menuWrap}
-      className="w-[160px] h-[36px] rounded-[5px] border-none flex flex-col justify-center relative py-0 text-[#B9B9C3] shadow-[0_2px_10px_0px_rgba(0,0,0,0.25)]"
+      className={cls(
+        "rounded-[5px] border-none flex flex-col justify-center relative py-0 text-[#B9B9C3] shadow-[0_2px_10px_0px_rgba(0,0,0,0.25)]",
+        isSize && isSize === "small"
+          ? "w-[140px] h-[25px]"
+          : "w-[160px] h-[36px]"
+      )}
       {...props}
     >
       <button
-        className="h-[1.875rem] flex flex-row justify-center items-center relative pr-12 pl-10 bg-transparent border-none text-[15px] font-[400] text-[#000]"
+        className={cls(
+          "h-[1.875rem] flex flex-row justify-center items-center relative pr-12 pl-10 bg-transparent border-none font-[400] text-[#000]",
+          isSize && isSize === "small" ? "text-[12px]" : "text-[15px]"
+        )}
         onClick={() => setIsOpen((open) => !open)}
       >
         {title}
@@ -57,18 +67,33 @@ const DropDown = ({
           width={13}
           height={13}
           alt="DropDown Button"
-          className="w-[13px] h-[13px] absolute top-[10px] right-[13px]"
+          className={cls(
+            "absolute right-[13px]",
+            isSize && isSize === "small"
+              ? "w-[11px] h-[11px] top-[7px]"
+              : "w-[13px] h-[13px] top-[10px]"
+          )}
           priority
         />
       </button>
       {isOpen ? (
-        <div className="w-[160px] max-h-[160px] bg-[#fff] flex flex-col absolute top-[45px] rounded-[5px] py-[5px] border-[#ededed] z-10 overflow-y-auto shadow-[0_2px_10px_0px_rgba(0,0,0,0.25)]">
+        <div
+          className={cls(
+            "bg-[#fff] flex flex-col absolute rounded-[5px] py-[5px] border-[#ededed] z-10 overflow-y-auto shadow-[0_2px_10px_0px_rgba(0,0,0,0.25)]",
+            isSize && isSize === "small"
+              ? "w-[140px] max-h-[160px] top-[35px]"
+              : "w-[160px] max-h-[160px] top-[45px]"
+          )}
+        >
           {list.map((item) => {
             return (
               <div
                 key={item.key}
                 onClick={() => changeItem(item)}
-                className="flex justify-center text-[15px] text-[#000] px-[5px] py-[7px] hover:bg-[#D9D9D9] cursor-pointer"
+                className={cls(
+                  "flex justify-center text-[#000] px-[5px] py-[7px] hover:bg-[#D9D9D9] cursor-pointer",
+                  isSize && isSize === "small" ? "text-[12px]" : "text-[15px]"
+                )}
               >
                 {item.value}
               </div>

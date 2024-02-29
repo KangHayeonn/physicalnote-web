@@ -106,7 +106,7 @@ export interface CategoryListType {
 
 export interface CategoryModalProps {
   setIsOpen: Dispatch<SetStateAction<boolean>>;
-  isEdit: boolean;
+  isEdit?: boolean;
   handleEvent: () => Promise<void>;
 }
 

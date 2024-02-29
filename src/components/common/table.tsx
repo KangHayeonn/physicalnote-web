@@ -137,7 +137,7 @@ const Table = ({
                   <Button
                     text="일괄삭제"
                     type="button"
-                    classnames="text-[12px] h-[25px] text-[#000] font-[700] hover:bg-[#000] hover:text-[#fff]"
+                    classnames="text-[12px] h-[25px] text-[#8DBE3D] font-[700] hover:bg-[#000] hover:text-[#fff]"
                     onClick={onClickAllDelete}
                   />
                 </th>
