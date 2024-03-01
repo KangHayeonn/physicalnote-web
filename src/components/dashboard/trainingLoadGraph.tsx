@@ -57,7 +57,7 @@ const TrainingLoadGraph = () => {
           curve: "linear",
           yAxisKey: "totalCount",
           data: tempTotalCount,
-          color: "#FF0000",
+          color: "#FF9F43",
         },
       ]);
       setXAxis(xAxisList);

@@ -308,7 +308,7 @@ const ManagePlayer: NextPage = () => {
       {isOpenModal && (
         <PlayerRequestModal
           setIsOpen={setIsOpenModal}
-          handleEvent={getPlayerRequest}
+          handleEvent={getPlayerList}
         />
       )}
     </div>
