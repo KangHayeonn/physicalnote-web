@@ -62,6 +62,17 @@ const Player = {
       return Promise.reject(err);
     }
   },
+  async v1GetPlayerDetail(playerId: number, recordDate: string) {
+    try {
+      const url = `${prefix}/player/${playerId}`;
+      const result = await instanceWithToken.get(url, {
+        params: { recordDate },
+      });
+      return result;
+    } catch (err) {
+      return Promise.reject(err);
+    }
+  },
 };
 
 export default Player;
