@@ -19,6 +19,7 @@ const WeeklyAvgInfo = () => {
           <div className="flex space-x-8">
             <div
               className={cls(
+                "cursor-pointer",
                 graphType === "hooper" ? "text-[#000]" : "text-[#C1C1C1]"
               )}
             >
@@ -26,6 +27,7 @@ const WeeklyAvgInfo = () => {
             </div>
             <div
               className={cls(
+                "cursor-pointer",
                 graphType === "intensity" ? "text-[#000]" : "text-[#C1C1C1]"
               )}
             >
@@ -33,6 +35,7 @@ const WeeklyAvgInfo = () => {
             </div>
             <div
               className={cls(
+                "cursor-pointer",
                 graphType === "time" ? "text-[#000]" : "text-[#C1C1C1]"
               )}
             >
@@ -65,10 +68,10 @@ const WeeklyAvgInfo = () => {
           </div>
         </div>
         <div className="flex space-x-8 text-[12px]">
-          <div className="text-[#000]">수면의 질</div>
-          <div className="text-[#B9B9C3]">스트레스</div>
-          <div className="text-[#B9B9C3]">피로</div>
-          <div className="text-[#B9B9C3]">근육통</div>
+          <div className="text-[#000] cursor-pointer">수면의 질</div>
+          <div className="text-[#B9B9C3] cursor-pointer">스트레스</div>
+          <div className="text-[#B9B9C3] cursor-pointer">피로</div>
+          <div className="text-[#B9B9C3] cursor-pointer">근육통</div>
         </div>
         <div>
           <AxisWithComposition
