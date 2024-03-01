@@ -1,4 +1,5 @@
 import { instanceWithToken } from "@/api";
+import { TeamNoteInfoType } from "@/types/dashboard";
 import {
   ApprovePlayerRequestType,
   PlayerChangeRequestType,
@@ -68,6 +69,15 @@ const Player = {
       const result = await instanceWithToken.get(url, {
         params: { recordDate },
       });
+      return result;
+    } catch (err) {
+      return Promise.reject(err);
+    }
+  },
+  async v1UpdateFeedback(playerId: number, data: TeamNoteInfoType) {
+    try {
+      const url = `${prefix}/feed_back/${playerId}`;
+      const result = await instanceWithToken.post(url, { ...data });
       return result;
     } catch (err) {
       return Promise.reject(err);

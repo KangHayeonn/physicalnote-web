@@ -16,7 +16,6 @@ import Api from "@/api/player";
 import { getFullDateToString } from "@/utils/dateFormat";
 import { useRecoilState } from "recoil";
 import { playerDetailSelector } from "@/recoil/player/playerState";
-import { playerDetail } from "@/constants/mock/player";
 
 const ManagePlayerDetail: NextPage = () => {
   const router = useRouter();
@@ -46,11 +45,20 @@ const ManagePlayerDetail: NextPage = () => {
   };
 
   const getPlayerDetail = async () => {
-    setPlayerData(playerDetail);
-    /*await Api.v1GetPlayerDetail(
+    if (!id) {
+      router.replace("/player");
+      return;
+    }
+
+    await Api.v1GetPlayerDetail(
       Number(id),
       getFullDateToString(searchDate)
-    ).then((res) => console.log(res.data));*/
+    ).then((res) => {
+      const { data } = res;
+      if (data) {
+        setPlayerData(data);
+      }
+    });
   };
 
   const init = () => {

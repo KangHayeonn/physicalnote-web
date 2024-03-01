@@ -32,7 +32,7 @@ const InjuryInfo = () => {
           <div className="w-full flex flex-col justify-content items-center">
             <div className="flex items-center space-x-4">
               <div className="w-[56px] h-[73px] rounded-[10px] relative bg-[#FDE6E8] relative">
-                {riskData?.injuryLevel && riskData?.injuryLevel < 7 && (
+                {riskData?.injuryLevel && riskData?.injuryLevel < 7 ? (
                   <>
                     <Image
                       loader={imageLoader}
@@ -53,14 +53,15 @@ const InjuryInfo = () => {
                       {riskData?.injuryLevel}
                     </div>
                   </>
-                )}
+                ) : null}
               </div>
               <div className="w-[56px] h-[73px] rounded-[10px] relative bg-[#F8B3B8]">
-                {riskData?.injuryLevel && riskData?.injuryLevel < 14 && (
+                {riskData?.injuryLevel &&
+                riskData?.injuryLevel >= 7 &&
+                riskData?.injuryLevel < 14 ? (
                   <>
                     <Image
                       loader={imageLoader}
-                      //src={data.profile || "/images/profile_default.svg"}
                       src="/icons/man.svg"
                       width={0}
                       height={0}
@@ -78,10 +79,12 @@ const InjuryInfo = () => {
                       {riskData?.injuryLevel}
                     </div>
                   </>
-                )}
+                ) : null}
               </div>
               <div className="w-[56px] h-[73px] rounded-[10px] relative bg-[#F06671]">
-                {riskData?.injuryLevel && riskData?.injuryLevel < 21 && (
+                {riskData?.injuryLevel &&
+                riskData?.injuryLevel >= 14 &&
+                riskData?.injuryLevel < 21 ? (
                   <>
                     <Image
                       loader={imageLoader}
@@ -103,10 +106,10 @@ const InjuryInfo = () => {
                       {riskData?.injuryLevel}
                     </div>
                   </>
-                )}
+                ) : null}
               </div>
               <div className="w-[56px] h-[73px] rounded-[10px] relative bg-[#E60012]">
-                {riskData?.injuryLevel && riskData?.injuryLevel >= 21 && (
+                {riskData?.injuryLevel && riskData?.injuryLevel >= 21 ? (
                   <>
                     <Image
                       loader={imageLoader}
@@ -128,7 +131,7 @@ const InjuryInfo = () => {
                       {riskData?.injuryLevel}
                     </div>
                   </>
-                )}
+                ) : null}
               </div>
             </div>
             <div className="text-[16px] text-[#C1C1C1] font-[700] space-x-14 ml-[8px]">

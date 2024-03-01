@@ -84,7 +84,7 @@ export interface PlayerDetailResponseType {
   intensityInfo: IntensityInfoType[];
   riskInfo: RiskInfoType;
   urineResponseDto: UrineInfoType;
-  feedBackInfo: string | null;
+  feedBackInfo: FeedBackInfoType;
   weekIntensityGraph: IntensityGraphType[];
   weekHooperIndexGraph: HooperIndexGraphType;
   weekWorkoutTimeGraph: WorkoutTimeGraphType[];
@@ -140,6 +140,14 @@ export interface UrineInfoType {
   weight: number;
   differenceFat: number | null; // 전날 대비 몸무게 %
   urine: string;
+  recordDate: string;
+}
+
+export interface FeedBackInfoType {
+  id: number;
+  userId: number;
+  userName: string;
+  content: string;
   recordDate: string;
 }
 

@@ -1,12 +1,17 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
-import { TeamNoteInfoType, TeamNoteType } from "@/types/dashboard";
+import { useRouter } from "next/router";
+import { TeamNoteType } from "@/types/dashboard";
 import Button from "@/components/common/button";
 import { getFullDateToString } from "@/utils/dateFormat";
 import { useRecoilValue } from "recoil";
 import { playerDetailSelector } from "@/recoil/player/playerState";
+import Api from "@/api/player";
+import { showToast } from "@/utils";
 
 const FeedbackInfo = ({ searchDate }: TeamNoteType) => {
+  const router = useRouter();
+  const { id } = router.query;
   const playerDetail = useRecoilValue(playerDetailSelector);
   const [note, setNote] = useState<string>("");
   const [htmlContent, setHtmlContent] = useState<string>("");
@@ -21,13 +26,21 @@ const FeedbackInfo = ({ searchDate }: TeamNoteType) => {
   };
 
   const updateFeedback = async () => {
-    // todo : update feedback
+    const params = {
+      content: htmlContent,
+      recordDate: date,
+    };
+
+    await Api.v1UpdateFeedback(Number(id), params).then((res) => {
+      const { status } = res;
+      if (status === 200) {
+        showToast("오늘의 피드백이 정상 등록되었습니다.");
+      }
+    });
   };
 
   useEffect(() => {
-    if (playerDetail.feedBackInfo) {
-      setNote(playerDetail?.feedBackInfo);
-    }
+    setNote(playerDetail?.feedBackInfo?.content || "");
   }, [playerDetail]);
 
   useEffect(() => {

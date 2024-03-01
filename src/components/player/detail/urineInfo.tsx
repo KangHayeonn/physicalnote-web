@@ -34,7 +34,7 @@ const UrineInfo = () => {
         <div className="w-full h-[120px] text-[16px] flex flex-col justify-center space-y-3">
           <div className="flex items-center space-x-1">
             <div>공복 몸무게 :</div>
-            <div>{data?.weight.toFixed(1) || 0.0}kg</div>
+            <div>{(data?.weight && data?.weight.toFixed(1)) || 0.0}kg</div>
             <em className="text-[12px] text-[#000AFF] font-[400] not-italic">
               {`(${data?.differenceFat || "-"}%)`}
             </em>
