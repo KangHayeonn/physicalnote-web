@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import Layout from "@/components/layout";
@@ -12,12 +12,20 @@ import UrineInfo from "@/components/player/detail/urineInfo";
 import FeedbackInfo from "@/components/player/detail/feedbackInfo";
 import WeeklyAvgInfo from "@/components/player/detail/weeklyAvgInfo";
 import BodyCheckInfo from "@/components/player/detail/bodyCheckInfo";
+import Api from "@/api/player";
+import { getFullDateToString } from "@/utils/dateFormat";
+import { useRecoilState } from "recoil";
+import { playerDetailSelector } from "@/recoil/player/playerState";
+import { playerDetail } from "@/constants/mock/player";
 
 const ManagePlayerDetail: NextPage = () => {
   const router = useRouter();
   const { id } = router.query;
+
   const [initDate, setInitDate] = useState<Date>(new Date());
   const [searchDate, setSearchDate] = useState<Date>(new Date());
+
+  const [playerData, setPlayerData] = useRecoilState(playerDetailSelector);
 
   const toggleDate = (type: string) => {
     const today = new Date();
@@ -37,9 +45,21 @@ const ManagePlayerDetail: NextPage = () => {
     }
   };
 
+  const getPlayerDetail = async () => {
+    setPlayerData(playerDetail);
+    /*await Api.v1GetPlayerDetail(
+      Number(id),
+      getFullDateToString(searchDate)
+    ).then((res) => console.log(res.data));*/
+  };
+
   const init = () => {
     setInitDate(new Date());
   };
+
+  useEffect(() => {
+    getPlayerDetail();
+  }, [searchDate]);
 
   return (
     <div className="min-w-[2000px]">

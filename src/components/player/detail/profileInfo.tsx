@@ -1,9 +1,14 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { Box, Slider, styled } from "@mui/material";
 import { marks } from "@/constants/mock/dashboard";
+import { useRecoilValue } from "recoil";
+import { playerDetailSelector } from "@/recoil/player/playerState";
+import { UserInfoType } from "@/types/player";
 
 const ProfileInfo = () => {
+  const playerDetail = useRecoilValue(playerDetailSelector);
+  const [userInfo, setUserInfo] = useState<UserInfoType>();
   const imageLoader = ({ src, width, quality }: any) => {
     return `${src}?w=${width}&q=${quality || 75}`;
   };
@@ -46,14 +51,21 @@ const ProfileInfo = () => {
     },
   });
 
+  useEffect(() => {
+    setUserInfo(playerDetail.userInfo);
+  }, [playerDetail]);
+
   return (
     <div className="w-full min-w-[860px] flex space-x-5 rounded-[25px] shadow-[0_2px_10px_0px_rgba(0,0,0,0.25)] py-4 px-8">
       <div className="flex items-start justify-start space-x-10 py-2 min-w-[292px]">
         <div className="w-[92px] h-[92px] rounded-[46px] bg-[#D9D9D9] flex justify-center items-center cursor-pointer">
           <Image
             loader={imageLoader}
-            //src={data.profile || "/images/profile_default.svg"}
-            src="/images/profile_default.svg"
+            src={
+              userInfo?.profile && userInfo?.profile !== "string"
+                ? userInfo?.profile
+                : "/images/profile_default.svg"
+            }
             width={0}
             height={0}
             priority
@@ -66,21 +78,29 @@ const ProfileInfo = () => {
           />
         </div>
         <div className="flex flex-col space-y-4">
-          <p className="text-[16px] font-[700]">이름 : 강하연</p>
-          <p className="text-[16px] font-[700]">키 : 180 cm</p>
-          <p className="text-[16px] font-[700]">몸무게 : 72 kg</p>
+          <p className="text-[16px] font-[700]">이름 : {userInfo?.name}</p>
+          <p className="text-[16px] font-[700]">
+            키 : {userInfo?.height && Math.ceil(userInfo?.height)} cm
+          </p>
+          <p className="text-[16px] font-[700]">
+            몸무게 : {userInfo?.weight && Math.ceil(userInfo?.weight)} kg
+          </p>
         </div>
       </div>
       <div className="flex flex-col space-y-4">
         <div className="flex items-center space-x-2">
           <div className="min-w-[80px] text-[16px] font-[700]">포지션</div>
           <div className="flex space-x-2">
-            <div className="flex justify-center items-center min-w-[60px] h-[30px] px-3 py-1 rounded-[25px] shadow-[0_2px_10px_0px_rgba(0,0,0,0.25)] text-[12px] cursor-pointer bg-[#C6E19B]">
-              공격수
-            </div>
-            <div className="flex justify-center items-center min-w-[60px] h-[30px] px-3 py-1 rounded-[25px] shadow-[0_2px_10px_0px_rgba(0,0,0,0.25)] text-[12px] cursor-pointer bg-[#C6E19B]">
-              미드필더
-            </div>
+            {userInfo?.positions &&
+              userInfo?.positions.length > 0 &&
+              userInfo?.positions.map((item, idx) => (
+                <div
+                  key={`userInfo${idx}`}
+                  className="flex justify-center items-center min-w-[60px] h-[30px] px-3 py-1 rounded-[25px] shadow-[0_2px_10px_0px_rgba(0,0,0,0.25)] text-[12px] cursor-pointer bg-[#C6E19B]"
+                >
+                  {item}
+                </div>
+              ))}
           </div>
         </div>
         <div className="flex items-center space-x-2">
@@ -88,11 +108,13 @@ const ProfileInfo = () => {
           <div>
             <Box sx={{ width: 300 }}>
               <PrettoSlider
-                defaultValue={Math.ceil(7)}
+                defaultValue={
+                  userInfo?.rightValue && Math.ceil(userInfo?.rightValue)
+                }
                 valueLabelDisplay="on"
                 step={1}
-                min={4}
-                max={21}
+                min={1}
+                max={10}
                 disabled
               />
             </Box>
@@ -103,12 +125,13 @@ const ProfileInfo = () => {
           <div>
             <Box sx={{ width: 300 }}>
               <PrettoSlider
-                defaultValue={Math.ceil(7)}
+                defaultValue={
+                  userInfo?.leftValue && Math.ceil(userInfo?.leftValue)
+                }
                 valueLabelDisplay="on"
                 step={1}
-                marks={marks}
-                min={4}
-                max={21}
+                min={1}
+                max={10}
                 disabled
               />
             </Box>
