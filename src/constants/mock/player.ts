@@ -182,6 +182,24 @@ export const playerDetail = {
       level: 10, // 운동 강도
       recordDate: "2024-01-25", // 기록 일자
     },
+    {
+      id: 21, // ID
+      type: "스포츠", // 운동 타입
+      level: 10, // 운동 강도
+      recordDate: "2024-01-25", // 기록 일자
+    },
+    {
+      id: 21, // ID
+      type: "스포츠", // 운동 타입
+      level: 10, // 운동 강도
+      recordDate: "2024-01-25", // 기록 일자
+    },
+    {
+      id: 21, // ID
+      type: "스포츠", // 운동 타입
+      level: 10, // 운동 강도
+      recordDate: "2024-01-25", // 기록 일자
+    },
   ],
   riskInfo: {
     // 위험 정보
@@ -193,7 +211,7 @@ export const playerDetail = {
   urineResponseDto: {
     // 소변 검사 정보
     id: 31, // ID
-    weight: 4, // 몸무게
+    weight: 40, // 몸무게
     differenceFat: null, // 전날 대비 몸무게 %
     urine: "적정", // 검사 결과
     recordDate: "2024-01-25", // 기록 일자

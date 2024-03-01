@@ -7,7 +7,7 @@ import Button from "@/components/common/button";
 import ProfileInfo from "@/components/player/detail/profileInfo";
 import AlertInfo from "@/components/player/detail/alertInfo";
 import HooperIndexInfo from "@/components/player/detail/hooperIndexInfo";
-import InjuryInfo from "@/components/player/detail/InjuryInfo";
+import InjuryInfo from "@/components/player/detail/injuryInfo";
 import UrineInfo from "@/components/player/detail/urineInfo";
 import FeedbackInfo from "@/components/player/detail/feedbackInfo";
 import WeeklyAvgInfo from "@/components/player/detail/weeklyAvgInfo";
@@ -113,7 +113,7 @@ const ManagePlayerDetail: NextPage = () => {
               <UrineInfo />
             </div>
             <div className="w-full flex space-x-10">
-              <FeedbackInfo />
+              <FeedbackInfo searchDate={searchDate} />
               <div className="w-[295px]"></div>
             </div>
           </div>
