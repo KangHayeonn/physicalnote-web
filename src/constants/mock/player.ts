@@ -188,18 +188,6 @@ export const playerDetail = {
       level: 10, // 운동 강도
       recordDate: "2024-01-25", // 기록 일자
     },
-    {
-      id: 21, // ID
-      type: "스포츠", // 운동 타입
-      level: 10, // 운동 강도
-      recordDate: "2024-01-25", // 기록 일자
-    },
-    {
-      id: 21, // ID
-      type: "스포츠", // 운동 타입
-      level: 10, // 운동 강도
-      recordDate: "2024-01-25", // 기록 일자
-    },
   ],
   riskInfo: {
     // 위험 정보
@@ -272,9 +260,21 @@ export const playerDetail = {
       xvalue: "2024-01-25 목요일", // x 값
     },
     {
+      id: 22, // ID
+      type: "스포츠", // 타입
+      workoutTime: "01:00:00", // 운동 시간
+      xvalue: "2024-01-26 금요일", // x 값
+    },
+    {
       id: 19,
       type: "피지컬",
       workoutTime: "01:00:00",
+      xvalue: "2024-01-25 목요일",
+    },
+    {
+      id: 20,
+      type: "피지컬",
+      workoutTime: "03:00:00",
       xvalue: "2024-01-26 금요일",
     },
   ],

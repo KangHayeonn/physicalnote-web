@@ -156,7 +156,7 @@ const InjuryInfo = () => {
           {intensityData.length !== 0 ? (
             <>
               {intensityData.map((item, idx) => (
-                <div className="w-full relative">
+                <div key={`injury-intensity${idx}`} className="w-full relative">
                   <div className="w-[200px] h-full">
                     <PieChart
                       key={`intensity${idx}`}

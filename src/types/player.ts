@@ -188,3 +188,22 @@ export interface InjuryInfoType {
   injuryLevelString: string | null; // 고통 텍스트
   comment: string | null; // 부상 코멘트
 }
+
+export interface HooperGraphType {
+  sleep: {
+    value: Array<number>;
+    xvalue: Array<string>;
+  };
+  stress: {
+    value: Array<number>;
+    xvalue: Array<string>;
+  };
+  fatigue: {
+    value: Array<number>;
+    xvalue: Array<string>;
+  };
+  muscleSoreness: {
+    value: Array<number>;
+    xvalue: Array<string>;
+  };
+}
