@@ -342,7 +342,8 @@ const Layout = ({ children }: LayoutProps) => {
               )}
             >
               <div>
-                {router.pathname === "/player" ? (
+                {router.pathname === "/player" ||
+                router.pathname.startsWith("/player/") ? (
                   <Image
                     loader={imageLoader}
                     src="/icons/player.svg"
@@ -373,7 +374,10 @@ const Layout = ({ children }: LayoutProps) => {
               <div
                 className={cls(
                   "text-[14px] font-[700]",
-                  router.pathname === "/player" ? "text-black" : "text-white"
+                  router.pathname === "/player" ||
+                    router.pathname.startsWith("/player/")
+                    ? "text-black"
+                    : "text-white"
                 )}
               >
                 선수관리

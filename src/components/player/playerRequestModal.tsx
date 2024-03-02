@@ -42,6 +42,7 @@ const PlayerRequestModal = ({ setIsOpen, handleEvent }: CategoryModalProps) => {
   const onClickClose = () => {
     document.body.style.overflow = "unset";
     setIsOpen(false);
+    handleEvent();
   };
 
   const handleApprove = async (approvalYn: boolean, id: number) => {

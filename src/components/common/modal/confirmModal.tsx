@@ -28,7 +28,6 @@ const ConfirmModal = ({ setIsOpen, handleSubmit, text }: ConfirmModalProps) => {
             classnames="text-[14px] w-[70px] h-[32px] text-[#8DBE3D] font-[700]"
             onClick={onClickEvent}
           />
-
           <Button
             text="아니오"
             type="button"

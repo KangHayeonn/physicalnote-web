@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useRouter } from "next/router";
 import usePagination from "@/utils/hooks/usePagination";
 import Item from "@/components/common/item";
 import { useRecoilValue } from "recoil";
@@ -11,6 +12,7 @@ import {
 } from "@/types/dashboard";
 
 const TeamInjury = ({ initPage, getData }: PaginationProps) => {
+  const router = useRouter();
   const teamInjuryInfo = useRecoilValue(teamInjurySelector);
   const [teamInjury, setTeamInjury] = useState<TeamInjuryInfoType>({
     teamInjuryCnt: 0,
@@ -46,7 +48,7 @@ const TeamInjury = ({ initPage, getData }: PaginationProps) => {
   };
 
   const goPlayerDetail = (playerId: number) => {
-    // todo : 선수 상세보기 페이지 이동
+    router.push(`/player/${playerId}`);
   };
 
   const LevelCircle = ({ level }: LevelCircleType) => {
