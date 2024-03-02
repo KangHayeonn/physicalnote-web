@@ -228,6 +228,11 @@ const CreateSchedule: NextPage = () => {
   };
 
   const getInitSchedule = async () => {
+    if (!id) {
+      router.replace("/schedule");
+      return;
+    }
+
     await Api.v1GetScheduleDetail(Number(id)).then((res) => {
       const {
         address,

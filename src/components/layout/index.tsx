@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import useSWR from "swr";
 import { cls } from "@/utils";
+import Button from "@/components/common/button";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -68,6 +69,13 @@ const Layout = ({ children }: LayoutProps) => {
               소속인원수 :{" "}
               {data?.memberCnt < 10 ? `0${data?.memberCnt}` : data?.memberCnt}명
             </span>
+            <div className="mt-[10px]">
+              <Button
+                type="button"
+                text="로그아웃"
+                classnames="text-[#8DBE3D] text-[12px] font-[700] bg-[#fff] hover:bg-[#fff] hover:text-[#000]"
+              />
+            </div>
           </div>
         </div>
         <div className="flex flex-col">
