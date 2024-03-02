@@ -106,7 +106,7 @@ const HooperIndexInfo = () => {
             }
             xAxis={[
               {
-                data: [10, 20, 30, 40, 50, 60],
+                data: [10, 20, 30, 40, 50, 60, 70],
                 position: "bottom",
                 hideTooltip: true,
               },
@@ -120,7 +120,7 @@ const HooperIndexInfo = () => {
           />
         )}
         <div className="w-[650px] absolute bottom-[13px] bg-[#fff] flex text-[12px] ml-[55px] space-x-6">
-          <div className="w-[68px] ml-[30px]">좋음 (1단계)</div>
+          <div className="w-[68px] ml-[60px]">좋음(1단계)</div>
           <div className="w-[68px]">좋음(2단계)</div>
           <div className="w-[68px]">적정(1단계)</div>
           <div className="w-[68px]">적정(2단계)</div>
