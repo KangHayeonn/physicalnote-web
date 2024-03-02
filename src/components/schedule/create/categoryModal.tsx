@@ -43,7 +43,6 @@ const CategoryModal = ({
     setCategory({ ...category, name: name });
     updateCategory();
     document.body.style.overflow = "unset";
-    setIsOpen(false);
   };
 
   const onClickClose = () => {
@@ -54,7 +53,6 @@ const CategoryModal = ({
   const onClickDelete = async () => {
     deleteCategory();
     document.body.style.overflow = "unset";
-    setIsOpen(false);
   };
 
   const updateCategory = async () => {
@@ -65,6 +63,7 @@ const CategoryModal = ({
 
     if (name === "") {
       showToast("목록 이름을 확인해주세요.");
+      return;
     }
 
     try {
@@ -74,24 +73,30 @@ const CategoryModal = ({
           showToast("목록이 등록되었습니다.");
           handleEvent();
           setSelectCategory(data.id);
+          setIsOpen(false);
         }
       });
     } catch {
-      showToast("목록 입력값을 확인해주세요.");
+      showToast("목록 색상을 선택해주세요.");
     }
   };
 
   const deleteCategory = async () => {
-    await Api.v1DeleteCategory(category.id).then((res) => {
-      const { status } = res;
-      if (status === 200) {
-        showToast("카테고리가 삭제되었습니다.");
-        if (selectCategory === category.id) {
-          setSelectCategory(-1);
+    try {
+      await Api.v1DeleteCategory(category.id).then((res) => {
+        const { status } = res;
+        if (status === 200) {
+          showToast("카테고리가 삭제되었습니다.");
+          if (selectCategory === category.id) {
+            setSelectCategory(-1);
+          }
+          handleEvent();
+          setIsOpen(false);
         }
-        handleEvent();
-      }
-    });
+      });
+    } catch {
+      showToast("사용중인 카테고리로 삭제할 수 없습니다.");
+    }
   };
 
   const getCategoryColorList = async () => {

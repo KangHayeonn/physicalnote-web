@@ -20,12 +20,14 @@ import CategoryForm from "@/components/schedule/create/categoryForm";
 import PlayerForm from "@/components/schedule/create/playerForm";
 import ImageForm from "@/components/schedule/create/imageForm";
 import {
+  categorySelector,
   imageFilesSelector,
   playerCheckSelector,
   selectCategorySelector,
 } from "@/recoil/schedule/scheduleState";
 import { getFullDateToString } from "@/utils/dateFormat";
 import { showToast } from "@/utils";
+import useDebounce from "@/utils/hooks/useDebounce";
 
 const CreateSchedule: NextPage = () => {
   const router = useRouter();
@@ -36,6 +38,7 @@ const CreateSchedule: NextPage = () => {
     addressKeywordSelector
   );
   const checkbox = useRecoilValue(playerCheckSelector);
+  const [category, setCategory] = useRecoilState(categorySelector);
   const [selectCategory, setSelectCategory] = useRecoilState(
     selectCategorySelector
   );
@@ -57,6 +60,8 @@ const CreateSchedule: NextPage = () => {
   const [content, setContent] = useState<string>("");
   const [players, setPlayers] = useState<string>("");
 
+  const debouncedQuery = useDebounce(searchKeyword, 250);
+
   const onSearchGraderChange = (grader: string) => {
     setSearchGrader(grader);
   };
@@ -74,6 +79,7 @@ const CreateSchedule: NextPage = () => {
     setSearchKeyword("");
     setImportantPlayer(false);
     setPlayers("");
+    setCategory({ id: -1, name: "", colorCode: "" });
   };
 
   const getTitleTextCnt = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -85,7 +91,7 @@ const CreateSchedule: NextPage = () => {
   };
 
   const getSearchAddress = async () => {
-    await Api.v1SearchAddress(searchKeyword).then((res) => {
+    await Api.v1SearchAddress(debouncedQuery).then((res) => {
       const { items } = res.data;
       setPreviewList([...items]);
     });
@@ -130,9 +136,49 @@ const CreateSchedule: NextPage = () => {
     return true;
   };
 
+  const createFormData = () => {
+    const formData = new FormData();
+
+    if (imageFiles) {
+      imageFiles.forEach((image) => {
+        formData.append("file", image);
+      });
+    }
+
+    return formData;
+  };
+
+  const isFormDataEmpty = (formData: FormData) => {
+    const entries = formData.entries();
+    return entries.next().done;
+  };
+
+  const uploadImages = async () => {
+    const formData = createFormData();
+
+    if (isFormDataEmpty(formData)) {
+      return null;
+    }
+
+    try {
+      const res = await Api.v1UploadImage("schedule", formData);
+      const { status, data } = res;
+
+      if (status === 200 && data?.uploaded) {
+        return data.url;
+      }
+    } catch {
+      showToast("이미지 업로드 문제가 발생했습니다.");
+    }
+
+    return null;
+  };
+
   const addSchedule = async () => {
     const newTitle = title.trim();
     if (!isValidationSchedule(newTitle, selectCategory, playerIdList)) return;
+
+    const urls = await uploadImages();
 
     const params = {
       name: title,
@@ -142,15 +188,15 @@ const CreateSchedule: NextPage = () => {
       recordDate: getFullDateToString(searchDate),
       startTime: `${startTime}:00`,
       endTime: `${endTime}:00`,
-      images: [], // imageFiles (파일 형식)
+      images: urls ? urls : [],
       importantYn: importantPlayer,
-      playerGrade: searchGrader !== "ALL" ? searchGrader : "",
+      playerGrade: searchGrader,
       userIds: playerIdList,
     };
 
     try {
       await Api.v1AddSchedule(params).then((res) => {
-        const { status } = res.data;
+        const { status } = res;
         if (status == 200) {
           init();
           router.push("/schedule");
@@ -158,13 +204,17 @@ const CreateSchedule: NextPage = () => {
         }
       });
     } catch {
-      showToast("일정 입력값을 확인해주세요.");
+      showToast("입력값을 확인해주세요.");
     }
   };
 
   useEffect(() => {
     init();
   }, []);
+
+  useEffect(() => {
+    setSelectCategory(category.id);
+  }, [category]);
 
   useEffect(() => {
     setPlayers(playerList.join(", "));
@@ -175,8 +225,8 @@ const CreateSchedule: NextPage = () => {
   }, [checkbox]);
 
   useEffect(() => {
-    if (searchKeyword) getSearchAddress();
-  }, [searchKeyword]);
+    if (debouncedQuery) getSearchAddress();
+  }, [debouncedQuery]);
 
   return (
     <div className="min-w-[1900px]">

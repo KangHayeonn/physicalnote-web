@@ -1,13 +1,20 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { showToast } from "@/utils";
-import { useSetRecoilState } from "recoil";
-import { imageFilesSelector } from "@/recoil/schedule/scheduleState";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import {
+  imageFilesSelector,
+  imageUrlsSelector,
+} from "@/recoil/schedule/scheduleState";
 
 const ImageForm = () => {
   const [files, setFiles] = useState<File[]>([]);
   const [previewURLs, setPreviewURLs] = useState<string[]>([]);
   const setImageFiles = useSetRecoilState(imageFilesSelector);
+
+  const imageLoader = ({ src, width, quality }: any) => {
+    return `${src}?w=${width}&q=${quality || 75}`;
+  };
 
   const addImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
@@ -63,30 +70,13 @@ const ImageForm = () => {
 
   const deleteImage = (target: string, idx: number) => {
     const tempImageURLs = previewURLs.filter((url) => url !== target);
-    setFiles(files.splice(idx, 1));
+    setFiles(files.filter((file, index) => index !== idx));
     setPreviewURLs(tempImageURLs);
   };
 
   useEffect(() => {
     setImageFiles(files);
   }, [files]);
-
-  // form data 만들기
-  /*
-  const createFormData = (data: ClubFormType, image: File | null) => {
-    const formData = new FormData();
-
-    if (image) {
-      formData.append("image", image);
-    }
-
-    formData.append(
-      "data",
-      new Blob([JSON.stringify(data)], { type: "application/json" })
-    );
-
-    return formData;
-  };*/
 
   return (
     <div>
@@ -108,6 +98,7 @@ const ImageForm = () => {
               {previewURL && (
                 <div className="relative">
                   <Image
+                    loader={imageLoader}
                     src={previewURL as string}
                     alt="previewImage"
                     width={0}
@@ -115,7 +106,6 @@ const ImageForm = () => {
                     style={{
                       width: "149px",
                       height: "107px",
-                      border: "1px solid red",
                     }}
                   />
                   <Image

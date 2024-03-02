@@ -79,6 +79,7 @@ const MyInfo: NextPage = () => {
               <input
                 type="text"
                 className="w-[445px] h-[40px] rounded-[5px] shadow-[0_2px_10px_0px_rgba(0,0,0,0.25)] border-none focus:ring-0"
+                value={data.joinDate}
                 {...register("joinDate")}
               />
             </div>

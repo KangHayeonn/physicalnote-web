@@ -111,6 +111,15 @@ const Schedule = {
       return Promise.reject(err);
     }
   },
+  async v1GetScheduleDetail(id: number) {
+    try {
+      const url = `${prefix}/workout_calendar/${id}`;
+      const result = await instanceWithToken.get(url);
+      return result;
+    } catch (err) {
+      return Promise.reject(err);
+    }
+  },
   async v1DeleteCategory(categoryId: number) {
     try {
       const url = `${prefix}/calendar_category/${categoryId}`;
@@ -134,6 +143,17 @@ const Schedule = {
       const url = `${prefix}/search/local`;
       const result = await instanceWithToken.get(url, {
         params: { query },
+      });
+      return result;
+    } catch (err) {
+      return Promise.reject(err);
+    }
+  },
+  async v1UploadImage(path: string, data: FormData) {
+    try {
+      const url = `${prefix}/upload/${path}`;
+      const result = await instanceWithToken.post(url, data, {
+        headers: { "Content-Type": "multipart/form-data" },
       });
       return result;
     } catch (err) {

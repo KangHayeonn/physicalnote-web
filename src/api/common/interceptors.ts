@@ -30,7 +30,7 @@ export const setInterceptors = (instance: AxiosInstance) => {
       const { response }: any = error;
 
       if (response.status === 500) {
-        showToast("서버 장애가 발생하였습니다.");
+        // showToast("서버 장애가 발생하였습니다.");
       }
 
       return Promise.reject(error);

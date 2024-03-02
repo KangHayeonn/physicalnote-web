@@ -1,18 +1,20 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
+import { useRouter } from "next/router";
 import { useRecoilValue } from "recoil";
 import { getTimeFormat } from "@/utils/strFormat";
 import { todayTrainingPlanSelector } from "@/recoil/dashboard/dashboardState";
 import { TodayTrainingPlanInfoType } from "@/types/dashboard";
 
 const TodayTrainingPlan = () => {
+  const router = useRouter();
   const todayTrainingPlan = useRecoilValue(todayTrainingPlanSelector);
   const [trainingPlan, setTrainingPlan] = useState<TodayTrainingPlanInfoType[]>(
     []
   );
 
   const goUpdateSchedule = (id: number) => {
-    // todo : 일정 관리 수정 페이지 이동
+    router.push(`/schedule/create/${id}`);
   };
 
   useEffect(() => {

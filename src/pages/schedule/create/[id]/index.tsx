@@ -6,12 +6,12 @@ import Layout from "@/components/layout";
 import Button from "@/components/common/button";
 import { searchCategoryList } from "@/constants/mock/searchCategoryList";
 import DropDown from "@/components/common/dropdown";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import {
   addressKeywordSelector,
   searchPlayerGraderState,
 } from "@/recoil/search/searchState";
-import { AddressResponseType } from "@/types/schedule";
+import { AddressResponseType, UserSimpleInfoType } from "@/types/schedule";
 import DatePickerComponent from "@/components/common/datepicker";
 import TimePickerComponent from "@/components/common/timepicker";
 import Api from "@/api/schedule";
@@ -20,12 +20,16 @@ import CategoryForm from "@/components/schedule/create/categoryForm";
 import PlayerForm from "@/components/schedule/create/playerForm";
 import ImageForm from "@/components/schedule/create/imageForm";
 import {
+  categorySelector,
   imageFilesSelector,
+  imageUrlsSelector,
   playerCheckSelector,
   selectCategorySelector,
 } from "@/recoil/schedule/scheduleState";
 import { getFullDateToString } from "@/utils/dateFormat";
 import { showToast } from "@/utils";
+import useDebounce from "@/utils/hooks/useDebounce";
+import { getTimeFormat } from "@/utils/strFormat";
 
 const CreateSchedule: NextPage = () => {
   const router = useRouter();
@@ -37,14 +41,17 @@ const CreateSchedule: NextPage = () => {
     addressKeywordSelector
   );
   const checkbox = useRecoilValue(playerCheckSelector);
+  const [category, setCategory] = useRecoilState(categorySelector);
   const [selectCategory, setSelectCategory] = useRecoilState(
     selectCategorySelector
   );
   const [imageFiles, setImageFiles] = useRecoilState(imageFilesSelector);
+  const setImageUrls = useSetRecoilState(imageUrlsSelector);
 
   const [initDate, setInitDate] = useState<Date>(new Date());
   const [searchDate, setSearchDate] = useState<Date>(new Date());
-  const [initTime, setInitTime] = useState<string>("09:00");
+  const [initStartTime, setInitStartTime] = useState<string>("09:00");
+  const [initEndTime, setInitEndTime] = useState<string>("09:00");
   const [startTime, setStartTime] = useState<string>("09:00");
   const [endTime, setEndTime] = useState<string>("09:00");
   const [title, setTitle] = useState<string>("");
@@ -57,6 +64,8 @@ const CreateSchedule: NextPage = () => {
   const [importantPlayer, setImportantPlayer] = useState<boolean>(false);
   const [content, setContent] = useState<string>("");
   const [players, setPlayers] = useState<string>("");
+
+  const debouncedQuery = useDebounce(searchKeyword, 250);
 
   const onSearchGraderChange = (grader: string) => {
     setSearchGrader(grader);
@@ -75,6 +84,7 @@ const CreateSchedule: NextPage = () => {
     setSearchKeyword("");
     setImportantPlayer(false);
     setPlayers("");
+    setCategory({ id: -1, name: "", colorCode: "" });
   };
 
   const getTitleTextCnt = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -86,7 +96,7 @@ const CreateSchedule: NextPage = () => {
   };
 
   const getSearchAddress = async () => {
-    await Api.v1SearchAddress(searchKeyword).then((res) => {
+    await Api.v1SearchAddress(debouncedQuery).then((res) => {
       const { items } = res.data;
       setPreviewList([...items]);
     });
@@ -131,9 +141,49 @@ const CreateSchedule: NextPage = () => {
     return true;
   };
 
-  const addSchedule = async () => {
+  const createFormData = () => {
+    const formData = new FormData();
+
+    if (imageFiles) {
+      imageFiles.forEach((image) => {
+        formData.append("file", image);
+      });
+    }
+
+    return formData;
+  };
+
+  const isFormDataEmpty = (formData: FormData) => {
+    const entries = formData.entries();
+    return entries.next().done;
+  };
+
+  const uploadImages = async () => {
+    const formData = createFormData();
+
+    if (isFormDataEmpty(formData)) {
+      return null;
+    }
+
+    try {
+      const res = await Api.v1UploadImage("schedule", formData);
+      const { status, data } = res;
+
+      if (status === 200 && data?.uploaded) {
+        return data.url;
+      }
+    } catch {
+      showToast("이미지 업로드 문제가 발생했습니다.");
+    }
+
+    return null;
+  };
+
+  const editSchedule = async () => {
     const newTitle = title.trim();
     if (!isValidationSchedule(newTitle, selectCategory, playerIdList)) return;
+
+    const urls = await uploadImages();
 
     const params = {
       name: title,
@@ -143,29 +193,86 @@ const CreateSchedule: NextPage = () => {
       recordDate: getFullDateToString(searchDate),
       startTime: `${startTime}:00`,
       endTime: `${endTime}:00`,
-      images: [], // imageFiles (파일 형식)
+      images: urls ? urls : [],
       importantYn: importantPlayer,
-      playerGrade: searchGrader !== "ALL" ? searchGrader : "",
+      playerGrade: searchGrader,
       userIds: playerIdList,
     };
 
     try {
-      await Api.v1AddSchedule(params).then((res) => {
-        const { status } = res.data;
+      await Api.v1UpdateSchedule(Number(id), params).then((res) => {
+        const { status } = res;
         if (status == 200) {
           init();
           router.push("/schedule");
-          showToast("일정이 정상 등록되었습니다.");
+          showToast("일정이 정상 수정되었습니다.");
         }
       });
     } catch {
-      showToast("");
+      showToast("일정 입력값을 확인해주세요.");
     }
+  };
+
+  const deleteSchedule = async () => {
+    try {
+      await Api.v1DeleteSchedule(Number(id)).then((res) => {
+        const { status } = res;
+        if (status === 200) {
+          showToast("일정이 삭제되었습니다.");
+          router.replace("/schedule");
+        }
+      });
+    } catch {
+      showToast("일정 삭제에 실패하였습니다.");
+    }
+  };
+
+  const getInitSchedule = async () => {
+    if (!id) {
+      router.replace("/schedule");
+      return;
+    }
+
+    await Api.v1GetScheduleDetail(Number(id)).then((res) => {
+      const {
+        address,
+        content,
+        startTime,
+        endTime,
+        images,
+        name,
+        userSimpleInfo,
+        importantYn,
+      } = res.data;
+
+      const playerArr: Array<string> = [];
+      const playerIdArr: Array<number> = [];
+      userSimpleInfo.map((item: UserSimpleInfoType) => {
+        playerArr.push(item.name);
+        playerIdArr.push(item.id);
+      });
+
+      setPlayerList(playerArr);
+      setPlayerIdList(playerIdArr);
+      setSelectCategory(-1);
+      setSearchKeyword("");
+      setImportantPlayer(importantYn);
+      setTitle(name);
+      setContent(content);
+      setInitStartTime(getTimeFormat(startTime));
+      setInitEndTime(getTimeFormat(endTime));
+      setImageUrls(images);
+    });
   };
 
   useEffect(() => {
     init();
+    getInitSchedule();
   }, []);
+
+  useEffect(() => {
+    setSelectCategory(category.id);
+  }, [category]);
 
   useEffect(() => {
     setPlayers(playerList.join(", "));
@@ -176,8 +283,8 @@ const CreateSchedule: NextPage = () => {
   }, [checkbox]);
 
   useEffect(() => {
-    if (searchKeyword) getSearchAddress();
-  }, [searchKeyword]);
+    if (debouncedQuery) getSearchAddress();
+  }, [debouncedQuery]);
 
   return (
     <div className="min-w-[1900px]">
@@ -244,12 +351,12 @@ const CreateSchedule: NextPage = () => {
                   />
                   <div className="flex items-center space-x-1">
                     <TimePickerComponent
-                      initTime={initTime}
+                      initTime={initStartTime}
                       changeTime={setStartTime}
                     />
                     <span>~</span>
                     <TimePickerComponent
-                      initTime={initTime}
+                      initTime={initEndTime}
                       changeTime={setEndTime}
                     />
                   </div>
@@ -278,15 +385,16 @@ const CreateSchedule: NextPage = () => {
               </div>
               <div className="flex items-center space-x-2 justify-end py-4">
                 <Button
-                  type="button"
+                  type="submit"
                   text="삭제"
                   classnames="text-[#8DBE3D] text-[12px] font-[700]"
+                  onClick={deleteSchedule}
                 />
                 <Button
                   type="submit"
                   text="등록"
                   classnames="text-[#8DBE3D] text-[12px] font-[700]"
-                  onClick={addSchedule}
+                  onClick={editSchedule}
                 />
               </div>
             </div>
