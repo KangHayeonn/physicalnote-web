@@ -63,30 +63,13 @@ const ImageForm = () => {
 
   const deleteImage = (target: string, idx: number) => {
     const tempImageURLs = previewURLs.filter((url) => url !== target);
-    setFiles(files.splice(idx, 1));
+    setFiles(files.filter((file, index) => index !== idx));
     setPreviewURLs(tempImageURLs);
   };
 
   useEffect(() => {
     setImageFiles(files);
   }, [files]);
-
-  // form data 만들기
-  /*
-  const createFormData = (data: ClubFormType, image: File | null) => {
-    const formData = new FormData();
-
-    if (image) {
-      formData.append("image", image);
-    }
-
-    formData.append(
-      "data",
-      new Blob([JSON.stringify(data)], { type: "application/json" })
-    );
-
-    return formData;
-  };*/
 
   return (
     <div>
@@ -115,7 +98,6 @@ const ImageForm = () => {
                     style={{
                       width: "149px",
                       height: "107px",
-                      border: "1px solid red",
                     }}
                   />
                   <Image

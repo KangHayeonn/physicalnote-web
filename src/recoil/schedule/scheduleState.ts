@@ -38,7 +38,7 @@ const dailyDateSelector = selector<Date>({
 const categoryState = atom<CategoryListType>({
   key: "categoryState",
   default: {
-    id: 0,
+    id: -1,
     name: "",
     colorCode: "",
   },

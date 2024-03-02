@@ -20,6 +20,7 @@ import CategoryForm from "@/components/schedule/create/categoryForm";
 import PlayerForm from "@/components/schedule/create/playerForm";
 import ImageForm from "@/components/schedule/create/imageForm";
 import {
+  categorySelector,
   imageFilesSelector,
   playerCheckSelector,
   selectCategorySelector,
@@ -37,6 +38,7 @@ const CreateSchedule: NextPage = () => {
     addressKeywordSelector
   );
   const checkbox = useRecoilValue(playerCheckSelector);
+  const [category, setCategory] = useRecoilState(categorySelector);
   const [selectCategory, setSelectCategory] = useRecoilState(
     selectCategorySelector
   );
@@ -57,6 +59,7 @@ const CreateSchedule: NextPage = () => {
   const [importantPlayer, setImportantPlayer] = useState<boolean>(false);
   const [content, setContent] = useState<string>("");
   const [players, setPlayers] = useState<string>("");
+  const [imageUrls, setImageUrls] = useState<Array<string>>([]);
 
   const debouncedQuery = useDebounce(searchKeyword, 250);
 
@@ -77,6 +80,7 @@ const CreateSchedule: NextPage = () => {
     setSearchKeyword("");
     setImportantPlayer(false);
     setPlayers("");
+    setCategory({ id: -1, name: "", colorCode: "" });
   };
 
   const getTitleTextCnt = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -133,9 +137,40 @@ const CreateSchedule: NextPage = () => {
     return true;
   };
 
+  const createFormData = () => {
+    const formData = new FormData();
+
+    if (imageFiles) {
+      imageFiles.forEach((image) => {
+        formData.append("file", image);
+      });
+    }
+
+    return formData;
+  };
+
+  const uploadImages = async () => {
+    const formData = createFormData();
+
+    try {
+      const res = await Api.v1UploadImage("schedule", formData);
+      const { status, data } = res;
+
+      if (status === 200 && data?.uploaded) {
+        return data.url;
+      }
+    } catch {
+      showToast("이미지 업로드 문제가 발생했습니다.");
+    }
+
+    return null;
+  };
+
   const addSchedule = async () => {
     const newTitle = title.trim();
     if (!isValidationSchedule(newTitle, selectCategory, playerIdList)) return;
+
+    const urls = await uploadImages();
 
     const params = {
       name: title,
@@ -145,7 +180,7 @@ const CreateSchedule: NextPage = () => {
       recordDate: getFullDateToString(searchDate),
       startTime: `${startTime}:00`,
       endTime: `${endTime}:00`,
-      images: [], // imageFiles (파일 형식)
+      images: urls ? urls : [],
       importantYn: importantPlayer,
       playerGrade: searchGrader !== "ALL" ? searchGrader : "",
       userIds: playerIdList,
@@ -153,7 +188,7 @@ const CreateSchedule: NextPage = () => {
 
     try {
       await Api.v1AddSchedule(params).then((res) => {
-        const { status } = res.data;
+        const { status } = res;
         if (status == 200) {
           init();
           router.push("/schedule");
@@ -168,6 +203,10 @@ const CreateSchedule: NextPage = () => {
   useEffect(() => {
     init();
   }, []);
+
+  useEffect(() => {
+    setSelectCategory(category.id);
+  }, [category]);
 
   useEffect(() => {
     setPlayers(playerList.join(", "));

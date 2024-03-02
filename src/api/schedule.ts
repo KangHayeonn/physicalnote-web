@@ -140,6 +140,17 @@ const Schedule = {
       return Promise.reject(err);
     }
   },
+  async v1UploadImage(path: string, data: FormData) {
+    try {
+      const url = `${prefix}/upload/${path}`;
+      const result = await instanceWithToken.post(url, data, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      return result;
+    } catch (err) {
+      return Promise.reject(err);
+    }
+  },
 };
 
 export default Schedule;

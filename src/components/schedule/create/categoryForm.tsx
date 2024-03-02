@@ -17,7 +17,7 @@ const CategoryForm = () => {
   const selectCategory = (item: CategoryListType) => {
     if (item.id == category.id) {
       setCategory({
-        id: 0,
+        id: -1,
         name: "",
         colorCode: "",
       });
@@ -27,7 +27,7 @@ const CategoryForm = () => {
   };
 
   const editCategory = () => {
-    if (category.id === 0) {
+    if (category.id === -1) {
       showToast("수정할 카테고리를 선택해주세요.");
       return;
     }
@@ -37,7 +37,7 @@ const CategoryForm = () => {
 
   const addCategory = () => {
     setIsOpenCategoryModal(true);
-    setCategory({ id: 0, name: "", colorCode: "" });
+    setCategory({ id: -1, name: "", colorCode: "" });
   };
 
   const getCategoryList = async () => {
