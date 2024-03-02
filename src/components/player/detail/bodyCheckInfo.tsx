@@ -13,8 +13,8 @@ const BodyCheckInfo = () => {
       <div className="text-[20px] font-[700] space-x-1">부상체크</div>
       <div className="flex space-x-16">
         <div className="flex">
-          <BodyCheckFrontChart type="" />
-          <BodyCheckBackChart />
+          <BodyCheckFrontChart type="" part="" />
+          <BodyCheckBackChart type="" part="" />
         </div>
         <div className="w-full h-[330px] space-y-6 overflow-y-scroll p-3">
           <div className="w-full cursor-pointer shadow-[0_2px_10px_0px_rgba(0,0,0,0.25)] space-y-2 rounded-[20px] flex flex-col justify-start py-4 px-7">

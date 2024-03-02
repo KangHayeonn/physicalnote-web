@@ -1,10 +1,7 @@
 import React from "react";
+import { BodyCheckChartType } from "@/types/player";
 
-interface BodyCheckFrontChartType {
-  type: string;
-  part: string;
-}
-const BodyCheckFrontChart = ({ type, part }: BodyCheckFrontChartType) => {
+const BodyCheckFrontChart = ({ type, part }: BodyCheckChartType) => {
   return (
     <>
       <svg

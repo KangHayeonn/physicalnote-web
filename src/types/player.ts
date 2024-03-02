@@ -212,3 +212,8 @@ export interface WeekDayType {
   day: string;
   unregistered: boolean;
 }
+
+export interface BodyCheckChartType {
+  type: string;
+  part: string;
+}
