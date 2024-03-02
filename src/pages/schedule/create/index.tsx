@@ -26,6 +26,7 @@ import {
 } from "@/recoil/schedule/scheduleState";
 import { getFullDateToString } from "@/utils/dateFormat";
 import { showToast } from "@/utils";
+import useDebounce from "@/utils/hooks/useDebounce";
 
 const CreateSchedule: NextPage = () => {
   const router = useRouter();
@@ -57,6 +58,8 @@ const CreateSchedule: NextPage = () => {
   const [content, setContent] = useState<string>("");
   const [players, setPlayers] = useState<string>("");
 
+  const debouncedQuery = useDebounce(searchKeyword, 250);
+
   const onSearchGraderChange = (grader: string) => {
     setSearchGrader(grader);
   };
@@ -85,7 +88,7 @@ const CreateSchedule: NextPage = () => {
   };
 
   const getSearchAddress = async () => {
-    await Api.v1SearchAddress(searchKeyword).then((res) => {
+    await Api.v1SearchAddress(debouncedQuery).then((res) => {
       const { items } = res.data;
       setPreviewList([...items]);
     });
@@ -175,8 +178,8 @@ const CreateSchedule: NextPage = () => {
   }, [checkbox]);
 
   useEffect(() => {
-    if (searchKeyword) getSearchAddress();
-  }, [searchKeyword]);
+    if (debouncedQuery) getSearchAddress();
+  }, [debouncedQuery]);
 
   return (
     <div className="min-w-[1900px]">
