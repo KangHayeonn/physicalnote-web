@@ -109,6 +109,22 @@ const imageFilesSelector = selector<File[]>({
   },
 });
 
+const imageUrlsState = atom<string[]>({
+  key: "imageUrlsState",
+  default: [],
+});
+
+const imageUrlsSelector = selector<string[]>({
+  key: "imageUrlsSelector",
+  get: ({ get }) => {
+    const images = get(imageUrlsState);
+    return images;
+  },
+  set: ({ set }, newValue) => {
+    set(imageUrlsState, newValue);
+  },
+});
+
 export {
   recordDateState,
   recordDateSelector,
@@ -122,4 +138,6 @@ export {
   selectCategorySelector,
   imageFiles,
   imageFilesSelector,
+  imageUrlsState,
+  imageUrlsSelector,
 };

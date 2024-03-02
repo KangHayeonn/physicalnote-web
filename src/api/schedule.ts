@@ -111,6 +111,15 @@ const Schedule = {
       return Promise.reject(err);
     }
   },
+  async v1GetScheduleDetail(id: number) {
+    try {
+      const url = `${prefix}/workout_calendar/${id}`;
+      const result = await instanceWithToken.get(url);
+      return result;
+    } catch (err) {
+      return Promise.reject(err);
+    }
+  },
   async v1DeleteCategory(categoryId: number) {
     try {
       const url = `${prefix}/calendar_category/${categoryId}`;

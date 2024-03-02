@@ -59,7 +59,6 @@ const CreateSchedule: NextPage = () => {
   const [importantPlayer, setImportantPlayer] = useState<boolean>(false);
   const [content, setContent] = useState<string>("");
   const [players, setPlayers] = useState<string>("");
-  const [imageUrls, setImageUrls] = useState<Array<string>>([]);
 
   const debouncedQuery = useDebounce(searchKeyword, 250);
 
@@ -149,8 +148,17 @@ const CreateSchedule: NextPage = () => {
     return formData;
   };
 
+  const isFormDataEmpty = (formData: FormData) => {
+    const entries = formData.entries();
+    return entries.next().done;
+  };
+
   const uploadImages = async () => {
     const formData = createFormData();
+
+    if (isFormDataEmpty(formData)) {
+      return null;
+    }
 
     try {
       const res = await Api.v1UploadImage("schedule", formData);
@@ -182,7 +190,7 @@ const CreateSchedule: NextPage = () => {
       endTime: `${endTime}:00`,
       images: urls ? urls : [],
       importantYn: importantPlayer,
-      playerGrade: searchGrader !== "ALL" ? searchGrader : "",
+      playerGrade: searchGrader,
       userIds: playerIdList,
     };
 
@@ -196,7 +204,7 @@ const CreateSchedule: NextPage = () => {
         }
       });
     } catch {
-      showToast("일정 입력값을 확인해주세요.");
+      showToast("입력값을 확인해주세요.");
     }
   };
 
