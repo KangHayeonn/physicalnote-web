@@ -179,13 +179,16 @@ export interface WorkoutTimeGraphType {
 
 export interface InjuryInfoType {
   id: number;
-  injuryType: string | null; // 부상 경위
+  injuryType: "NON_CONTACT" | "CONTACT" | "DISEASE"; // 비접촉 / 접촉 / 질병
   distinctionType: string | null; // 앞 뒤 구분
   bodyType: string | null; // 상체 하체 구분
+  bodyPart: string | null;
   muscleType: string | null; // 근육 부위 구분
   recordDate: string | null;
   injuryLevelType: string | null; // 고통 정도
   injuryLevelString: string | null; // 고통 텍스트
+  painCharacteristicList: Array<string>; // 통증 양상
+  painTimeList: Array<string>; // 통증 시기
   comment: string | null; // 부상 코멘트
 }
 
@@ -214,6 +217,5 @@ export interface WeekDayType {
 }
 
 export interface BodyCheckChartType {
-  type: string;
-  part: string;
+  injuryArr: Map<string, string | null> | undefined;
 }
