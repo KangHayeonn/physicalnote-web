@@ -207,3 +207,8 @@ export interface HooperGraphType {
     xvalue: Array<string>;
   };
 }
+
+export interface WeekDayType {
+  day: string;
+  unregistered: boolean;
+}

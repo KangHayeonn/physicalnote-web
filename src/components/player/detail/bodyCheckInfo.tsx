@@ -1,5 +1,7 @@
 import React from "react";
 import Image from "next/image";
+import BodyCheckFrontChart from "@/components/player/detail/bodyCheckFrontChart";
+import BodyCheckBackChart from "@/components/player/detail/bodyCheckBackChart";
 
 const BodyCheckInfo = () => {
   const imageLoader = ({ src, width, quality }: any) => {
@@ -9,35 +11,10 @@ const BodyCheckInfo = () => {
   return (
     <div className="w-full min-w-[800px] flex flex-col space-y-5 rounded-[25px] shadow-[0_2px_10px_0px_rgba(0,0,0,0.25)] py-4 px-8">
       <div className="text-[20px] font-[700] space-x-1">부상체크</div>
-      <div className="flex space-x-28">
+      <div className="flex space-x-16">
         <div className="flex">
-          <Image
-            loader={imageLoader}
-            //src={data.profile || "/images/profile_default.svg"}
-            src="/images/앞모습.svg"
-            width={0}
-            height={0}
-            priority
-            alt="body chart front image"
-            style={{
-              width: "170px",
-              height: "324px",
-              fill: "red",
-            }}
-          />
-          <Image
-            loader={imageLoader}
-            //src={data.profile || "/images/profile_default.svg"}
-            src="/images/뒷모습.svg"
-            width={0}
-            height={0}
-            priority
-            alt="body chart back image"
-            style={{
-              width: "170px",
-              height: "324px",
-            }}
-          />
+          <BodyCheckFrontChart type="" />
+          <BodyCheckBackChart />
         </div>
         <div className="w-full h-[330px] space-y-6 overflow-y-scroll p-3">
           <div className="w-full cursor-pointer shadow-[0_2px_10px_0px_rgba(0,0,0,0.25)] space-y-2 rounded-[20px] flex flex-col justify-start py-4 px-7">

@@ -2,12 +2,7 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { useRecoilValue } from "recoil";
 import { playerDetailSelector } from "@/recoil/player/playerState";
-import { UnregisteredInfoType } from "@/types/player";
-
-interface WeekDayType {
-  day: string;
-  unregistered: boolean;
-}
+import { UnregisteredInfoType, WeekDayType } from "@/types/player";
 
 const AlertInfo = () => {
   const playerDetail = useRecoilValue(playerDetailSelector);
