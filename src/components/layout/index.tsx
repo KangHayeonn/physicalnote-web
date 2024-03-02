@@ -3,8 +3,9 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import Image from "next/image";
 import useSWR from "swr";
-import { cls } from "@/utils";
+import { cls, showToast } from "@/utils";
 import Button from "@/components/common/button";
+import { clearToken } from "@/utils/tokenControl";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -16,6 +17,12 @@ const Layout = ({ children }: LayoutProps) => {
 
   const imageLoader = ({ src, width, quality }: any) => {
     return `${src}?w=${width}&q=${quality || 75}`;
+  };
+
+  const logout = () => {
+    clearToken();
+    router.push("/login");
+    showToast("로그아웃되었습니다.");
   };
 
   if (!data) return;
@@ -74,6 +81,7 @@ const Layout = ({ children }: LayoutProps) => {
                 type="button"
                 text="로그아웃"
                 classnames="text-[#8DBE3D] text-[12px] font-[700] bg-[#fff] hover:bg-[#fff] hover:text-[#000]"
+                onClick={logout}
               />
             </div>
           </div>
