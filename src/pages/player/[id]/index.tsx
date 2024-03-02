@@ -122,7 +122,7 @@ const ManagePlayerDetail: NextPage = () => {
             </div>
             <div className="w-full flex space-x-10">
               <FeedbackInfo searchDate={searchDate} />
-              <div className="w-[295px]"></div>
+              <div className="w-[430px]"></div>
             </div>
           </div>
           <div className="flex flex-col space-y-7">
