@@ -26,6 +26,7 @@ import {
 import Api from "@/api/dashboard";
 import { getFullDateToString } from "@/utils/dateFormat";
 import { DashboardResponseType } from "@/types/dashboard";
+import AuthLayout from "@/components/layout/authLayout";
 
 const Dashboard: NextPage = () => {
   const [initDate, setInitDate] = useState<Date>(new Date());
@@ -108,75 +109,77 @@ const Dashboard: NextPage = () => {
   }, [searchDate]);
 
   return (
-    <div className="min-w-[2050px]">
-      <Layout>
-        <div className="flex items-center space-x-[30px]">
-          <h1 className="text-[28px] font-[700]">대시보드</h1>
-        </div>
-        <div className="flex items-center justify-end space-x-2">
-          <Button
-            type="button"
-            text="2주전"
-            classnames="h-[36px] px-4 text-[#8DBE3D] text-[13px] font-[700]"
-            onClick={() => toggleDate("lastWeek2")}
-          />
-          <Button
-            type="button"
-            text="지난주"
-            classnames="h-[36px] px-4 text-[#8DBE3D] text-[13px] font-[700]"
-            onClick={() => toggleDate("lastWeek")}
-          />
-          <Button
-            type="button"
-            text="오늘"
-            classnames="h-[36px] px-4 text-[#8DBE3D] text-[13px] font-[700]"
-            onClick={() => toggleDate("today")}
-          />
-          <DatePickerComponent
-            calendarType="free"
-            initDate={initDate}
-            changeDate={setSearchDate}
-          />
-          <Button
-            type="button"
-            text="초기화"
-            classnames="h-[36px] px-4 text-[#000] text-[13px] font-[700]"
-            onClick={init}
-          />
-        </div>
-        <div className="space-y-8">
-          <div className="flex flex-col space-y-2">
-            <h2 className="text-[20px] font-[500]">팀 컨디션</h2>
-            <div className="grid grid-cols-12 space-x-10">
-              <TeamCondition />
-              <TeamHooperIndex
-                initPage={searchDate}
-                getData={getTeamCautionInfo}
-              />
-            </div>
+    <AuthLayout>
+      <div className="min-w-[2050px]">
+        <Layout>
+          <div className="flex items-center space-x-[30px]">
+            <h1 className="text-[28px] font-[700]">대시보드</h1>
           </div>
-          <div className="flex flex-col space-y-2">
-            <div className="grid grid-cols-12 space-x-10">
-              <TeamInjury initPage={searchDate} getData={getTeamInjuryInfo} />
-              <TodayTrainingPlan />
-            </div>
+          <div className="flex items-center justify-end space-x-2">
+            <Button
+              type="button"
+              text="2주전"
+              classnames="h-[36px] px-4 text-[#8DBE3D] text-[13px] font-[700]"
+              onClick={() => toggleDate("lastWeek2")}
+            />
+            <Button
+              type="button"
+              text="지난주"
+              classnames="h-[36px] px-4 text-[#8DBE3D] text-[13px] font-[700]"
+              onClick={() => toggleDate("lastWeek")}
+            />
+            <Button
+              type="button"
+              text="오늘"
+              classnames="h-[36px] px-4 text-[#8DBE3D] text-[13px] font-[700]"
+              onClick={() => toggleDate("today")}
+            />
+            <DatePickerComponent
+              calendarType="free"
+              initDate={initDate}
+              changeDate={setSearchDate}
+            />
+            <Button
+              type="button"
+              text="초기화"
+              classnames="h-[36px] px-4 text-[#000] text-[13px] font-[700]"
+              onClick={init}
+            />
           </div>
-          <div className="flex flex-col space-y-2">
-            <h2 className="text-[20px] font-[500]">운동부하 밸런스</h2>
-            <div className="grid grid-cols-12 space-x-10">
-              <WeeklyWorkLoad />
-              <div className="flex col-span-7 space-x-10">
-                <TrainingBalance />
-                <TeamNote searchDate={searchDate} />
+          <div className="space-y-8">
+            <div className="flex flex-col space-y-2">
+              <h2 className="text-[20px] font-[500]">팀 컨디션</h2>
+              <div className="grid grid-cols-12 space-x-10">
+                <TeamCondition />
+                <TeamHooperIndex
+                  initPage={searchDate}
+                  getData={getTeamCautionInfo}
+                />
               </div>
             </div>
+            <div className="flex flex-col space-y-2">
+              <div className="grid grid-cols-12 space-x-10">
+                <TeamInjury initPage={searchDate} getData={getTeamInjuryInfo} />
+                <TodayTrainingPlan />
+              </div>
+            </div>
+            <div className="flex flex-col space-y-2">
+              <h2 className="text-[20px] font-[500]">운동부하 밸런스</h2>
+              <div className="grid grid-cols-12 space-x-10">
+                <WeeklyWorkLoad />
+                <div className="flex col-span-7 space-x-10">
+                  <TrainingBalance />
+                  <TeamNote searchDate={searchDate} />
+                </div>
+              </div>
+            </div>
+            <div className="flex flex-col space-y-2">
+              <TrainingLoadGraph />
+            </div>
           </div>
-          <div className="flex flex-col space-y-2">
-            <TrainingLoadGraph />
-          </div>
-        </div>
-      </Layout>
-    </div>
+        </Layout>
+      </div>
+    </AuthLayout>
   );
 };
 

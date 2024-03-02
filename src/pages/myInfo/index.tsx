@@ -5,6 +5,8 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import useSWR from "swr";
 import Layout from "@/components/layout";
+import { clearToken } from "@/utils/tokenControl";
+import { showToast } from "@/utils";
 
 const MyInfo: NextPage = () => {
   const router = useRouter();
@@ -25,6 +27,12 @@ const MyInfo: NextPage = () => {
 
   const onValid = (data: any) => {
     // todo : my info update api
+  };
+
+  const logout = () => {
+    clearToken();
+    router.push("/login");
+    showToast("로그아웃되었습니다.");
   };
 
   if (!data) return;
@@ -159,8 +167,9 @@ const MyInfo: NextPage = () => {
               탈퇴
             </button>
             <button
-              type="submit"
+              type="button"
               className="text-[#8DBE3D] text-[12px] font-[700] py-1 w-[68px] h-[25px] flex justify-center items-center rounded-[5px] shadow-[0_2px_10px_0px_rgba(0,0,0,0.25)] hover:scale-105"
+              onClick={logout}
             >
               로그아웃
             </button>
