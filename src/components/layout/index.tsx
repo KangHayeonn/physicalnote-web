@@ -80,7 +80,7 @@ const Layout = ({ children }: LayoutProps) => {
               <Button
                 type="button"
                 text="로그아웃"
-                classnames="text-[#8DBE3D] text-[12px] font-[700] bg-[#fff] hover:bg-[#fff] hover:text-[#000]"
+                classnames="text-[#8DBE3D] text-[12px] font-[700] bg-[#fff]"
                 onClick={logout}
               />
             </div>
