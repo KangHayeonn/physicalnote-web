@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
+import { useRouter } from "next/router";
 import usePagination from "@/utils/hooks/usePagination";
 import Item from "@/components/common/item";
 import { useRecoilValue } from "recoil";
 import Pagination2 from "@/components/common/pagination02";
-import { teamInjuryState } from "@/recoil/dashboard/dashboardState";
+import { teamInjurySelector } from "@/recoil/dashboard/dashboardState";
 import {
   TeamInjuryInfoType,
   LevelCircleType,
@@ -11,7 +12,8 @@ import {
 } from "@/types/dashboard";
 
 const TeamInjury = ({ initPage, getData }: PaginationProps) => {
-  const teamInjuryInfo = useRecoilValue(teamInjuryState);
+  const router = useRouter();
+  const teamInjuryInfo = useRecoilValue(teamInjurySelector);
   const [teamInjury, setTeamInjury] = useState<TeamInjuryInfoType>({
     teamInjuryCnt: 0,
     injuryInfoList: [],
@@ -46,7 +48,7 @@ const TeamInjury = ({ initPage, getData }: PaginationProps) => {
   };
 
   const goPlayerDetail = (playerId: number) => {
-    // todo : 선수 상세보기 페이지 이동
+    router.push(`/player/${playerId}`);
   };
 
   const LevelCircle = ({ level }: LevelCircleType) => {
@@ -117,7 +119,7 @@ const TeamInjury = ({ initPage, getData }: PaginationProps) => {
       <div className="flex justify-between">
         <div>
           <div className="flex flex-col space-y-2">
-            <span className="text-[15px] font-[400]">
+            <span className="text-[15px] font-[700]">
               ■ 총 부상자 :{" "}
               {teamInjury.teamInjuryCnt < 10
                 ? `0${teamInjury.teamInjuryCnt}`

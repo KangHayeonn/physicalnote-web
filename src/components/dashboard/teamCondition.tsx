@@ -3,7 +3,7 @@ import Image from "next/image";
 import { Box, Slider, styled } from "@mui/material";
 import { useRecoilValue } from "recoil";
 import { TeamConditionInfoType } from "@/types/dashboard";
-import { teamConditionState } from "@/recoil/dashboard/dashboardState";
+import { teamConditionSelector } from "@/recoil/dashboard/dashboardState";
 import { marks, marks2 } from "@/constants/mock/dashboard";
 
 const TeamCondition = () => {
@@ -16,7 +16,7 @@ const TeamCondition = () => {
     unRegisteredPlayerIds: [],
     unRegisteredPlayerCnt: 0,
   });
-  const teamCondition = useRecoilValue(teamConditionState);
+  const teamCondition = useRecoilValue(teamConditionSelector);
 
   const PrettoSlider = styled(Slider)({
     color: "#4D73BA",
@@ -105,7 +105,7 @@ const TeamCondition = () => {
     <div className="flex flex-col col-span-5 space-y-4">
       <div className="flex itmes-center space-x-24">
         <div className="flex flex-col space-y-2">
-          <span className="text-[15px] font-[400]">■ 훈련준비 상태</span>
+          <span className="text-[15px] font-[700]">■ 훈련준비 상태</span>
           <div className="w-full">
             <Box sx={{ width: 300 }}>
               {condition.hooperIndexValue !== 0 ? (
@@ -170,7 +170,7 @@ const TeamCondition = () => {
       </div>
       <div className="flex items-center space-x-24">
         <div className="flex flex-col space-y-2">
-          <span className="text-[15px] font-[400]">■ 수분섭취 상태</span>
+          <span className="text-[15px] font-[700]">■ 수분섭취 상태</span>
           <div className="w-full">
             <Box sx={{ width: 300 }}>
               {condition.urineValue !== 0 ? (

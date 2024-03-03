@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import usePagination from "@/utils/hooks/usePagination";
 import Item from "@/components/common/item";
 import { useRecoilValue } from "recoil";
-import { teamHooperIndexState } from "@/recoil/dashboard/dashboardState";
+import { teamHooperIndexSelector } from "@/recoil/dashboard/dashboardState";
 import {
   TeamHooperIndexInfoType,
   LevelCircleType,
@@ -11,7 +11,7 @@ import {
 import Pagination2 from "@/components/common/pagination02";
 
 const TeamHooperIndex = ({ initPage, getData }: PaginationProps) => {
-  const hooperIndex = useRecoilValue(teamHooperIndexState);
+  const hooperIndex = useRecoilValue(teamHooperIndexSelector);
   const [teamCaution, setTeamCaution] = useState<TeamHooperIndexInfoType[]>([]);
   const [isOpen, setIsOpen] = useState<boolean[]>([]);
   const [totalLength, setTotalLength] = useState<number>(0);
@@ -106,7 +106,7 @@ const TeamHooperIndex = ({ initPage, getData }: PaginationProps) => {
     <div className="col-span-7 flex flex-col space-y-2">
       <div className="flex justify-between">
         <div className="space-x-2">
-          <span className="text-[15px] font-[400] ">■ 관찰대상</span>
+          <span className="text-[15px] font-[700] ">■ 관찰대상</span>
           <em className="text-[12px] text-[#FF0000] font-[400] not-italic">
             (컨디션조절이 필요해요!)
           </em>

@@ -27,3 +27,9 @@ export const getFullDateToString = (date: Date) => {
 
   return `${year}-${newMonth}-${newDay}`;
 };
+
+export const getDateToNum = (date: string) => {
+  const [hour, minute, second] = date.split(":").map(Number);
+  const totalHours = hour + minute / 60 + second / 3600;
+  return totalHours;
+};

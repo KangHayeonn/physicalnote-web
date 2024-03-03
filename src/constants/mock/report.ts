@@ -63,7 +63,7 @@ export const weeklyColumnData = [
     accessor: "bodyFat",
   },
   {
-    Header: "후퍼인댁스",
+    Header: "후퍼인덱스",
     accessor: "hooperIndex",
   },
   {

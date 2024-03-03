@@ -73,7 +73,7 @@ const Report: NextPage = () => {
         content.map((item: DailyReportResponseType) => {
           tempData.push({
             id: item.userId,
-            position: item.positions.join(", "),
+            position: item.positions.join(" / "),
             ...item,
           });
         });
@@ -112,7 +112,7 @@ const Report: NextPage = () => {
         content.map((item: WeeklyReportResponseType) => {
           tempData.push({
             id: item.userId,
-            position: item.positions.join(", "),
+            position: item.positions.join(" / "),
             ...item,
           });
         });
@@ -171,19 +171,19 @@ const Report: NextPage = () => {
           <Button
             type="button"
             text="지난주"
-            classnames="text-[#8DBE3D] text-[13px] font-[700]"
+            classnames="h-[36px] px-4 text-[#8DBE3D] text-[13px] font-[700]"
             onClick={() => toggleDate("lastWeek")}
           />
           <Button
             type="button"
             text="어제"
-            classnames="text-[#8DBE3D] text-[13px] font-[700]"
+            classnames="h-[36px] px-4 text-[#8DBE3D] text-[13px] font-[700]"
             onClick={() => toggleDate("yesterday")}
           />
           <Button
             type="button"
             text="오늘"
-            classnames="text-[#8DBE3D] text-[13px] font-[700]"
+            classnames="h-[36px] px-4 text-[#8DBE3D] text-[13px] font-[700]"
             onClick={() => toggleDate("today")}
           />
           <DatePickerComponent
@@ -194,7 +194,7 @@ const Report: NextPage = () => {
           <Button
             type="button"
             text="초기화"
-            classnames="text-[#000] text-[13px] font-[700]"
+            classnames="h-[36px] px-4 text-[#000] text-[13px] font-[700]"
             onClick={init}
           />
         </div>

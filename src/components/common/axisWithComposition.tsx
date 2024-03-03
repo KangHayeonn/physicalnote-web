@@ -17,9 +17,7 @@ const AxisWithComposition = ({
   margin = { left: 70, right: 70 },
 }: AxisWithCompositionProps) => {
   return (
-    <Box
-    // sx={{ width: "100%" }}
-    >
+    <Box sx={{ width: "100%" }}>
       <ResponsiveChartContainer
         xAxis={[
           {

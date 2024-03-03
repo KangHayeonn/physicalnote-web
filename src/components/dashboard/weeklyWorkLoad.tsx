@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { LineChart } from "@mui/x-charts";
 import { useRecoilValue } from "recoil";
-import { weeklyWorkloadState } from "@/recoil/dashboard/dashboardState";
+import { weeklyWorkloadSelector } from "@/recoil/dashboard/dashboardState";
 import { WeeklyWorkLoadInfoType } from "@/types/dashboard";
 
 const WeeklyWorkLoad = () => {
-  const weeklyWorkLoad = useRecoilValue(weeklyWorkloadState);
+  const weeklyWorkLoad = useRecoilValue(weeklyWorkloadSelector);
   const [weeklyData, setWeeklyData] = useState<WeeklyWorkLoadInfoType>({
     stringOfWeekly: "",
     workloadInfoList: [],
@@ -31,7 +31,7 @@ const WeeklyWorkLoad = () => {
 
   return (
     <div className="flex flex-col col-span-5">
-      <div className="text-[15px] font-[400] space-x-2">
+      <div className="text-[15px] font-[700] space-x-2">
         <span>■ 주간 트레이닝 부하</span>
         <em className="text-[12px] text-[#CBCCCD] font-[400] not-italic">
           (RPE X 운동시간 값)

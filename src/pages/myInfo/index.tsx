@@ -5,11 +5,17 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import useSWR from "swr";
 import Layout from "@/components/layout";
+import { clearToken } from "@/utils/tokenControl";
+import { showToast } from "@/utils";
 
 const MyInfo: NextPage = () => {
   const router = useRouter();
   const { data, error } = useSWR("/admin/coach", { dedupingInterval: 100000 });
   const { register, handleSubmit } = useForm();
+
+  const imageLoader = ({ src, width, quality }: any) => {
+    return `${src}?w=${width}&q=${quality || 75}`;
+  };
 
   const goChangePassword = () => {
     router.push("/changePassword");
@@ -21,6 +27,12 @@ const MyInfo: NextPage = () => {
 
   const onValid = (data: any) => {
     // todo : my info update api
+  };
+
+  const logout = () => {
+    clearToken();
+    router.push("/login");
+    showToast("로그아웃되었습니다.");
   };
 
   if (!data) return;
@@ -37,11 +49,13 @@ const MyInfo: NextPage = () => {
         <div className="flex items-center justify-start space-x-10 py-10 min-w-[292px]">
           <div className="w-[92px] h-[92px] rounded-[46px] bg-[#D9D9D9] flex justify-center items-center cursor-pointer">
             <Image
-              src="/images/profile_default.svg"
-              width={116}
-              height={116}
+              loader={imageLoader}
+              src={data.profile || "/images/profile_default.svg"}
+              width={0}
+              height={0}
               priority
               alt="프로필 이미지"
+              style={{ width: "92px", height: "auto", borderRadius: "46px" }}
             />
           </div>
           <div className="flex flex-col space-y-2">
@@ -73,6 +87,7 @@ const MyInfo: NextPage = () => {
               <input
                 type="text"
                 className="w-[445px] h-[40px] rounded-[5px] shadow-[0_2px_10px_0px_rgba(0,0,0,0.25)] border-none focus:ring-0"
+                value={data.joinDate}
                 {...register("joinDate")}
               />
             </div>
@@ -152,8 +167,9 @@ const MyInfo: NextPage = () => {
               탈퇴
             </button>
             <button
-              type="submit"
+              type="button"
               className="text-[#8DBE3D] text-[12px] font-[700] py-1 w-[68px] h-[25px] flex justify-center items-center rounded-[5px] shadow-[0_2px_10px_0px_rgba(0,0,0,0.25)] hover:scale-105"
+              onClick={logout}
             >
               로그아웃
             </button>

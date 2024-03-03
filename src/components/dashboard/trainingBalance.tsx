@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useRecoilValue } from "recoil";
-import { trainingBalanceState } from "@/recoil/dashboard/dashboardState";
+import { trainingBalanceSelector } from "@/recoil/dashboard/dashboardState";
 import { TrainingBalanceInfoType } from "@/types/dashboard";
 
 const TrainingBalance = () => {
-  const trainingBalanceInfo = useRecoilValue(trainingBalanceState);
+  const trainingBalanceInfo = useRecoilValue(trainingBalanceSelector);
   const [trainingBalance, setTrainingBalance] =
     useState<TrainingBalanceInfoType>(trainingBalanceInfo);
 
@@ -42,7 +42,7 @@ const TrainingBalance = () => {
 
   return (
     <div className="grid grid-rows-1 min-w-[457px]">
-      <div className="text-[15px] font-[400] space-x-2">
+      <div className="text-[15px] font-[700] space-x-2">
         <span>■ 트레이닝 밸런스</span>
         <em className="text-[12px] text-[#CBCCCD] font-[400] not-italic">
           (이번주 운동부하 평균 / 지난주 운동부하 평균)
