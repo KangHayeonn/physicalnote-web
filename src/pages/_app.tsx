@@ -18,7 +18,7 @@ export default function App({ Component, pageProps }: AppProps) {
               name="viewport"
               content="initial-scale=1.0, width=device-width"
             />
-            {/* <link rel="icon" href="" /> */}
+            <link rel="icon" href="/icons/favicon.svg" />
           </Head>
           <Component {...pageProps} />
           <Toaster
