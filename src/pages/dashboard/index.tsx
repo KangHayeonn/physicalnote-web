@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { NextPage } from "next";
+import { GetServerSidePropsContext, NextPage } from "next";
 import Layout from "@/components/layout";
 import Button from "@/components/common/button";
 import DatePickerComponent from "@/components/common/datepicker";
@@ -28,7 +28,14 @@ import { getFullDateToString } from "@/utils/dateFormat";
 import { DashboardResponseType } from "@/types/dashboard";
 import AuthLayout from "@/components/layout/authLayout";
 
-const Dashboard: NextPage = () => {
+import axios from "axios";
+
+interface DashboardProps {
+  data: number;
+  error: string;
+}
+
+const Dashboard: NextPage<DashboardProps> = ({data, error}) => {
   const [initDate, setInitDate] = useState<Date>(new Date());
   const [searchDate, setSearchDate] = useState<Date>(new Date());
 
@@ -61,6 +68,8 @@ const Dashboard: NextPage = () => {
       setInitDate(today);
     }
   };
+
+
 
   const getDashboardInfo = async () => {
     await Api.v1GetDashboard(getFullDateToString(searchDate)).then((res) => {
@@ -114,6 +123,7 @@ const Dashboard: NextPage = () => {
         <Layout>
           <div className="flex items-center space-x-[30px]">
             <h1 className="text-[28px] font-[700]">대시보드</h1>
+            <div className="text-[15px] color-[#000]">값 : {data}{error}</div>
           </div>
           <div className="flex items-center justify-end space-x-2">
             <Button
@@ -184,3 +194,24 @@ const Dashboard: NextPage = () => {
 };
 
 export default Dashboard;
+
+export const getServerSideProps = async(context:GetServerSidePropsContext) => {
+  const token = context.req.cookies.token ?? '';
+  const apiUrl = "https://dev.hajinj.com";
+
+  try {
+    const url = `${apiUrl}/admin/team_injury`;
+    const response = await axios.get(url, {
+      params: { page: 0, size: 10 },
+      headers: {
+        "Authorization": `bearer ${token}`,
+        "Content-Type": "application/json; charset=utf-8",
+      }
+    });
+
+    const data = response.data.userInjuryInfoList.content[0].userInfo.name;
+    return {props: {data}};
+  } catch (err:any) {
+    return {props: {error: err.message}}
+  }
+} // ssr 성공 (but, project에는 export 배포를 통해 cdn & s3 정적 사이트로 해서 ssg랑 csr만 먹음)

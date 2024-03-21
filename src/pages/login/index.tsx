@@ -16,6 +16,7 @@ import {
   setRole,
 } from "@/utils/tokenControl";
 import { showToast } from "@/utils";
+import cookie from "react-cookies"; // client 일 경우
 
 const schema = yup.object({
   email: yup
@@ -57,6 +58,7 @@ const Login: NextPage = () => {
           setLoginId(loginId);
           setName(name);
           setRole(role);
+          cookie.save("token", token, {path:"/"}); // 모든 페이지에서 쿠키 접근 가능
           router.push("/dashboard");
         }
       })
